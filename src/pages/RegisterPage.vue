@@ -31,9 +31,8 @@
 
           <q-input
             v-model="phoneNumber"
-            label="Phone Number"
+            label="Phone Number (Optional)"
             mask="(###) ###-####"
-            :rules="[val => !!val || 'Phone number is required']"
           />
 
           <q-input

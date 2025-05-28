@@ -6,7 +6,7 @@ interface User {
   firstName: string
   lastName: string
   emailAddress: string
-  phoneNumber: string
+  phoneNumber?: string
 }
 
 export const useAuthStore = defineStore('auth', () => {

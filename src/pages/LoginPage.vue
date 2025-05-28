@@ -28,21 +28,31 @@
             label="Email"
             type="email"
             :rules="[val => !!val || 'Email is required', isValidEmail]"
+            class="q-px-md"
           />
 
           <q-input
             v-model="loginForm.password"
             label="Password"
-            type="password"
+            :type="isLoginPasswordVisible ? 'text' : 'password'"
             :rules="[val => !!val || 'Password is required']"
-          />
+            class="q-px-md"
+          >
+            <template v-slot:append>
+              <q-icon
+                :name="isLoginPasswordVisible ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="isLoginPasswordVisible = !isLoginPasswordVisible"
+              />
+            </template>
+          </q-input>
 
           <div>
             <q-btn
               label="Login"
               type="submit"
               color="primary"
-              class="full-width"
+              class="full-width q-mx-md"
             />
           </div>
         </q-form>
@@ -51,7 +61,7 @@
       <!-- Register Form -->
       <q-card-section v-else>
         <q-form @submit="onRegister" class="q-gutter-md">
-          <div class="row q-col-gutter-md">
+          <div class="row q-col-gutter-md q-px-md">
             <div class="col-12 col-sm-6">
               <q-input
                 v-model="registerForm.firstName"
@@ -73,42 +83,65 @@
             label="Email"
             type="email"
             :rules="[val => !!val || 'Email is required', isValidEmail]"
+            class="q-px-md"
           />
 
           <q-input
             v-model="registerForm.phoneNumber"
-            label="Phone Number"
+            label="Phone Number (Optional)"
             mask="(###) ###-####"
-            :rules="[val => !!val || 'Phone number is required']"
+            class="q-px-md"
           />
 
           <q-input
             v-model="registerForm.password"
             label="Password"
-            type="password"
+            :type="isRegisterPasswordVisible ? 'text' : 'password'"
             :rules="[
               val => !!val || 'Password is required',
               val => val.length >= 8 || 'Password must be at least 8 characters'
             ]"
-          />
+            class="q-px-md"
+          >
+            <template v-slot:append>
+              <q-icon
+                :name="isRegisterPasswordVisible ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="isRegisterPasswordVisible = !isRegisterPasswordVisible"
+              />
+            </template>
+          </q-input>
 
           <q-input
             v-model="registerForm.confirmPassword"
             label="Confirm Password"
-            type="password"
+            :type="isConfirmPasswordVisible ? 'text' : 'password'"
             :rules="[
               val => !!val || 'Please confirm your password',
               val => val === registerForm.password || 'Passwords do not match'
             ]"
-          />
+            class="q-px-md"
+          >
+            <template v-slot:append>
+              <q-icon
+                :name="isConfirmPasswordVisible ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="isConfirmPasswordVisible = !isConfirmPasswordVisible"
+              />
+            </template>
+          </q-input>
 
           <div>
             <q-btn
               label="Register"
               type="submit"
               color="primary"
-              class="full-width"
+              class="full-width q-mx-md"
             />
+          </div>
+
+          <div class="text-center q-mt-sm q-px-md">
+            <router-link to="/login" class="text-primary">Already have an account? Login</router-link>
           </div>
         </q-form>
       </q-card-section>
@@ -122,11 +155,14 @@ import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from 'stores/auth.store'
 
-const $q = useQuasar()
 const router = useRouter()
 const authStore = useAuthStore()
+const $q = useQuasar()
 
 const isLogin = ref(true)
+const isLoginPasswordVisible = ref(false)
+const isRegisterPasswordVisible = ref(false)
+const isConfirmPasswordVisible = ref(false)
 
 const loginForm = ref({
   emailAddress: '',
@@ -180,21 +216,31 @@ const onRegister = async () => {
       })
       return
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { confirmPassword, ...userData } = registerForm.value
-    const success = await authStore.register(userData)
+
+    const success = await authStore.register({
+      firstName: registerForm.value.firstName,
+      lastName: registerForm.value.lastName,
+      emailAddress: registerForm.value.emailAddress,
+      phoneNumber: registerForm.value.phoneNumber
+    })
+
     if (success) {
       $q.notify({
         color: 'positive',
         message: 'Registration successful'
       })
-      await router.push('/')
+      await router.push('/applications')
+    } else {
+      $q.notify({
+        color: 'negative',
+        message: 'Registration failed'
+      })
     }
   } catch (err) {
-    console.error('Registration failed:', err)
+    console.error('Registration error:', err)
     $q.notify({
       color: 'negative',
-      message: 'Registration failed'
+      message: 'An error occurred during registration'
     })
   }
 }

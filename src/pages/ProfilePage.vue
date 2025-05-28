@@ -36,9 +36,8 @@
 
               <q-input
                 v-model="profile.phoneNumber"
-                label="Phone Number"
+                label="Phone Number (Optional)"
                 mask="(###) ###-####"
-                :rules="[val => !!val || 'Phone number is required']"
               />
 
               <div class="row justify-end">
@@ -119,7 +118,7 @@ interface Profile {
   firstName: string
   lastName: string
   emailAddress: string
-  phoneNumber: string
+  phoneNumber?: string
 }
 
 interface SearchPreferences {

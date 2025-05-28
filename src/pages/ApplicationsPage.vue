@@ -1,78 +1,141 @@
 <template>
   <q-page padding>
     <div class="row q-mb-md items-center justify-between">
-      <div class="text-h5">Scholarship Applications</div>
+      <div class="text-h5">Applications</div>
       <q-btn
         color="primary"
         icon="add"
         label="New Application"
-        to="/applications/new"
+        @click="openApplicationForm"
       />
     </div>
 
-    <q-table
-      :rows="applications"
-      :columns="columns"
-      row-key="scholarshipId"
-      :loading="loading"
-      v-model:pagination="pagination"
-      :filter="filter"
-    >
-      <template v-slot:top-right>
-        <q-input
-          v-model="filter"
-          placeholder="Search"
-          dense
-          debounce="300"
-        >
-          <template v-slot:append>
-            <q-icon name="search" />
-          </template>
-        </q-input>
-      </template>
+    <!-- Filters -->
+    <q-card class="q-mb-md">
+      <q-card-section>
+        <div class="row q-col-gutter-md">
+          <div class="col-12 col-sm-4">
+            <q-select
+              v-model="filters.status"
+              :options="statusOptions"
+              label="Status"
+              clearable
+            />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input
+              v-model="filters.companyName"
+              label="Company Name"
+              clearable
+            />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-select
+              v-model="filters.dateRange"
+              :options="dateRangeOptions"
+              label="Date Range"
+              clearable
+            />
+          </div>
+        </div>
+      </q-card-section>
+    </q-card>
 
-      <template v-slot:body-cell-status="props">
-        <q-td :props="props">
-          <q-chip
-            :color="getStatusColor(props.value)"
-            text-color="white"
-            dense
-          >
-            {{ props.value }}
-          </q-chip>
-        </q-td>
-      </template>
+    <!-- Applications List -->
+    <q-card>
+      <q-table
+        :rows="filteredApplications"
+        :columns="columns"
+        row-key="id"
+        :loading="loading"
+        v-model:pagination="pagination"
+      >
+        <template v-slot:body-cell-status="props">
+          <q-td :props="props">
+            <q-chip
+              :color="getStatusColor(props.value)"
+              text-color="white"
+              dense
+            >
+              {{ props.value }}
+            </q-chip>
+          </q-td>
+        </template>
 
-      <template v-slot:body-cell-actions="props">
-        <q-td :props="props" class="q-gutter-sm">
-          <q-btn
-            flat
-            round
-            color="primary"
-            icon="edit"
-            :to="`/applications/${props.row.scholarshipId}`"
-          />
-          <q-btn
-            flat
-            round
-            color="negative"
-            icon="delete"
-            @click="confirmDelete(props.row)"
-          />
-        </q-td>
-      </template>
-    </q-table>
+        <template v-slot:body-cell-actions="props">
+          <q-td :props="props" class="q-gutter-sm">
+            <q-btn
+              flat
+              round
+              color="primary"
+              icon="edit"
+              @click="editApplication(props.row)"
+            />
+            <q-btn
+              flat
+              round
+              color="negative"
+              icon="delete"
+              @click="confirmDelete(props.row)"
+            />
+          </q-td>
+        </template>
+      </q-table>
+    </q-card>
 
-    <q-dialog v-model="deleteDialog" persistent>
-      <q-card>
-        <q-card-section class="row items-center">
-          <q-avatar icon="warning" color="negative" text-color="white" />
-          <span class="q-ml-sm">Are you sure you want to delete this application?</span>
+    <!-- Application Form Dialog -->
+    <q-dialog v-model="showApplicationForm" persistent>
+      <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-h6">{{ editingApplication ? 'Edit' : 'New' }} Application</div>
+        </q-card-section>
+
+        <q-card-section>
+          <q-form @submit="onSubmit" class="q-gutter-md">
+            <q-input
+              v-model="applicationForm.companyName"
+              label="Company Name"
+              :rules="[val => !!val || 'Company name is required']"
+            />
+
+            <q-input
+              v-model="applicationForm.position"
+              label="Position"
+              :rules="[val => !!val || 'Position is required']"
+            />
+
+            <q-select
+              v-model="applicationForm.status"
+              :options="statusOptions"
+              label="Status"
+              :rules="[val => !!val || 'Status is required']"
+            />
+
+            <q-input
+              v-model="applicationForm.openDate"
+              label="Open Date"
+              type="date"
+              :rules="[val => !!val || 'Open date is required']"
+            />
+
+            <q-input
+              v-model="applicationForm.dueDate"
+              label="Due Date"
+              type="date"
+              :rules="[val => !!val || 'Due date is required']"
+            />
+
+            <q-input
+              v-model="applicationForm.notes"
+              label="Notes"
+              type="textarea"
+            />
+          </q-form>
         </q-card-section>
 
         <q-card-actions align="right">
           <q-btn flat label="Cancel" color="primary" v-close-popup />
-          <q-btn flat label="Delete" color="negative" @click="deleteApplication" v-close-popup />
+          <q-btn flat label="Save" color="primary" @click="onSubmit" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -80,25 +143,54 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useQuasar } from 'quasar'
+import type { QTableColumn } from 'quasar'
 
 interface Application {
-  scholarshipId: string
-  scholarshipName: string
-  company: string
-  amount: number
-  dueDate: string
+  id: string
+  companyName: string
+  position: string
   status: string
-  currentAction: string
+  openDate: string
+  dueDate: string
+  notes?: string
 }
 
 const $q = useQuasar()
 const loading = ref(false)
-const applications = ref<Application[]>([])
-const filter = ref('')
-const deleteDialog = ref(false)
-const applicationToDelete = ref<Application | null>(null)
+const showApplicationForm = ref(false)
+const editingApplication = ref<Application | null>(null)
+
+const applications = ref<Application[]>([
+  {
+    id: '1',
+    companyName: 'Google',
+    position: 'Software Engineer',
+    status: 'Applied',
+    openDate: '2024-03-01',
+    dueDate: '2024-04-01',
+    notes: 'Applied through company website'
+  }
+])
+
+const filters = ref({
+  status: null,
+  companyName: '',
+  dateRange: null
+})
+
+const statusOptions = ['Applied', 'Interview', 'Offer', 'Rejected', 'Draft']
+const dateRangeOptions = ['Last 7 days', 'Last 30 days', 'Last 90 days']
+
+const columns: QTableColumn[] = [
+  { name: 'companyName', label: 'Company', field: 'companyName', sortable: true, align: 'left' },
+  { name: 'position', label: 'Position', field: 'position', sortable: true, align: 'left' },
+  { name: 'status', label: 'Status', field: 'status', sortable: true, align: 'left' },
+  { name: 'openDate', label: 'Open Date', field: 'openDate', sortable: true, align: 'left' },
+  { name: 'dueDate', label: 'Due Date', field: 'dueDate', sortable: true, align: 'left' },
+  { name: 'actions', label: 'Actions', field: 'actions', align: 'right' }
+]
 
 const pagination = ref({
   sortBy: 'dueDate',
@@ -107,146 +199,93 @@ const pagination = ref({
   rowsPerPage: 10
 })
 
-const columns = [
-  {
-    name: 'scholarshipName',
-    required: true,
-    label: 'Scholarship',
-    align: 'left' as const,
-    field: 'scholarshipName',
-    sortable: true
-  },
-  {
-    name: 'company',
-    required: true,
-    label: 'Organization',
-    align: 'left' as const,
-    field: 'company',
-    sortable: true
-  },
-  {
-    name: 'amount',
-    required: true,
-    label: 'Amount',
-    align: 'right' as const,
-    field: 'amount',
-    format: (val: number) => `$${val.toLocaleString()}`,
-    sortable: true
-  },
-  {
-    name: 'dueDate',
-    required: true,
-    label: 'Due Date',
-    align: 'left' as const,
-    field: 'dueDate',
-    format: (val: string) => new Date(val).toLocaleDateString(),
-    sortable: true
-  },
-  {
-    name: 'status',
-    required: true,
-    label: 'Status',
-    align: 'left' as const,
-    field: 'status',
-    sortable: true
-  },
-  {
-    name: 'currentAction',
-    required: true,
-    label: 'Current Action',
-    align: 'left' as const,
-    field: 'currentAction',
-    sortable: true
-  },
-  {
-    name: 'actions',
-    required: true,
-    label: 'Actions',
-    align: 'center' as const,
-    field: 'actions'
-  }
-]
+const applicationForm = ref<Partial<Application>>({
+  companyName: '',
+  position: '',
+  status: '',
+  openDate: '',
+  dueDate: '',
+  notes: ''
+})
+
+const filteredApplications = computed(() => {
+  return applications.value.filter(app => {
+    if (filters.value.status && app.status !== filters.value.status) return false
+    if (filters.value.companyName && !app.companyName.toLowerCase().includes(filters.value.companyName.toLowerCase())) return false
+    // Add date range filtering logic here
+    return true
+  })
+})
 
 const getStatusColor = (status: string) => {
-  switch (status.toLowerCase()) {
-    case 'submitted':
-      return 'positive'
-    case 'in progress':
-      return 'warning'
-    case 'not started':
-      return 'grey'
-    case 'rejected':
-      return 'negative'
-    default:
-      return 'grey'
+  const colors: Record<string, string> = {
+    Applied: 'blue',
+    Interview: 'orange',
+    Offer: 'green',
+    Rejected: 'red',
+    Draft: 'grey'
   }
+  return colors[status] || 'grey'
 }
 
-const loadApplications = async () => {
-  loading.value = true
-  try {
-    // TODO: Implement API call
-    // For now, using mock data
-    await new Promise(resolve => setTimeout(resolve, 500)) // Simulate API delay
-    applications.value = [
-      {
-        scholarshipId: '1',
-        scholarshipName: 'STEM Excellence Scholarship',
-        company: 'Tech Foundation',
-        amount: 10000,
-        dueDate: '2024-05-01',
-        status: 'In Progress',
-        currentAction: 'Complete Essay'
-      },
-      {
-        scholarshipId: '2',
-        scholarshipName: 'Arts Achievement Award',
-        company: 'Creative Arts Society',
-        amount: 5000,
-        dueDate: '2024-04-15',
-        status: 'Not Started',
-        currentAction: 'Start Application'
-      }
-    ]
-  } catch (err) {
-    console.error('Failed to load applications:', err)
-    $q.notify({
-      color: 'negative',
-      message: 'Failed to load applications'
-    })
-  } finally {
-    loading.value = false
+const openApplicationForm = () => {
+  editingApplication.value = null
+  applicationForm.value = {
+    companyName: '',
+    position: '',
+    status: '',
+    openDate: '',
+    dueDate: '',
+    notes: ''
   }
+  showApplicationForm.value = true
+}
+
+const editApplication = (application: Application) => {
+  editingApplication.value = application
+  applicationForm.value = { ...application }
+  showApplicationForm.value = true
 }
 
 const confirmDelete = (application: Application) => {
-  applicationToDelete.value = application
-  deleteDialog.value = true
+  $q.dialog({
+    title: 'Confirm',
+    message: 'Are you sure you want to delete this application?',
+    cancel: true,
+    persistent: true
+  }).onOk(() => {
+    deleteApplication(application)
+  })
 }
 
-const deleteApplication = async () => {
-  if (!applicationToDelete.value) return
+const deleteApplication = (application: Application) => {
+  applications.value = applications.value.filter(app => app.id !== application.id)
+  $q.notify({
+    color: 'positive',
+    message: 'Application deleted successfully'
+  })
+}
 
-  try {
-    // TODO: Implement API call
-    await new Promise(resolve => setTimeout(resolve, 500)) // Simulate API delay
-    applications.value = applications.value.filter(
-      app => app.scholarshipId !== applicationToDelete.value?.scholarshipId
-    )
-    $q.notify({
-      color: 'positive',
-      message: 'Application deleted successfully'
-    })
-  } catch (err) {
-    console.error('Failed to delete application:', err)
-    $q.notify({
-      color: 'negative',
-      message: 'Failed to delete application'
-    })
+const onSubmit = () => {
+  if (editingApplication.value) {
+    const index = applications.value.findIndex(app => app.id === editingApplication.value?.id)
+    if (index !== -1) {
+      applications.value[index] = {
+        ...editingApplication.value,
+        ...applicationForm.value
+      } as Application
+    }
+  } else {
+    applications.value.push({
+      id: Date.now().toString(),
+      ...applicationForm.value
+    } as Application)
   }
+  
+  showApplicationForm.value = false
+  $q.notify({
+    color: 'positive',
+    message: `Application ${editingApplication.value ? 'updated' : 'created'} successfully`
+  })
 }
-
-onMounted(() => {
-  void loadApplications()
-})
 </script> 
