@@ -63,8 +63,9 @@ export default defineConfig((/* ctx */) => {
       // polyfillModulePreload: true,
       // distDir
 
-      // extendViteConf (viteConf) {},
-      // viteVuePluginOptions: {},
+      extendViteConf (viteConf) {
+        viteConf.publicDir = 'public'
+      },
       
       vitePlugins: [
         ['vite-plugin-checker', {
