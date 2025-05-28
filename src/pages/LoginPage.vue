@@ -120,7 +120,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
-import { useAuthStore } from 'stores/auth'
+import { useAuthStore } from 'stores/auth.store'
 
 const $q = useQuasar()
 const router = useRouter()

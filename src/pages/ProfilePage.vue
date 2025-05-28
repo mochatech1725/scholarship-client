@@ -113,7 +113,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
-import { useAuthStore } from 'stores/auth'
+import { useAuthStore } from 'stores/auth.store'
 
 interface Profile {
   firstName: string
