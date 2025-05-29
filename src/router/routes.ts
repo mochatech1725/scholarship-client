@@ -16,6 +16,8 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true },
     children: [
       { path: 'applications', component: () => import('pages/ApplicationsPage.vue') },
+      { path: 'application-form', component: () => import('pages/ApplicationFormPage.vue') },
+      { path: 'application-form/:id', component: () => import('pages/ApplicationFormPage.vue') },
       { path: 'scholarships', component: () => import('pages/ScholarshipsPage.vue') },
       { path: 'profile', component: () => import('pages/ProfilePage.vue') }
     ]

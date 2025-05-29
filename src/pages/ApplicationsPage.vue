@@ -6,7 +6,7 @@
         color="primary"
         icon="add"
         label="New Application"
-        @click="openApplicationForm"
+        to="/application-form"
       />
     </div>
 
@@ -69,7 +69,7 @@
               round
               color="primary"
               icon="edit"
-              @click="editApplication(props.row)"
+              :to="`/application-form/${props.row.id}`"
             />
             <q-btn
               flat
@@ -82,63 +82,6 @@
         </template>
       </q-table>
     </q-card>
-
-    <!-- Application Form Dialog -->
-    <q-dialog v-model="showApplicationForm" persistent>
-      <q-card style="min-width: 350px">
-        <q-card-section>
-          <div class="text-h6">{{ editingApplication ? 'Edit' : 'New' }} Application</div>
-        </q-card-section>
-
-        <q-card-section>
-          <q-form @submit="onSubmit" class="q-gutter-md">
-            <q-input
-              v-model="applicationForm.companyName"
-              label="Company Name"
-              :rules="[val => !!val || 'Company name is required']"
-            />
-
-            <q-input
-              v-model="applicationForm.position"
-              label="Position"
-              :rules="[val => !!val || 'Position is required']"
-            />
-
-            <q-select
-              v-model="applicationForm.status"
-              :options="statusOptions"
-              label="Status"
-              :rules="[val => !!val || 'Status is required']"
-            />
-
-            <q-input
-              v-model="applicationForm.openDate"
-              label="Open Date"
-              type="date"
-              :rules="[val => !!val || 'Open date is required']"
-            />
-
-            <q-input
-              v-model="applicationForm.dueDate"
-              label="Due Date"
-              type="date"
-              :rules="[val => !!val || 'Due date is required']"
-            />
-
-            <q-input
-              v-model="applicationForm.notes"
-              label="Notes"
-              type="textarea"
-            />
-          </q-form>
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat label="Cancel" color="primary" v-close-popup />
-          <q-btn flat label="Save" color="primary" @click="onSubmit" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
   </q-page>
 </template>
 
@@ -150,7 +93,6 @@ import type { QTableColumn } from 'quasar'
 interface Application {
   id: string
   companyName: string
-  position: string
   status: string
   openDate: string
   dueDate: string
@@ -159,14 +101,11 @@ interface Application {
 
 const $q = useQuasar()
 const loading = ref(false)
-const showApplicationForm = ref(false)
-const editingApplication = ref<Application | null>(null)
 
 const applications = ref<Application[]>([
   {
     id: '1',
     companyName: 'Google',
-    position: 'Software Engineer',
     status: 'Applied',
     openDate: '2024-03-01',
     dueDate: '2024-04-01',
@@ -185,7 +124,6 @@ const dateRangeOptions = ['Last 7 days', 'Last 30 days', 'Last 90 days']
 
 const columns: QTableColumn[] = [
   { name: 'companyName', label: 'Company', field: 'companyName', sortable: true, align: 'left' },
-  { name: 'position', label: 'Position', field: 'position', sortable: true, align: 'left' },
   { name: 'status', label: 'Status', field: 'status', sortable: true, align: 'left' },
   { name: 'openDate', label: 'Open Date', field: 'openDate', sortable: true, align: 'left' },
   { name: 'dueDate', label: 'Due Date', field: 'dueDate', sortable: true, align: 'left' },
@@ -197,15 +135,6 @@ const pagination = ref({
   descending: true,
   page: 1,
   rowsPerPage: 10
-})
-
-const applicationForm = ref<Partial<Application>>({
-  companyName: '',
-  position: '',
-  status: '',
-  openDate: '',
-  dueDate: '',
-  notes: ''
 })
 
 const filteredApplications = computed(() => {
@@ -228,25 +157,6 @@ const getStatusColor = (status: string) => {
   return colors[status] || 'grey'
 }
 
-const openApplicationForm = () => {
-  editingApplication.value = null
-  applicationForm.value = {
-    companyName: '',
-    position: '',
-    status: '',
-    openDate: '',
-    dueDate: '',
-    notes: ''
-  }
-  showApplicationForm.value = true
-}
-
-const editApplication = (application: Application) => {
-  editingApplication.value = application
-  applicationForm.value = { ...application }
-  showApplicationForm.value = true
-}
-
 const confirmDelete = (application: Application) => {
   $q.dialog({
     title: 'Confirm',
@@ -263,29 +173,6 @@ const deleteApplication = (application: Application) => {
   $q.notify({
     color: 'positive',
     message: 'Application deleted successfully'
-  })
-}
-
-const onSubmit = () => {
-  if (editingApplication.value) {
-    const index = applications.value.findIndex(app => app.id === editingApplication.value?.id)
-    if (index !== -1) {
-      applications.value[index] = {
-        ...editingApplication.value,
-        ...applicationForm.value
-      } as Application
-    }
-  } else {
-    applications.value.push({
-      id: Date.now().toString(),
-      ...applicationForm.value
-    } as Application)
-  }
-  
-  showApplicationForm.value = false
-  $q.notify({
-    color: 'positive',
-    message: `Application ${editingApplication.value ? 'updated' : 'created'} successfully`
   })
 }
 </script> 
