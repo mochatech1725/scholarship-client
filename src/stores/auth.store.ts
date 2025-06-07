@@ -1,45 +1,41 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed } from 'vue'
+import { useAuth0 } from '@auth0/auth0-vue'
 
 interface User {
   personId: string
   firstName: string
   lastName: string
   emailAddress: string
-  phoneNumber?: string
+  phoneNumber?: string | undefined
 }
 
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref<User | null>(null)
-  const token = ref<string | null>(null)
-  const isAuthenticated = ref(false)
+  const auth0 = useAuth0()
 
-  const login = async (email: string, password: string) => {
+  const userInfo = computed<User | null>(() => {
+    if (!auth0?.user?.value) return null
+    const user = auth0.user.value
+    return {
+      personId: user.sub || '',
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
+      emailAddress: user.email || '',
+      phoneNumber: user.phoneNumber
+    }
+  })
+
+  const isAuthenticated = computed(() => {
+    return auth0?.isAuthenticated?.value ?? false
+  })
+
+  const login = async () => {
+    if (!auth0) {
+      console.error('Auth0 not initialized')
+      return false
+    }
     try {
-      // TODO: Implement actual API call
-      // For now, just mock the response
-      await new Promise(resolve => setTimeout(resolve, 500)) // Simulate API delay
-      
-      // Validate credentials (mock)
-      if (password.length < 8) {
-        throw new Error('Invalid credentials')
-      }
-      
-      const mockUser: User = {
-        personId: '1',
-        firstName: 'John',
-        lastName: 'Doe',
-        emailAddress: email,
-        phoneNumber: '123-456-7890'
-      }
-      
-      user.value = mockUser
-      token.value = 'mock-token'
-      isAuthenticated.value = true
-      
-      // Store token in localStorage
-      localStorage.setItem('token', 'mock-token')
-      
+      await auth0.loginWithRedirect()
       return true
     } catch (err) {
       console.error('Login failed:', err)
@@ -47,53 +43,41 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  const register = async (userData: Omit<User, 'personId'>) => {
+  const logout = async () => {
+    if (!auth0) {
+      console.error('Auth0 not initialized')
+      return
+    }
     try {
-      // TODO: Implement actual API call
-      // For now, just mock the response
-      await new Promise(resolve => setTimeout(resolve, 500)) // Simulate API delay
-      const mockUser: User = {
-        personId: '1',
-        ...userData
-      }
-      
-      user.value = mockUser
-      token.value = 'mock-token'
-      isAuthenticated.value = true
-      
-      // Store token in localStorage
-      localStorage.setItem('token', 'mock-token')
-      
-      return true
+      await auth0.logout({
+        logoutParams: {
+          returnTo: window.location.origin
+        }
+      })
     } catch (err) {
-      console.error('Registration failed:', err)
-      return false
+      console.error('Logout failed:', err)
     }
   }
 
-  const logout = () => {
-    user.value = null
-    token.value = null
-    isAuthenticated.value = false
-    localStorage.removeItem('token')
-  }
-
-  const checkAuth = () => {
-    const storedToken = localStorage.getItem('token')
-    if (storedToken) {
-      token.value = storedToken
-      isAuthenticated.value = true
-      // TODO: Implement actual API call to get user data
+  const getToken = async () => {
+    if (!auth0) {
+      console.error('Auth0 not initialized')
+      return null
+    }
+    try {
+      const token = await auth0.getAccessTokenSilently()
+      return token
+    } catch (err) {
+      console.error('Failed to get token:', err)
+      return null
     }
   }
 
   return {
-    user,
-    token,
+    user: userInfo,
     isAuthenticated,
     login,
-    register,
     logout,
-    checkAuth
+    getToken
   }
 }) 

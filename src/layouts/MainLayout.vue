@@ -140,11 +140,19 @@ const toggleLeftDrawer = () => {
 }
 
 const onLogout = async () => {
-  authStore.logout()
-  await router.push('/login')
-  $q.notify({
-    color: 'positive',
-    message: 'Logged out successfully'
-  })
+  try {
+    await authStore.logout()
+    await router.push('/login')
+    $q.notify({
+      color: 'positive',
+      message: 'Logged out successfully'
+    })
+  } catch (err) {
+    console.error('Logout failed:', err)
+    $q.notify({
+      color: 'negative',
+      message: 'Logout failed'
+    })
+  }
 }
 </script>

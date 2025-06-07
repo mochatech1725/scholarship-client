@@ -6,8 +6,9 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', redirect: '/login' },
-      { path: 'login', component: () => import('pages/LoginPage.vue') },
-      { path: 'register', component: () => import('pages/RegisterPage.vue') }
+      { path: 'login', component: () => import('pages/LoginPage.vue'), meta: { requiresAuth: false } },
+      { path: 'register', component: () => import('pages/RegisterPage.vue'), meta: { requiresAuth: false } },
+      { path: 'callback', component: () => import('pages/CallbackPage.vue'), meta: { requiresAuth: false } }
     ]
   },
   {
@@ -15,16 +16,17 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/DashboardLayout.vue'),
     meta: { requiresAuth: true },
     children: [
-      { path: 'applications', component: () => import('pages/ApplicationsPage.vue') },
-      { path: 'application-form', component: () => import('pages/ApplicationFormPage.vue') },
-      { path: 'application-form/:id', component: () => import('pages/ApplicationFormPage.vue') },
-      { path: 'scholarships', component: () => import('pages/ScholarshipsPage.vue') },
-      { path: 'profile', component: () => import('pages/ProfilePage.vue') }
+      { path: 'applications', component: () => import('pages/ApplicationsPage.vue'), meta: { requiresAuth: true } },
+      { path: 'application-form', component: () => import('pages/ApplicationFormPage.vue'), meta: { requiresAuth: true } },
+      { path: 'application-form/:id', component: () => import('pages/ApplicationFormPage.vue'), meta: { requiresAuth: true } },
+      { path: 'scholarships', component: () => import('pages/ScholarshipsPage.vue'), meta: { requiresAuth: true } },
+      { path: 'profile', component: () => import('pages/ProfilePage.vue'), meta: { requiresAuth: true } }
     ]
   },
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue')
+    component: () => import('pages/ErrorNotFound.vue'),
+    meta: { requiresAuth: false }
   }
 ]
 

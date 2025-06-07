@@ -29,12 +29,22 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { useAuthStore } from 'stores/auth.store'
+import { useQuasar } from 'quasar'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const $q = useQuasar()
 
 const logout = async () => {
-  authStore.logout()
-  await router.push('/login')
+  try {
+    await authStore.logout()
+    await router.push('/login')
+  } catch (err) {
+    console.error('Logout failed:', err)
+    $q.notify({
+      color: 'negative',
+      message: 'Logout failed'
+    })
+  }
 }
 </script> 

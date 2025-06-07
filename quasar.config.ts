@@ -7,7 +7,8 @@ export default defineConfig((/* ctx */) => {
   return {
 
     boot: [
-      'axios'
+      'axios',
+      'auth0'
     ],
 
     css: [
@@ -33,20 +34,6 @@ export default defineConfig((/* ctx */) => {
       },
 
       vueRouterMode: 'hash', // available values: 'hash', 'history'
-      // vueRouterBase,
-      // vueDevtools,
-      // vueOptionsAPI: false,
-
-      // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
-
-      // publicPath: '/',
-      // analyze: true,
-      // env: {},
-      // rawDefine: {}
-      // ignorePublicFolder: true,
-      // minify: false,
-      // polyfillModulePreload: true,
-      // distDir
 
       extendViteConf (viteConf) {
         viteConf.publicDir = 'public'
