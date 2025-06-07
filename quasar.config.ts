@@ -64,14 +64,12 @@ export default defineConfig((/* ctx */) => {
     },
 
     devServer: {
-      // https: true,
       open: true // opens browser window automatically
     },
 
     framework: {
       config: {},
 
-      // iconSet: 'material-icons', // Quasar icon set
       // Quasar plugins
       plugins: [
         'Notify',
@@ -113,7 +111,6 @@ export default defineConfig((/* ctx */) => {
     },
 
     bex: {
-
       extraScripts: []
     }
   }
