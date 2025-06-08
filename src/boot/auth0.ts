@@ -3,13 +3,13 @@ import { createAuth0 } from '@auth0/auth0-vue'
 import type { CacheLocation, Auth0VueClient } from '@auth0/auth0-vue'
 
 // Debug environment variables
-console.log('Auth0 Configuration:', {
-  domain: import.meta.env.VITE_AUTH0_DOMAIN,
-  clientId: import.meta.env.VITE_AUTH0_CLIENT_ID,
-  callbackUrl: import.meta.env.VITE_AUTH0_CALLBACK_URL,
-  origin: window.location.origin,
-  href: window.location.href
-})
+// console.log('Auth0 Configuration:', {
+//   domain: import.meta.env.VITE_AUTH0_DOMAIN,
+//   clientId: import.meta.env.VITE_AUTH0_CLIENT_ID,
+//   callbackUrl: import.meta.env.VITE_AUTH0_CALLBACK_URL,
+//   origin: window.location.origin,
+//   href: window.location.href
+// })
 
 const auth0Config = {
   domain: import.meta.env.VITE_AUTH0_DOMAIN,

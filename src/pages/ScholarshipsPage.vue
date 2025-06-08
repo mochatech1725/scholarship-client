@@ -1,11 +1,11 @@
 <template>
   <q-page padding>
-    <div class="text-h5 q-mb-lg">Scholarships</div>
+    <div class="text-h5 q-mb-lg">Search Scholarships</div>
 
     <!-- Search Section -->
     <q-card class="q-mb-lg">
       <q-card-section>
-        <div class="text-h6 q-mb-md">Search Scholarships</div>
+        <div class="text-h6 q-mb-md">Filter</div>
         <div class="row q-col-gutter-md">
           <div class="col-12 col-sm-6 col-md-3">
             <q-input
