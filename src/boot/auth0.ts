@@ -2,16 +2,19 @@ import { boot } from 'quasar/wrappers'
 import { createAuth0 } from '@auth0/auth0-vue'
 
 // Debug environment variables
-console.log('Auth0 Domain:', import.meta.env.VITE_AUTH0_DOMAIN)
-console.log('Auth0 Client ID:', import.meta.env.VITE_AUTH0_CLIENT_ID)
-console.log('Auth0 Callback URL:', import.meta.env.VITE_AUTH0_CALLBACK_URL)
+console.log('Environment Variables:', {
+  domain: import.meta.env.VITE_AUTH0_DOMAIN,
+  clientId: import.meta.env.VITE_AUTH0_CLIENT_ID,
+  callbackUrl: import.meta.env.VITE_AUTH0_CALLBACK_URL,
+  origin: window.location.origin,
+  href: window.location.href
+})
 
 const auth0Config = {
   domain: import.meta.env.VITE_AUTH0_DOMAIN,
   clientId: import.meta.env.VITE_AUTH0_CLIENT_ID,
   authorizationParams: {
-    redirect_uri: import.meta.env.VITE_AUTH0_CALLBACK_URL,
-    screen_hint: "signup",
+    redirect_uri: import.meta.env.VITE_AUTH0_CALLBACK_URL
   }
 }
 

@@ -49,6 +49,9 @@ const handleLogin = async () => {
     await auth0.loginWithRedirect({
       appState: { 
         target: '/applications'
+      },
+      authorizationParams: {
+        screen_hint: 'login'
       }
     })
   } catch (error) {

@@ -30,18 +30,31 @@ import { useAuth0 } from '@auth0/auth0-vue'
 const $q = useQuasar()
 const auth0 = useAuth0()
 
-const onSignUp = () => {
+const onSignUp = async () => {
   try {
-    void auth0.loginWithRedirect({
+    console.log('Starting signup process...')
+    console.log('Current URL:', window.location.href)
+    console.log('Auth0 Callback URL:', import.meta.env.VITE_AUTH0_CALLBACK_URL)
+    
+    await auth0.loginWithRedirect({
+      appState: { 
+        target: '/applications'
+      },
       authorizationParams: {
-        screen_hint: 'signup'
+        screen_hint: 'signup',
+        redirect_uri: import.meta.env.VITE_AUTH0_CALLBACK_URL
       }
     })
-  } catch (err) {
+  } catch (err: unknown) {
     console.error('Sign up failed:', err)
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+    console.error('Error details:', {
+      message: errorMessage,
+      stack: err instanceof Error ? err.stack : undefined
+    })
     $q.notify({
       color: 'negative',
-      message: 'Sign up failed'
+      message: `Sign up failed: ${errorMessage}`
     })
   }
 }
