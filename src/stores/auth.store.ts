@@ -29,19 +29,15 @@ export const useAuthStore = defineStore('auth', () => {
   })
 
   const isAuthenticated = computed(() => {
-
     if (!isInitialized.value) return false
     return auth0?.isAuthenticated?.value ?? false
   })
 
-  const initialize = () => {
-
-    // Don't re-initialize if already initialized
-    if (isInitialized.value) {
-      return
-    }
+  const initialize = async () => {
+    if (isInitialized.value) return
 
     try {
+      await waitForAuth0Initialization(auth0)
       isInitialized.value = true
     } catch (err) {
       console.error('Failed to initialize auth store:', err)
@@ -50,10 +46,10 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const handleCallback = async () => {
-   
     try {
       await waitForAuth0Initialization(auth0)
-      return isInitialized.value = true
+      isInitialized.value = true
+      return true
     } catch (err) {
       console.error('Failed to handle callback:', err)
       return false
@@ -61,9 +57,8 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const login = async () => {
-    if (!auth0) {
-      return false
-    }
+    if (!auth0) return false
+
     try {
       isLoggingIn.value = true
       await auth0.loginWithRedirect({
@@ -81,14 +76,10 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const logout = async () => {
-   
+    if (!auth0) return
+
     try {
       isInitialized.value = false
-  
-      if (!auth0) {
-        return
-      }
-
       await auth0.logout({
         logoutParams: {
           returnTo: window.location.origin
@@ -96,19 +87,14 @@ export const useAuthStore = defineStore('auth', () => {
       })
     } catch (err) {
       console.error('Logout failed:', err)
-    } finally {
-      console.log('Auth store - Logging out complete')
     }
   }
 
   const getToken = async () => {
-    if (!auth0) {
-      console.error('Auth0 not initialized')
-      return null
-    }
+    if (!auth0) return null
+
     try {
-      const token = await auth0.getAccessTokenSilently()
-      return token
+      return await auth0.getAccessTokenSilently()
     } catch (err) {
       console.error('Failed to get token:', err)
       return null

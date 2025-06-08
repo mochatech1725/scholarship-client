@@ -6,6 +6,7 @@ import {
 } from 'vue-router';
 import routes from './routes';
 import { useAuth0 } from '@auth0/auth0-vue';
+import { watch } from 'vue';
 
 const createHistory = process.env.SERVER
   ? createMemoryHistory
@@ -20,37 +21,34 @@ const router = createRouter({
 // Public routes that don't require authentication
 const publicRoutes = ['/login', '/register', '/callback'];
 
-router.beforeEach( (to, from, next) => {
-
+router.beforeEach(async (to, from, next) => {
   const auth0 = useAuth0();
 
-  // Handle root path
+  // Wait for Auth0 to finish loading
+  if (auth0.isLoading.value) {
+    await new Promise<void>(resolve => {
+      const unwatch = watch(auth0.isLoading, (loading) => {
+        if (!loading) {
+          unwatch();
+          resolve();
+        }
+      });
+    });
+  }
+
+  // Redirect root to appropriate page
   if (to.path === '/') {
-    const target = auth0.isAuthenticated.value ? '/dashboard/applications' : '/login';
-    return next(target);
+    return next(auth0.isAuthenticated.value ? '/dashboard/applications' : '/login');
   }
 
   // Allow access to public routes
-  if (publicRoutes.includes(to.path)) {
+  if (auth0.isAuthenticated.value || publicRoutes.includes(to.path) || !to.matched.some(record => record.meta.requiresAuth)) {
     return next();
   }
 
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-  
-  if (!requiresAuth) {
-    return next();
-  }
-
-  if (auth0.isAuthenticated.value) {
-    return next();
-  }
-
-  // Only include redirect parameter if we're not coming from a logout
+  // Redirect to login
   const isLogout = from.path.startsWith('/dashboard');
-  if (isLogout) {
-    return next('/login');
-  }
-  return next({ path: '/login', query: { redirect: to.fullPath } });
+  return next(isLogout ? '/login' : { path: '/login', query: { redirect: to.fullPath } });
 });
 
 export default router; 
