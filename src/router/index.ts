@@ -5,8 +5,8 @@ import {
   createWebHistory,
 } from 'vue-router';
 import routes from './routes';
-import { useAuthStore } from 'stores/auth.store';
-import { storeToRefs } from 'pinia';
+import { useAuth0 } from '@auth0/auth0-vue';
+import { watch } from 'vue';
 
 const createHistory = process.env.SERVER
   ? createMemoryHistory
@@ -21,39 +21,55 @@ const router = createRouter({
 // Public routes that don't require authentication
 const publicRoutes = ['/login', '/register', '/callback'];
 
-router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore();
-  const { isAuthenticated } = storeToRefs(authStore);
+router.beforeEach(async (to, from, next) => {
+  const auth0 = useAuth0();
 
-  // if (isAuthenticated.value && publicRoutes.includes(to.path)) {
-  //   return next('/dashboard/applications');
-  // }
+  // Wait for Auth0 to finish loading
+  if (auth0.isLoading.value) {
+    console.log('Auth0 is loading, waiting...');
+    await new Promise(resolve => {
+      const unwatch = watch(auth0.isLoading, (isLoading) => {
+        if (!isLoading) {
+          unwatch();
+          resolve(true);
+        }
+      });
+    });
+  }
 
+  console.log('Router guard - Auth0 state:', {
+    isAuthenticated: auth0.isAuthenticated.value,
+    isLoading: auth0.isLoading.value,
+    path: to.path
+  });
+
+  // Handle root path
   if (to.path === '/') {
-    return next(isAuthenticated.value ? '/dashboard/applications' : '/login');
+    return next(auth0.isAuthenticated.value ? '/dashboard/applications' : '/login');
+  }
+
+  // Allow access to public routes
+  if (publicRoutes.includes(to.path)) {
+    return next();
   }
 
   // Check if the route requires authentication
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   
-  if (!requiresAuth || publicRoutes.includes(to.path)) {
-    next();
-    return;
+  if (!requiresAuth) {
+    return next();
   }
 
-  // For protected routes, check if we're in a callback
-  if (to.path === '/callback') {
-    next();
-    return;
+  // For protected routes, check authentication
+  if (auth0.isAuthenticated.value) {
+    return next();
   }
 
-  // Check if user is authenticated
-  if (isAuthenticated.value) {
-    next();
-  } else {
-    // Redirect to login without query parameters
-    next('/login');
-  }
+  // If not authenticated, redirect to login
+  return next({
+    path: '/login',
+    query: { redirect: to.fullPath }
+  });
 });
 
 export default router; 

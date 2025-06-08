@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useAuth0 } from '@auth0/auth0-vue'
 
 interface User {
@@ -12,6 +12,7 @@ interface User {
 
 export const useAuthStore = defineStore('auth', () => {
   const auth0 = useAuth0()
+  const isInitialized = ref(false)
 
   const userInfo = computed<User | null>(() => {
     if (!auth0?.user?.value) return null
@@ -26,12 +27,54 @@ export const useAuthStore = defineStore('auth', () => {
   })
 
   const isAuthenticated = computed(() => {
+    if (!isInitialized.value) return false
     return auth0?.isAuthenticated?.value ?? false
   })
 
+  const initialize = async () => {
+    if (isInitialized.value) return
+
+    try {
+      console.log('Initializing auth store...')
+      
+      // Wait for Auth0 to finish loading
+      while (auth0.isLoading.value) {
+        console.log('Auth store - Waiting for Auth0 to finish loading...')
+        await new Promise(resolve => setTimeout(resolve, 100))
+      }
+
+      // Force a session check
+      await auth0.checkSession()
+      console.log('Auth store - Session checked')
+
+      // Wait for authentication state to be properly set
+      let attempts = 0
+      const maxAttempts = 20
+      while (!auth0.isAuthenticated.value && attempts < maxAttempts) {
+        console.log('Auth store - Waiting for authentication state...', {
+          attempt: attempts + 1,
+          isAuthenticated: auth0.isAuthenticated.value,
+          isLoading: auth0.isLoading.value,
+          user: auth0.user.value
+        })
+        await new Promise(resolve => setTimeout(resolve, 250))
+        attempts++
+      }
+
+      isInitialized.value = true
+      console.log('Auth store initialized:', {
+        isAuthenticated: auth0.isAuthenticated.value,
+        user: auth0.user.value
+      })
+    } catch (err) {
+      console.error('Failed to initialize auth store:', err)
+      throw err
+    }
+  }
+
   const login = async () => {
     if (!auth0) {
-      console.error('Auth0 not initialized')
+      console.log('auth.store - auth0 not initialized')
       return false
     }
     try {
@@ -80,6 +123,8 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     user: userInfo,
     isAuthenticated,
+    isInitialized,
+    initialize,
     login,
     logout,
     getToken

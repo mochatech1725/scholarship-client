@@ -46,6 +46,7 @@ onMounted(async () => {
 const handleLogin = async () => {
   try {
     isLoading.value = true
+
     const targetUrl = route.query.redirect as string || '/dashboard/applications'
     console.log('Login initiated, target URL:', targetUrl)
     

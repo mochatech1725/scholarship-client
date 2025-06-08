@@ -8,24 +8,29 @@
 import { onMounted } from 'vue'
 import { useAuth0 } from '@auth0/auth0-vue'
 import { useQuasar } from 'quasar'
+import { useAuthStore } from 'stores/auth.store'
 
 const $q = useQuasar()
 const auth0 = useAuth0()
+const authStore = useAuthStore()
 
 onMounted(async () => {
   try {
-    // Wait for Auth0 to be initialized
-    if (auth0 && !auth0.isLoading.value) {
-      await auth0.checkSession()
-      console.log('Session checked')
-    } else {
-      console.log('Waiting for Auth0 to initialize...')
-    }
+    // Initialize auth store
+    await authStore.initialize()
+    
+    // Log initial state
+    console.log('App mounted - Auth state:', {
+      isAuthenticated: auth0.isAuthenticated.value,
+      isLoading: auth0.isLoading.value,
+      user: auth0.user.value,
+      storeInitialized: authStore.isInitialized
+    })
   } catch (error) {
-    console.error('Error checking session:', error)
+    console.error('Error initializing auth:', error)
     $q.notify({
       type: 'negative',
-      message: 'Error checking authentication session'
+      message: 'Error initializing authentication'
     })
   }
 })

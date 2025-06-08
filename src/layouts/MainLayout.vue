@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Scholarship Tracker
+          Scholarship Application Tracker
         </q-toolbar-title>
 
         <q-btn-dropdown

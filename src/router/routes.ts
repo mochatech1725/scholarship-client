@@ -16,7 +16,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/DashboardLayout.vue'),
     meta: { requiresAuth: true },
     children: [
-      // { path: '', redirect: '/dashboard/applications' },
+      { path: '', redirect: '/dashboard/applications' },
       { path: 'applications', component: () => import('pages/ApplicationsPage.vue'), meta: { requiresAuth: true } },
       { path: 'application-form', component: () => import('pages/ApplicationFormPage.vue'), meta: { requiresAuth: true } },
       { path: 'application-form/:id', component: () => import('pages/ApplicationFormPage.vue'), meta: { requiresAuth: true } },
