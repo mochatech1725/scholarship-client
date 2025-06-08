@@ -125,12 +125,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from 'stores/auth.store'
 
 const $q = useQuasar()
-const router = useRouter()
 const authStore = useAuthStore()
 
 const leftDrawerOpen = ref(false)
@@ -141,8 +139,9 @@ const toggleLeftDrawer = () => {
 
 const onLogout = async () => {
   try {
+    console.log('MainLayout - Logging out')
     await authStore.logout()
-    await router.push('/login')
+    window.location.href = '/login'
     $q.notify({
       color: 'positive',
       message: 'Logged out successfully'

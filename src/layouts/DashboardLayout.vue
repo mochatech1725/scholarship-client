@@ -11,7 +11,7 @@
               <q-item clickable v-close-popup to="/dashboard/profile">
                 <q-item-section>Profile</q-item-section>
               </q-item>
-              <q-item clickable v-close-popup @click="logout">
+              <q-item clickable v-close-popup @click="onLogout">
                 <q-item-section>Logout</q-item-section>
               </q-item>
             </q-list>
@@ -21,24 +21,31 @@
     </q-header>
 
     <q-page-container>
-      <router-view />
+      <router-view v-if="isReady" />
+      <div v-else class="flex flex-center" style="height: 100vh">
+        <q-spinner-dots size="40px" color="primary" />
+      </div>
     </q-page-container>
   </q-layout>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
 import { useAuthStore } from 'stores/auth.store'
 import { useQuasar } from 'quasar'
-
-const router = useRouter()
 const authStore = useAuthStore()
 const $q = useQuasar()
+const isReady = ref(false)
 
-const logout = async () => {
+const onLogout = async () => {
   try {
+    console.log('DashboardLayout - Logging out')
     await authStore.logout()
-    await router.push('/login')
+    window.location.href = '/login'
+    $q.notify({
+      color: 'positive',
+      message: 'Logged out successfully'
+    })
   } catch (err) {
     console.error('Logout failed:', err)
     $q.notify({
@@ -47,4 +54,39 @@ const logout = async () => {
     })
   }
 }
+
+// Watch for authentication state changes
+// watch(
+//   () => authStore.isAuthenticated,
+//   async (isAuthenticated) => {
+//     console.log('DashboardLayout - Authentication state changed:', { isAuthenticated })
+//     if (!isAuthenticated && !authStore.isLoggingOut) {
+//       try {
+//         await router.push('/login')
+//       } catch (err) {
+//         console.error('Failed to redirect to login:', err)
+//       }
+//     }
+//   }
+// )
+
+// Initialize auth store
+onMounted(async () => {
+  try {
+    console.log('DashboardLayout mounted - Initializing auth store')
+    await authStore.initialize()
+    console.log('DashboardLayout - Auth store initialized:', {
+      isAuthenticated: authStore.isAuthenticated,
+      isInitialized: authStore.isInitialized,
+      user: authStore.user
+    })
+    isReady.value = true
+  } catch (err) {
+    console.error('Failed to initialize auth store:', err)
+    $q.notify({
+      color: 'negative',
+      message: 'Failed to initialize authentication'
+    })
+  }
+})
 </script> 
