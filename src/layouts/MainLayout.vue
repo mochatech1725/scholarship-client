@@ -44,7 +44,7 @@
           v-if="authStore.isAuthenticated"
           clickable
           v-ripple
-          to="/applications"
+          to="/dashboard/applications"
           exact
         >
           <q-item-section avatar>
@@ -59,7 +59,7 @@
           v-if="authStore.isAuthenticated"
           clickable
           v-ripple
-          to="/search"
+          to="/dashboard/scholarships"
           exact
         >
           <q-item-section avatar>
@@ -74,7 +74,7 @@
           v-if="authStore.isAuthenticated"
           clickable
           v-ripple
-          to="/profile"
+          to="/dashboard/profile"
           exact
         >
           <q-item-section avatar>

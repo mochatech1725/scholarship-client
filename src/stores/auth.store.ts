@@ -35,7 +35,11 @@ export const useAuthStore = defineStore('auth', () => {
       return false
     }
     try {
-      await auth0.loginWithRedirect()
+      await auth0.loginWithRedirect({
+        appState: { 
+          target: '/dashboard/applications'
+        }
+      })
       return true
     } catch (err) {
       console.error('Login failed:', err)

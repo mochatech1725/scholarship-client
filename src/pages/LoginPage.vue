@@ -31,7 +31,7 @@ onMounted(async () => {
   try {
     // Check if user is already authenticated
     if (auth0.isAuthenticated) {
-      const targetUrl = route.query.redirect as string || '/applications'
+      const targetUrl = route.query.redirect as string || '/dashboard/applications'
       await router.push(targetUrl)
     }
   } catch (error) {
@@ -46,9 +46,12 @@ onMounted(async () => {
 const handleLogin = async () => {
   try {
     isLoading.value = true
+    const targetUrl = route.query.redirect as string || '/dashboard/applications'
+    console.log('Login initiated, target URL:', targetUrl)
+    
     await auth0.loginWithRedirect({
       appState: { 
-        target: '/applications'
+        target: targetUrl
       },
       authorizationParams: {
         screen_hint: 'login'

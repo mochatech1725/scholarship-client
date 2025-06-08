@@ -5,6 +5,8 @@ import {
   createWebHistory,
 } from 'vue-router';
 import routes from './routes';
+import { useAuthStore } from 'stores/auth.store';
+import { storeToRefs } from 'pinia';
 
 const createHistory = process.env.SERVER
   ? createMemoryHistory
@@ -20,10 +22,20 @@ const router = createRouter({
 const publicRoutes = ['/login', '/register', '/callback'];
 
 router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore();
+  const { isAuthenticated } = storeToRefs(authStore);
+
+  // if (isAuthenticated.value && publicRoutes.includes(to.path)) {
+  //   return next('/dashboard/applications');
+  // }
+
+  if (to.path === '/') {
+    return next(isAuthenticated.value ? '/dashboard/applications' : '/login');
+  }
+
   // Check if the route requires authentication
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   
-  // If the route is public, allow access
   if (!requiresAuth || publicRoutes.includes(to.path)) {
     next();
     return;
@@ -35,8 +47,13 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
-  // For all other protected routes, redirect to login
-  next('/login');
+  // Check if user is authenticated
+  if (isAuthenticated.value) {
+    next();
+  } else {
+    // Redirect to login without query parameters
+    next('/login');
+  }
 });
 
 export default router; 

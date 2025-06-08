@@ -19,20 +19,29 @@ const $q = useQuasar()
 
 onMounted(async () => {
   try {
-    // Handle the callback
+    console.log('Handling Auth0 callback...')
+
     const { appState } = await auth0.handleRedirectCallback()
+    console.log('Auth0 callback handled, appState:', appState)
     
-    const targetUrl = appState?.targetUrl || '/applications'
+    await auth0.checkSession()
+    console.log('Auth0 session checked, isAuthenticated:', auth0.isAuthenticated.value)
     
-    // Redirect to the target URL
-    await router.push(targetUrl)
+    const targetUrl = appState?.target || '/dashboard/applications'
+    console.log('Redirecting to:', targetUrl)
+    
+    if (auth0.isAuthenticated.value) {
+      await router.push(targetUrl)
+    } else {
+      console.error('Not authenticated after callback')
+      await router.push('/login')
+    }
   } catch (error) {
     console.error('Error handling callback:', error)
     $q.notify({
       type: 'negative',
       message: 'Error completing login'
     })
-    // Redirect to login page on error
     await router.push('/login')
   }
 })

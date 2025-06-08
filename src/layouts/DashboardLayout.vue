@@ -3,12 +3,12 @@
     <q-header elevated class="bg-primary text-white">
       <q-toolbar>
         <q-toolbar-title>
-          Scholarship Tracker
+          Scholarship Application Tracker
         </q-toolbar-title>
         <q-btn flat round dense icon="person" class="q-ml-sm">
           <q-menu>
             <q-list style="min-width: 100px">
-              <q-item clickable v-close-popup to="/profile">
+              <q-item clickable v-close-popup to="/dashboard/profile">
                 <q-item-section>Profile</q-item-section>
               </q-item>
               <q-item clickable v-close-popup @click="logout">
