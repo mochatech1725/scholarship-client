@@ -34,7 +34,6 @@ const handleCallback = async () => {
 }
 
 onMounted(async () => {
-  console.log('Callback page mounted')
   await handleCallback()
 })
 </script> 

@@ -139,7 +139,6 @@ const toggleLeftDrawer = () => {
 
 const onLogout = async () => {
   try {
-    console.log('MainLayout - Logging out')
     await authStore.logout()
     window.location.href = '/login'
     $q.notify({

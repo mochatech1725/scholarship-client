@@ -14,7 +14,6 @@ const authStore = useAuthStore()
 
 onMounted(async () => {
   try {
-    console.log('App mounted - Initializing auth store')
     await authStore.initialize()
     
     // Log initial state

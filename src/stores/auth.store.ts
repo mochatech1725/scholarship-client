@@ -14,7 +14,6 @@ interface User {
 export const useAuthStore = defineStore('auth', () => {
   const auth0 = useAuth0()
   const isInitialized = ref(false)
-  const isLoggingOut = ref(false)
   const isLoggingIn = ref(false)
 
   const userInfo = computed<User | null>(() => {
@@ -30,47 +29,20 @@ export const useAuthStore = defineStore('auth', () => {
   })
 
   const isAuthenticated = computed(() => {
-    console.log('Checking isAuthenticated:', {
-      isInitialized: isInitialized.value,
-      isLoggingOut: isLoggingOut.value,
-      auth0Authenticated: auth0?.isAuthenticated?.value
-    })
-    if (!isInitialized.value || isLoggingOut.value) return false
+
+    if (!isInitialized.value) return false
     return auth0?.isAuthenticated?.value ?? false
   })
 
-  const initialize = async () => {
-    console.log('Auth store - Initialize called with state:', {
-      isLoggingOut: isLoggingOut.value,
-      isLoggingIn: isLoggingIn.value,
-      isInitialized: isInitialized.value,
-      isAuthenticated: auth0.isAuthenticated.value,
-      isLoading: auth0.isLoading.value,
-      user: auth0.user.value
-    })
+  const initialize = () => {
 
     // Don't re-initialize if already initialized
     if (isInitialized.value) {
-      console.log('Auth store - Already initialized')
-      return
-    }
-
-    // Don't initialize if we're logging out
-    if (isLoggingOut.value) {
-      console.log('Auth store - Not initializing because we are logging out')
       return
     }
 
     try {
-      console.log('Auth store - Waiting for Auth0 initialization')
-      await waitForAuth0Initialization(auth0)
       isInitialized.value = true
-      console.log('Auth store initialized:', {
-        isAuthenticated: auth0.isAuthenticated.value,
-        isLoading: auth0.isLoading.value,
-        user: auth0.user.value,
-        isInitialized: isInitialized.value
-      })
     } catch (err) {
       console.error('Failed to initialize auth store:', err)
       throw err
@@ -78,12 +50,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const handleCallback = async () => {
-    // Don't handle callback if we're logging out
-    if (isLoggingOut.value) {
-      console.log('Auth store - Not handling callback because we are logging out')
-      return false
-    }
-
+   
     try {
       await waitForAuth0Initialization(auth0)
       return isInitialized.value = true
@@ -95,7 +62,6 @@ export const useAuthStore = defineStore('auth', () => {
 
   const login = async () => {
     if (!auth0) {
-      console.log('auth.store - auth0 not initialized')
       return false
     }
     try {
@@ -117,12 +83,9 @@ export const useAuthStore = defineStore('auth', () => {
   const logout = async () => {
    
     try {
-      console.log('Auth store - Starting logout process')
-      isLoggingOut.value = true
       isInitialized.value = false
   
       if (!auth0) {
-        console.error('Auth0 not initialized')
         return
       }
 
@@ -134,7 +97,7 @@ export const useAuthStore = defineStore('auth', () => {
     } catch (err) {
       console.error('Logout failed:', err)
     } finally {
-      isLoggingOut.value = false
+      console.log('Auth store - Logging out complete')
     }
   }
 
@@ -156,7 +119,6 @@ export const useAuthStore = defineStore('auth', () => {
     user: userInfo,
     isAuthenticated,
     isInitialized,
-    isLoggingOut,
     isLoggingIn,
     initialize,
     login,

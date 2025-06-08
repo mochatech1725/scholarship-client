@@ -32,10 +32,6 @@ const auth0 = useAuth0()
 
 const onSignUp = async () => {
   try {
-    console.log('Starting signup process...')
-    console.log('Current URL:', window.location.href)
-    console.log('Auth0 Callback URL:', import.meta.env.VITE_AUTH0_CALLBACK_URL)
-    
     await auth0.loginWithRedirect({
       appState: { 
         target: '/applications'

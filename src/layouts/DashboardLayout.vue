@@ -39,7 +39,6 @@ const isReady = ref(false)
 
 const onLogout = async () => {
   try {
-    console.log('DashboardLayout - Logging out')
     await authStore.logout()
     window.location.href = '/login'
     $q.notify({
@@ -60,7 +59,7 @@ const onLogout = async () => {
 //   () => authStore.isAuthenticated,
 //   async (isAuthenticated) => {
 //     console.log('DashboardLayout - Authentication state changed:', { isAuthenticated })
-//     if (!isAuthenticated && !authStore.isLoggingOut) {
+//     if (!isAuthenticated) {
 //       try {
 //         await router.push('/login')
 //       } catch (err) {
@@ -73,13 +72,8 @@ const onLogout = async () => {
 // Initialize auth store
 onMounted(async () => {
   try {
-    console.log('DashboardLayout mounted - Initializing auth store')
     await authStore.initialize()
-    console.log('DashboardLayout - Auth store initialized:', {
-      isAuthenticated: authStore.isAuthenticated,
-      isInitialized: authStore.isInitialized,
-      user: authStore.user
-    })
+
     isReady.value = true
   } catch (err) {
     console.error('Failed to initialize auth store:', err)

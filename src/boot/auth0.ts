@@ -23,26 +23,19 @@ const auth0Config = {
   skipRedirectCallback: window.location.pathname === '/callback'
 }
 
+
 export const waitForAuth0Initialization = async (auth0: Auth0VueClient) => {
-  console.log('Auth0 - Starting initialization')
   
   while (auth0.isLoading.value) {
-    console.log('Auth0 - Waiting for Auth0 to finish loading...')
     await new Promise(resolve => setTimeout(resolve, 100))
   }
 
   await auth0.checkSession()
-  console.log('Auth0 - Session checked')
 
   let attempts = 0
   const maxAttempts = 20
   while (!auth0.isAuthenticated.value && attempts < maxAttempts) {
-    console.log('Auth0 - Waiting for authentication state...', {
-      attempt: attempts + 1,
-      isAuthenticated: auth0.isAuthenticated.value,
-      isLoading: auth0.isLoading.value,
-      user: auth0.user.value
-    })
+
     await new Promise(resolve => setTimeout(resolve, 250))
     attempts++
   }
@@ -55,11 +48,7 @@ export default boot(async ({ app }) => {
     app.use(auth0)
     
     await auth0.checkSession()
-    console.log('auth0-Initial Auth0 state:', {
-      isAuthenticated: auth0.isAuthenticated.value,
-      isLoading: auth0.isLoading.value,
-      user: auth0.user.value
-    })
+
   } catch (error) {
     console.error('Error initializing Auth0:', error)
   }
