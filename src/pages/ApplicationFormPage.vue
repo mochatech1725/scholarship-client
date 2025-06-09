@@ -31,7 +31,6 @@
                 v-model="form.targetType"
                 :options="targetTypeOptions"
                 label="Target Type"
-                :rules="rules.targetType"
                 outlined
               />
             </div>
@@ -40,7 +39,6 @@
               <q-input
                 v-model="form.company"
                 label="Organization"
-                :rules="rules.company"
                 outlined
               />
             </div>
@@ -49,7 +47,6 @@
               <q-input
                 v-model="form.companyWebsite"
                 label="Organization Website"
-                :rules="rules.companyWebsite"
                 outlined
                 type="url"
               />
@@ -59,7 +56,6 @@
               <q-input
                 v-model="form.applicationLink"
                 label="Application Link"
-                :rules="rules.applicationLink"
                 outlined
                 type="url"
               />
@@ -81,7 +77,6 @@
               <q-input
                 v-model="form.platform"
                 label="Platform"
-                :rules="rules.platform"
                 outlined
               />
             </div>
@@ -90,7 +85,6 @@
               <q-input
                 v-model="form.theme"
                 label="Theme"
-                :rules="rules.theme"
                 outlined
               />
             </div>
@@ -107,7 +101,6 @@
               <q-input
                 v-model="form.openDate"
                 label="Open Date"
-                :rules="rules.openDate"
                 outlined
                 type="date"
               />
@@ -127,7 +120,6 @@
               <q-input
                 v-model="form.submissionDate"
                 label="Submission Date"
-                :rules="rules.submissionDate"
                 outlined
                 type="date"
               />
@@ -147,7 +139,6 @@
               <q-input
                 v-model="form.currentAction"
                 label="Current Action"
-                :rules="rules.currentAction"
                 outlined
               />
             </div>
@@ -169,7 +160,6 @@
           <q-input
             v-model="form.requirements"
             label="Requirements"
-            :rules="rules.requirements"
             outlined
             type="textarea"
             autogrow
@@ -187,7 +177,7 @@
               color="primary"
               icon="add"
               label="Add Essay"
-              @click="addEssay"
+              :to="`/dashboard/essay-form/${form.scholarshipId}`"
             />
           </div>
 
@@ -213,7 +203,7 @@
                         round
                         color="primary"
                         icon="add"
-                        @click="addExistingEssay(props.row)"
+                        :to="`/dashboard/essay-form/${form.scholarshipId}`"
                         dense
                       />
                     </q-td>
@@ -235,7 +225,7 @@
               color="primary"
               icon="add"
               label="Add Recommendation"
-              @click="addRecommendation"
+              to="/dashboard/recommender-form"
             />
           </div>
 
@@ -366,7 +356,7 @@ import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'src/stores/application.store'
 import { useRecommenderStore } from 'src/stores/recommender.store'
 import { useEssayStore } from 'src/stores/essay.store'
-import type { Recommender, Application, Essay } from 'src/types'
+import type { Recommender, Application } from 'src/types'
 
 const route = useRoute()
 const router = useRouter()
@@ -445,75 +435,21 @@ const rules = {
     (val: string) => !!val || 'Company website is required',
     (val: string) => /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(val) || 'Please enter a valid website URL'
   ],
-  platform: [
-    (val: string) => !!val || 'Platform is required'
-  ],
   applicationLink: [
     (val: string) => !!val || 'Application link is required',
     (val: string) => /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(val) || 'Please enter a valid URL'
   ],
-  theme: [
-    (val: string) => !!val || 'Theme is required'
-  ],
   amount: [
+    (val: number) => !isNaN(val) || 'Amount must be a number',
     (val: number) => val >= 0 || 'Amount must be a positive number'
-  ],
-  requirements: [
-    (val: string) => !!val || 'Requirements are required'
-  ],
-  currentAction: [
-    (val: string) => !!val || 'Current action is required'
   ],
   status: [
     (val: string) => !!val || 'Status is required'
-  ],
-  submissionDate: [
-    (val: string) => !!val || 'Submission date is required'
-  ],
-  openDate: [
-    (val: string) => !!val || 'Open date is required'
   ],
   dueDate: [
     (val: string) => !!val || 'Due date is required'
   ]
 }
-
-const addEssay = () => {
-  form.value.essays.push({
-    scholarshipId: form.value.scholarshipId,
-    studentId: '',
-    count: '',
-    units: '',
-    theme: '',
-    essayLink: '',
-    created: new Date().toISOString()
-  })
-}
-
-const addExistingEssay = (essay: Essay) => {
-  form.value.essays.push({
-    ...essay,
-    scholarshipId: form.value.scholarshipId,
-    studentId: '',
-    created: new Date().toISOString()
-  })
-}
-
-// const removeEssay = async (index: number) => {
-//   try {
-//     const essay = form.value.essays[index]
-//     if (essay?.essayId) {
-//       await essayStore.deleteEssay(essay.essayId)
-//     }
-//     form.value.essays.splice(index, 1)
-//   } catch (err) {
-//     console.error('Failed to remove essay:', err)
-//     $q.notify({
-//       type: 'negative',
-//       message: 'Failed to remove essay'
-//     })
-//   }
-// }
 
 const loadEssays = async () => {
   try {
@@ -539,28 +475,6 @@ const loadRecommenders = async () => {
       message: 'Failed to load recommenders'
     })
   }
-}
-
-const addRecommendation = () => {
-  form.value.recommendations.push({
-    scholarshipId: form.value.scholarshipId,
-    studentId: '',
-    recommenderId: '',
-    relationship: '',
-    dueDate: '',
-    created: new Date().toISOString()
-  })
-}
-
-const addExistingRecommender = (recommender: Recommender) => {
-  form.value.recommendations.push({
-    scholarshipId: form.value.scholarshipId,
-    studentId: '',
-    recommenderId: recommender.recommenderId || '',
-    relationship: recommender.relationship,
-    dueDate: '',
-    created: new Date().toISOString()
-  })
 }
 
 const removeRecommendation = (index: number) => {

@@ -21,7 +21,12 @@ const routes: RouteRecordRaw[] = [
       { path: 'application-form', component: () => import('pages/ApplicationFormPage.vue'), meta: { requiresAuth: true } },
       { path: 'application-form/:id', component: () => import('pages/ApplicationFormPage.vue'), meta: { requiresAuth: true } },
       { path: 'scholarships', component: () => import('pages/ScholarshipsPage.vue'), meta: { requiresAuth: true } },
-      { path: 'profile', component: () => import('pages/ProfilePage.vue'), meta: { requiresAuth: true } }
+      { path: 'profile', component: () => import('pages/ProfilePage.vue'), meta: { requiresAuth: true } },
+      { path: 'essays', component: () => import('pages/EssaysPage.vue'), meta: { requiresAuth: true } },
+      { path: 'essay-form', component: () => import('pages/EssayFormPage.vue'), meta: { requiresAuth: true } },
+      { path: 'essay-form/:id', component: () => import('pages/EssayFormPage.vue'), meta: { requiresAuth: true } },
+      { path: 'recommender-form', component: () => import('pages/RecommenderFormPage.vue'), meta: { requiresAuth: true } },
+      { path: 'recommender-form/:id', component: () => import('pages/RecommenderFormPage.vue'), meta: { requiresAuth: true } },
     ]
   },
   {

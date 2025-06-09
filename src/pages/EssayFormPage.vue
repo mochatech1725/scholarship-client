@@ -14,13 +14,6 @@
     <q-form @submit="onSubmit" class="q-gutter-md">
       <div class="row q-col-gutter-md">
         <div class="col-12 col-md-6">
-          <q-input
-            v-model="form.scholarshipId"
-            label="Scholarship ID"
-            :rules="rules.scholarshipId"
-            outlined
-          />
-        </div>
 
         <div class="col-12 col-md-6">
           <q-input
@@ -54,7 +47,6 @@
           <q-input
             v-model="form.theme"
             label="Theme"
-            :rules="rules.theme"
             outlined
           />
         </div>
@@ -63,7 +55,6 @@
           <q-input
             v-model="form.essayLink"
             label="Essay Link"
-            :rules="rules.essayLink"
             outlined
             type="url"
           />
@@ -75,7 +66,7 @@
           label="Cancel"
           color="grey"
           flat
-          to="/essays"
+          to="/dashboard/essays"
           class="q-mr-sm"
         />
         <q-btn
@@ -113,9 +104,6 @@ const form = ref<Omit<Essay, 'essayId' | 'created'>>({
 })
 
 const rules = {
-  scholarshipId: [
-    (val: string) => !!val || 'Scholarship ID is required'
-  ],
   studentId: [
     (val: string) => !!val || 'Student ID is required'
   ],
@@ -123,15 +111,13 @@ const rules = {
     (val: string) => !!val || 'Count is required'
   ],
   units: [
-    (val: string) => !!val || 'Units is required'
+    (val: number) => !isNaN(val) || 'Units must be a number',
+    (val: number) => val >= 0 || 'Units must be a positive number'
   ],
-  theme: [
-    (val: string) => !!val || 'Theme is required'
-  ],
-  essayLink: [
-    (val: string) => !!val || 'Essay link is required',
-    (val: string) => /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(val) || 'Please enter a valid URL'
-  ]
+  // essayLink: [
+  //   (val: string) => !!val || 'Essay link is required',
+  //   (val: string) => /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(val) || 'Please enter a valid URL'
+  // ]
 }
 
 const loadEssay = async (id: string) => {
