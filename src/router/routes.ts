@@ -28,6 +28,8 @@ const routes: RouteRecordRaw[] = [
       { path: 'recommenders', component: () => import('pages/RecommendersPage.vue'), meta: { requiresAuth: true } },
       { path: 'recommender-form', component: () => import('pages/RecommenderFormPage.vue'), meta: { requiresAuth: true } },
       { path: 'recommender-form/:id', component: () => import('pages/RecommenderFormPage.vue'), meta: { requiresAuth: true } },
+      { path: 'recommendation-form', component: () => import('pages/RecommendationFormPage.vue'), meta: { requiresAuth: true } },
+      { path: 'recommendation-form/id', component: () => import('pages/RecommendationFormPage.vue'), meta: { requiresAuth: true } },
     ]
   },
   {

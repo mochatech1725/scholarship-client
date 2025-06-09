@@ -225,107 +225,54 @@
               color="primary"
               icon="add"
               label="Add Recommendation"
-              to="/dashboard/recommender-form"
+              to="/dashboard/recommendation-form"
             />
           </div>
 
-          <q-expansion-item
-            group="recommendations"
-            icon="person"
-            label="Current Recommendations"
-            header-class="text-primary"
+          <q-table
+            :rows="form.recommendations"
+            :columns="recommendationColumns"
+            row-key="recommendationId"
+            flat
+            bordered
           >
-            <q-card>
-              <q-card-section>
-                <div class="row q-col-gutter-md">
-                  <div v-for="(recommendation, index) in form.recommendations" :key="index" class="col-12">
-                    <q-card flat bordered class="q-pa-sm">
-                      <div class="row q-col-gutter-sm items-center">
-                        <div class="col-12 col-md-4">
-                          <q-select
-                            v-model="recommendation.recommenderId"
-                            :options="recommenders"
-                            option-label="firstName"
-                            option-value="recommenderId"
-                            label="Recommender"
-                            outlined
-                            dense
-                          >
-                            <template v-slot:option="scope">
-                              <q-item v-bind="scope.itemProps">
-                                <q-item-section>
-                                  <q-item-label>{{ scope.opt.firstName }} {{ scope.opt.lastName }}</q-item-label>
-                                  <q-item-label caption>{{ scope.opt.relationship }}</q-item-label>
-                                </q-item-section>
-                              </q-item>
-                            </template>
-                          </q-select>
-                        </div>
-                        <div class="col-12 col-md-3">
-                          <q-input
-                            v-model="recommendation.relationship"
-                            label="Relationship"
-                            outlined
-                            dense
-                          />
-                        </div>
-                        <div class="col-12 col-md-3">
-                          <q-input
-                            v-model="recommendation.dueDate"
-                            label="Due Date"
-                            type="date"
-                            outlined
-                            dense
-                          />
-                        </div>
-                        <div class="col-12 col-md-2">
-                          <q-btn
-                            flat
-                            round
-                            color="negative"
-                            icon="delete"
-                            @click="removeRecommendation(index)"
-                            dense
-                          />
-                        </div>
-                      </div>
-                    </q-card>
-                  </div>
-                </div>
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
-
-          <q-expansion-item
-            group="recommendations"
-            icon="list"
-            label="Available Recommenders"
-            header-class="text-primary"
-          >
-            <q-card>
-              <q-card-section>
-                <q-table
-                  :rows="recommenders"
-                  :columns="recommenderColumns"
-                  row-key="recommenderId"
-                  flat
-                  bordered
+            <template v-slot:body-cell-recommender="props">
+              <q-td :props="props">
+                {{ props.row.recommender?.firstName }} {{ props.row.recommender?.lastName }}
+              </q-td>
+            </template>
+            <template v-slot:body-cell-status="props">
+              <q-td :props="props">
+                <q-chip
+                  :color="getStatusColor(props.row.status)"
+                  text-color="white"
+                  dense
                 >
-                  <template v-slot:body-cell-actions="props">
-                    <q-td :props="props" class="q-gutter-sm">
-                      <q-btn
-                        flat
-                        round
-                        color="primary"
-                        icon="add"
-                        dense
-                      />
-                    </q-td>
-                  </template>
-                </q-table>
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
+                  {{ props.row.status }}
+                </q-chip>
+              </q-td>
+            </template>
+            <template v-slot:body-cell-actions="props">
+              <q-td :props="props" class="q-gutter-sm">
+                <q-btn
+                  flat
+                  round
+                  color="primary"
+                  icon="edit"
+                  :to="`/dashboard/recommendation-form/${props.row.recommendationId}`"
+                  dense
+                />
+                <q-btn
+                  flat
+                  round
+                  color="negative"
+                  icon="delete"
+                  @click="removeRecommendation(props.rowIndex)"
+                  dense
+                />
+              </q-td>
+            </template>
+          </q-table>
         </q-card-section>
       </q-card>
 
@@ -352,10 +299,10 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
-import { useApplicationStore } from 'src/stores/application.store'
-import { useRecommenderStore } from 'src/stores/recommender.store'
-import { useEssayStore } from 'src/stores/essay.store'
-import type { Recommender, Application } from 'src/types'
+import { useApplicationStore } from 'stores/application.store'
+import { useRecommenderStore } from 'stores/recommender.store'
+import { useEssayStore } from 'stores/essay.store'
+import type { Application, Recommendation, Recommender } from 'src/types'
 
 const route = useRoute()
 const router = useRouter()
@@ -401,11 +348,32 @@ const essayColumns = [
   { name: 'actions', label: 'Actions', field: 'actions', align: 'right' as const }
 ]
 
-const recommenderColumns = [
-  { name: 'firstName', label: 'First Name', field: 'firstName', sortable: true, align: 'left' as const },
-  { name: 'lastName', label: 'Last Name', field: 'lastName', sortable: true, align: 'left' as const },
-  { name: 'relationship', label: 'Relationship', field: 'relationship', sortable: true, align: 'left' as const },
-  { name: 'actions', label: 'Actions', field: 'actions', align: 'right' as const }
+const recommendationColumns = [
+  {
+    name: 'recommender',
+    label: 'Recommender',
+    field: (row: Recommendation) => row.recommender ? `${row.recommender.firstName} ${row.recommender.lastName}` : '',
+    align: 'left' as const
+  },
+  {
+    name: 'status',
+    label: 'Status',
+    field: 'status',
+    align: 'left' as const
+  },
+  {
+    name: 'dueDate',
+    label: 'Due Date',
+    field: 'dueDate',
+    align: 'left' as const,
+    format: (val: string) => new Date(val).toLocaleDateString()
+  },
+  {
+    name: 'actions',
+    label: 'Actions',
+    field: 'actions',
+    align: 'right' as const
+  }
 ]
 
 const availableEssays = ref<Array<{
@@ -525,7 +493,17 @@ const loadApplication = async (id: string) => {
             scholarshipId: '1',
             studentId: '',
             recommenderId: '1',
-            relationship: 'Academic',
+            recommender: {
+              recommenderId: '1',
+              firstName: 'John',
+              lastName: 'Smith',
+              relationship: 'Teacher',
+              emailAddress: 'john.smith@example.com',
+              phoneNumber: '1234567890',
+              created: new Date().toISOString()
+            },
+            relationship: 'Teacher',
+            status: 'Pending',
             dueDate: '2024-04-15',
             created: new Date().toISOString()
           }
@@ -573,6 +551,19 @@ const onSubmit = async () => {
     })
   } finally {
     loading.value = false
+  }
+}
+
+const getStatusColor = (status: string) => {
+  switch (status.toLowerCase()) {
+    case 'pending':
+      return 'warning'
+    case 'submitted':
+      return 'positive'
+    case 'declined':
+      return 'negative'
+    default:
+      return 'grey'
   }
 }
 

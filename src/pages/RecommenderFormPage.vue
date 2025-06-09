@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-lg">
     <div class="row q-mb-md items-center justify-between">
-      <div class="text-h5">{{ isEdit ? 'Edit Recommender' : 'New Recommender' }}</div>
+      <div class="text-h5">{{ isEdit ? 'Edit Recommendation' : 'New Recommendation' }}</div>
       <q-btn
         flat
         color="primary"
@@ -108,7 +108,7 @@ const $q = useQuasar()
 const recommenderStore = useRecommenderStore()
 const loading = ref(false)
 
-const relationshipOptions = ['teacher', 'counselor', 'employer', 'friend', 'other']
+const relationshipOptions = ['Teacher', 'Counselor', 'Employer', 'Friend', 'Other']
 
 const isEdit = ref(false)
 const form = ref<Omit<Recommender, 'recommenderId' | 'created'> & { emailAddress: string; phoneNumber: string }>({

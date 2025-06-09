@@ -20,14 +20,14 @@ export interface Recommender {
 }
 
 export interface Recommendation {
-  recommendationId?: string
+  recommender?: Recommender
   scholarshipId: string
   studentId: string
   recommenderId: string
   relationship: string
   dueDate: string
+  status: string
   created: string
-  recommender?: Recommender
 }
 
 export interface Application {
