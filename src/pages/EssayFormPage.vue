@@ -13,34 +13,29 @@
 
     <q-form @submit="onSubmit" class="q-gutter-md">
       <div class="row q-col-gutter-md">
-        <div class="col-12 col-md-6">
-          <q-input
-            v-model="form.studentId"
-            label="Student ID"
-            :rules="rules.studentId"
-            outlined
-          />
-        </div>
-
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-3">
           <q-input
             v-model="form.count"
             label="Count"
             :rules="rules.count"
             outlined
+            dense
             type="number"
           />
         </div>
 
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-3">
           <q-input
             v-model="form.units"
             label="Units"
             :rules="rules.units"
             outlined
+            dense
           />
         </div>
+      </div>
 
+      <div class="row q-col-gutter-md">
         <div class="col-12 col-md-6">
           <q-input
             v-model="form.theme"
@@ -92,9 +87,10 @@ const essayStore = useEssayStore()
 const loading = ref(false)
 
 const isEdit = ref(false)
-const form = ref<Omit<Essay, 'essayId' | 'created'>>({
-  scholarshipId: '',
-  studentId: '',
+const form = ref<Omit<Essay, 'created'>>({
+  essayId: route.params.essayId as string,
+  scholarshipId: '', // TODO: Get from parent application
+  studentId: '', // TODO: Get from auth store
   count: '',
   units: '',
   theme: '',
@@ -102,9 +98,6 @@ const form = ref<Omit<Essay, 'essayId' | 'created'>>({
 })
 
 const rules = {
-  studentId: [
-    (val: string) => !!val || 'Student ID is required'
-  ],
   count: [
     (val: string) => !!val || 'Count is required'
   ],
@@ -124,6 +117,7 @@ const loadEssay = async (id: string) => {
     const essay = essays.find(e => e.essayId === id)
     if (essay) {
       form.value = {
+        essayId: essay.essayId || '',
         scholarshipId: essay.scholarshipId,
         studentId: essay.studentId,
         count: essay.count,

@@ -502,9 +502,10 @@ const loadApplication = async (id: string) => {
               phoneNumber: '1234567890',
               created: new Date().toISOString()
             },
-            relationship: 'Teacher',
             status: 'Pending',
             dueDate: '2024-04-15',
+            submissionMethod: 'DirectEmail' as const,
+            requestDate: new Date().toISOString().split('T')[0] || '2024-01-01',
             created: new Date().toISOString()
           }
         ]

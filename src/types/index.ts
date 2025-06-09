@@ -20,13 +20,15 @@ export interface Recommender {
 }
 
 export interface Recommendation {
+  recommendationId?: string
   recommender?: Recommender
   scholarshipId: string
   studentId: string
   recommenderId: string
-  relationship: string
   dueDate: string
   status: string
+  submissionMethod: 'DirectEmail' | 'StudentUpload' | 'DirectMail'
+  requestDate: string
   created: string
 }
 

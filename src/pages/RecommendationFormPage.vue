@@ -49,6 +49,30 @@
                 class="max-width-300"
               />
             </div>
+
+            <div class="col-12">
+              <q-select
+                v-model="form.submissionMethod"
+                :options="submissionMethodOptions"
+                label="Submission Method"
+                :rules="rules.submissionMethod"
+                outlined
+                dense
+                class="max-width-300"
+              />
+            </div>
+
+            <div class="col-12">
+              <q-input
+                v-model="form.requestDate"
+                label="Request Date"
+                type="date"
+                :rules="rules.requestDate"
+                outlined
+                dense
+                class="max-width-300"
+              />
+            </div>
           </div>
 
           <div class="row justify-end q-mt-lg">
@@ -86,16 +110,32 @@ const recommenderStore = useRecommenderStore()
 const loading = ref(false)
 
 const isEdit = ref(false)
+
+// Get and validate route parameters
+const recommendationId = Array.isArray(route.params.recommendationId) 
+  ? route.params.recommendationId[0] 
+  : route.params.recommendationId || ''
+
+const scholarshipId = route.params.scholarshipId
+
+if (!scholarshipId || Array.isArray(scholarshipId)) {
+  throw new Error('Invalid scholarship ID')
+}
+
 const form = ref<Omit<Recommendation, 'created'>>({
-  scholarshipId: route.params.scholarshipId as string,
+  recommendationId: typeof recommendationId === 'string' ? recommendationId : '',
+  scholarshipId: scholarshipId,
   studentId: '', // TODO: Get from auth store
   recommenderId: '',
-  relationship: '',
   dueDate: '',
-  status: 'Pending'
+  status: 'Pending',
+  submissionMethod: 'DirectEmail',
+  requestDate: new Date().toISOString().split('T')[0] || new Date().toISOString().slice(0, 10)
 })
 
 const recommenders = ref<Recommender[]>([])
+const submissionMethodOptions = ['DirectEmail', 'StudentUpload', 'DirectMail'] as const
+type SubmissionMethod = typeof submissionMethodOptions[number]
 
 const rules = {
   recommenderId: [
@@ -103,6 +143,12 @@ const rules = {
   ],
   dueDate: [
     (val: string) => !!val || 'Due date is required'
+  ],
+  submissionMethod: [
+    (val: SubmissionMethod) => !!val || 'Submission method is required'
+  ],
+  requestDate: [
+    (val: string) => !!val || 'Request date is required'
   ]
 }
 
@@ -127,12 +173,13 @@ const loadRecommendation = async (id: string) => {
     const mockData = {
       '1': {
         recommendationId: '1',
-        scholarshipId: route.params.scholarshipId as string,
+        scholarshipId,
         studentId: '', // TODO: Get from auth store
         recommenderId: '1',
-        relationship: 'Teacher',
         dueDate: '2024-04-15',
         status: 'Pending',
+        submissionMethod: 'DirectEmail' as const,
+        requestDate: new Date().toISOString().split('T')[0],
         created: new Date().toISOString()
       }
     }
@@ -140,12 +187,14 @@ const loadRecommendation = async (id: string) => {
     const mockRecommendation = mockData[id as keyof typeof mockData]
     if (mockRecommendation) {
       form.value = {
+        recommendationId: mockRecommendation.recommendationId,
         scholarshipId: mockRecommendation.scholarshipId,
         studentId: mockRecommendation.studentId,
         recommenderId: mockRecommendation.recommenderId,
-        relationship: mockRecommendation.relationship,
         dueDate: mockRecommendation.dueDate,
-        status: mockRecommendation.status
+        status: mockRecommendation.status,
+        submissionMethod: mockRecommendation.submissionMethod,
+        requestDate: mockRecommendation.requestDate!
       }
     }
   } catch (err) {
@@ -174,10 +223,6 @@ const onSubmit = async () => {
         message: 'Recommendation created successfully'
       })
     }
-    const scholarshipId = route.params.scholarshipId
-    if (!scholarshipId || Array.isArray(scholarshipId)) {
-      throw new Error('Invalid scholarship ID')
-    }
     await router.push(`/dashboard/applications/${scholarshipId}`)
   } catch (err) {
     console.error('Failed to save recommendation:', err)
@@ -192,9 +237,9 @@ const onSubmit = async () => {
 
 onMounted(async () => {
   await loadRecommenders()
-  if (route.params.id) {
+  if (recommendationId) {
     isEdit.value = true
-    await loadRecommendation(route.params.id as string)
+    await loadRecommendation(recommendationId)
   }
 })
 </script>
