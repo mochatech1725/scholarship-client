@@ -6,7 +6,7 @@
         color="primary"
         icon="add"
         label="New Application"
-        to="/application-form"
+        to="/dashboard/application-form"
       />
     </div>
 
@@ -69,7 +69,7 @@
               round
               color="primary"
               icon="edit"
-              :to="`/application-form/${props.row.id}`"
+              :to="`/dashboard/application-form/${props.row.id}`"
             />
             <q-btn
               flat
