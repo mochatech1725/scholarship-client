@@ -124,12 +124,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from 'stores/auth.store'
+import { useRouter } from 'vue-router'
 
 const $q = useQuasar()
 const authStore = useAuthStore()
+const router = useRouter()
 
 const leftDrawerOpen = ref(false)
 
@@ -140,7 +142,6 @@ const toggleLeftDrawer = () => {
 const onLogout = async () => {
   try {
     await authStore.logout()
-    window.location.href = '/login'
     $q.notify({
       color: 'positive',
       message: 'Logged out successfully'
@@ -153,4 +154,16 @@ const onLogout = async () => {
     })
   }
 }
+
+// Watch for authentication state changes
+watch(
+  () => authStore.isAuthenticated,
+  async (isAuthenticated) => {
+    if (!isAuthenticated && router.currentRoute.value.path !== '/login') {
+      await router.push('/login')
+    } else if (isAuthenticated) {
+      console.log('**** authStore.isAuthenticated changed to true')
+    }
+  }
+)
 </script>

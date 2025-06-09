@@ -48,7 +48,6 @@ const handleLogin = async () => {
     isLoading.value = true
 
     const targetUrl = route.query.redirect as string || '/dashboard/applications'
-    
     await auth0.loginWithRedirect({
       appState: { 
         target: targetUrl

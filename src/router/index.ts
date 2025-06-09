@@ -36,6 +36,18 @@ router.beforeEach(async (to, from, next) => {
     });
   }
 
+  // Wait for authentication state to be determined
+  if (!auth0.isAuthenticated.value && !publicRoutes.includes(to.path)) {
+    await new Promise<void>(resolve => {
+      const unwatch = watch(auth0.isAuthenticated, (isAuthenticated) => {
+        if (isAuthenticated) {
+          unwatch();
+          resolve();
+        }
+      });
+    });
+  }
+
   // Redirect root to appropriate page
   if (to.path === '/') {
     return next(auth0.isAuthenticated.value ? '/dashboard/applications' : '/login');

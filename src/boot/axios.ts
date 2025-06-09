@@ -10,9 +10,9 @@ declare module 'vue' {
 }
 
 // Debug environment variables
-console.log('API Base URL:', import.meta.env.VITE_API_BASE_URL)
+console.log('API Base URL:', import.meta.env.API_BASE_URL)
 
-const api = axios.create({ baseURL: 'https://api.example.com' });
+const api = axios.create({ baseURL: import.meta.env.API_BASE_URL});
 
 export default defineBoot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
