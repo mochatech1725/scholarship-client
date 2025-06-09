@@ -334,7 +334,7 @@
           label="Cancel"
           color="grey"
           flat
-          to="/applications"
+          to="/dashboard/applications"
           class="q-mr-sm"
         />
         <q-btn

@@ -79,8 +79,7 @@
           </q-card-section>
 
           <q-card-actions align="right">
-            <q-btn flat color="primary" label="View Details" :to="`/scholarships/${scholarship.id}`" />
-            <q-btn flat color="primary" label="Apply" @click="applyForScholarship(scholarship)" />
+            <q-btn flat color="primary" label="View Details" :to="`/dashboard/scholarships/${scholarship.id}`" />
           </q-card-actions>
         </q-card>
       </div>

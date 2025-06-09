@@ -13,6 +13,7 @@
     <!-- Filters -->
     <q-card class="q-mb-md">
       <q-card-section>
+        <div class="text-h6 q-mb-md">Filters</div>
         <div class="row q-col-gutter-md">
           <div class="col-12 col-sm-4">
             <q-select

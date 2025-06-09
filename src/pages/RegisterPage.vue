@@ -34,7 +34,7 @@ const onSignUp = async () => {
   try {
     await auth0.loginWithRedirect({
       appState: { 
-        target: '/applications'
+        target: '/dashboard/applications'
       },
       authorizationParams: {
         screen_hint: 'signup',

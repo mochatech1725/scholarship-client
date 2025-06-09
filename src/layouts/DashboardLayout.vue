@@ -2,14 +2,7 @@
   <q-layout view="hHh lpR fFf">
     <q-header elevated class="bg-primary text-white">
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+
         <q-toolbar-title>
           Scholarship Application Tracker
         </q-toolbar-title>
@@ -26,59 +19,29 @@
           </q-menu>
         </q-btn>
       </q-toolbar>
+
+      <q-tabs
+        v-model="activeTab"
+        class="bg-primary text-white"
+        align="left"
+        narrow-indicator
+      >
+        <q-route-tab
+          to="/dashboard/applications"
+          name="applications"
+          icon="description"
+          label="Applications"
+        />
+        <q-route-tab
+          to="/dashboard/scholarships"
+          name="scholarships"
+          icon="search"
+          label="Scholarship Search"
+        />
+      </q-tabs>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label header>Navigation</q-item-label>
 
-        <q-item
-          clickable
-          v-ripple
-          to="/dashboard/applications"
-          exact
-        >
-          <q-item-section avatar>
-            <q-icon name="description" />
-          </q-item-section>
-          <q-item-section>
-            Applications
-          </q-item-section>
-        </q-item>
-
-        <q-item
-          clickable
-          v-ripple
-          to="/dashboard/scholarships"
-          exact
-        >
-          <q-item-section avatar>
-            <q-icon name="search" />
-          </q-item-section>
-          <q-item-section>
-            Scholarship Search
-          </q-item-section>
-        </q-item>
-
-        <q-item
-          clickable
-          v-ripple
-          to="/dashboard/profile"
-          exact
-        >
-          <q-item-section avatar>
-            <q-icon name="person" />
-          </q-item-section>
-          <q-item-section>
-            Profile
-          </q-item-section>
-        </q-item>
-      </q-list>
-    </q-drawer>
 
     <q-page-container>
       <router-view v-if="isReady" />
@@ -93,15 +56,13 @@
 import { ref, onMounted } from 'vue'
 import { useAuthStore } from 'stores/auth.store'
 import { useQuasar } from 'quasar'
+import { useRoute } from 'vue-router'
 
 const authStore = useAuthStore()
 const $q = useQuasar()
+const route = useRoute()
 const isReady = ref(false)
-const leftDrawerOpen = ref(false)
-
-const toggleLeftDrawer = () => {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
+const activeTab = ref('applications')
 
 const onLogout = async () => {
   try {
@@ -140,6 +101,12 @@ onMounted(async () => {
   try {
     await authStore.initialize()
     isReady.value = true
+    // Set active tab based on current route
+    if (route.path.includes('/scholarships')) {
+      activeTab.value = 'scholarships'
+    } else {
+      activeTab.value = 'applications'
+    }
   } catch (err) {
     console.error('Failed to initialize auth store:', err)
     $q.notify({
