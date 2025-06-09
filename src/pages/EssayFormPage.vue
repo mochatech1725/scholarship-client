@@ -1,20 +1,18 @@
 <template>
-  <q-page padding>
-    <div class="row q-mb-md items-center justify-between">
+  <q-page padding class="q-px-xl q-py-lg">
+    <div class="row q-mb-lg items-center justify-between">
       <div class="text-h5">{{ isEdit ? 'Edit Essay' : 'New Essay' }}</div>
       <q-btn
         flat
         color="primary"
         icon="arrow_back"
         label="Back"
-        to="/essays"
+        to="/dashboard/essays"
       />
     </div>
 
     <q-form @submit="onSubmit" class="q-gutter-md">
       <div class="row q-col-gutter-md">
-        <div class="col-12 col-md-6">
-
         <div class="col-12 col-md-6">
           <q-input
             v-model="form.studentId"
@@ -51,7 +49,7 @@
           />
         </div>
 
-        <div class="col-12 col-md-6">
+        <div class="col-12">
           <q-input
             v-model="form.essayLink"
             label="Essay Link"

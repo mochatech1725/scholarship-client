@@ -7,7 +7,7 @@
         color="primary"
         icon="arrow_back"
         label="Back"
-        to="/recommenders"
+        to="/dashboard/recommenders"
       />
     </div>
 

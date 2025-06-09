@@ -7,7 +7,7 @@
         color="primary"
         icon="arrow_back"
         label="Back"
-        to="/applications"
+        to="/dashboard/applications"
       />
     </div>
 
@@ -318,7 +318,6 @@
                         round
                         color="primary"
                         icon="add"
-                        @click="addExistingRecommender(props.row)"
                         dense
                       />
                     </q-td>
