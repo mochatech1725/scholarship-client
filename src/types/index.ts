@@ -14,6 +14,8 @@ export interface Recommender {
   firstName: string
   lastName: string
   relationship: string
+  emailAddress: string
+  phoneNumber: string
   created: string
 }
 

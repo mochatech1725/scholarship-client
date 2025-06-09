@@ -25,6 +25,7 @@ const routes: RouteRecordRaw[] = [
       { path: 'essays', component: () => import('pages/EssaysPage.vue'), meta: { requiresAuth: true } },
       { path: 'essay-form', component: () => import('pages/EssayFormPage.vue'), meta: { requiresAuth: true } },
       { path: 'essay-form/:id', component: () => import('pages/EssayFormPage.vue'), meta: { requiresAuth: true } },
+      { path: 'recommenders', component: () => import('pages/RecommendersPage.vue'), meta: { requiresAuth: true } },
       { path: 'recommender-form', component: () => import('pages/RecommenderFormPage.vue'), meta: { requiresAuth: true } },
       { path: 'recommender-form/:id', component: () => import('pages/RecommenderFormPage.vue'), meta: { requiresAuth: true } },
     ]

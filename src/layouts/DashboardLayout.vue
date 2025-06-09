@@ -38,6 +38,13 @@
           icon="search"
           label="Scholarship Search"
         />
+
+        <q-route-tab
+          to="/dashboard/recommenders"
+          name="Recommenders"
+          icon="assignment"
+          label="Recommenders"
+        />
       </q-tabs>
     </q-header>
 
