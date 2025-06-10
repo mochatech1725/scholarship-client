@@ -9,7 +9,6 @@
           label="Search"
           clearable
           dense
-          @update:model-value="onSearch"
           class="col-6"
         >
           <template v-slot:append>
@@ -23,7 +22,6 @@
           label="Theme"
           clearable
           dense
-          @update:model-value="onSearch"
           class="col-2"
         />
 
@@ -33,7 +31,6 @@
           label="Target Type"
           clearable
           dense
-          @update:model-value="onSearch"
           class="col-2"
         />
       </div>
@@ -42,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { targetTypeOptions } from 'src/types'
 
 const searchQuery = ref('')
@@ -65,10 +62,27 @@ const themeOptions = [
 
 const emit = defineEmits(['search'])
 
-const onSearch = () => {
+// Debounce function
+const debounce = <T extends (...args: unknown[]) => void>(fn: T, delay: number): ((...args: Parameters<T>) => void) => {
+  let timeoutId: ReturnType<typeof setTimeout>
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => fn(...args), delay)
+  }
+}
+
+// Debounced search function
+const debouncedSearch = debounce(() => {
   emit('search', {
     query: searchQuery.value,
     ...filters.value
   })
-}
+}, 300)
+
+// Watch for changes in search query and filters
+watch([searchQuery, () => filters.value], () => {
+  debouncedSearch()
+}, { deep: true })
+
+// Remove the onSearch function since we're using watchers now
 </script> 
