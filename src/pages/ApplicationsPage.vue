@@ -73,6 +73,7 @@ import type { QTableColumn } from 'quasar'
 import ApplicationFilters from 'src/components/ApplicationFilters.vue'
 import type { ApplicationStatus } from 'src/types'
 import { statusOptions } from 'src/types'
+import { useGetStatusColor } from 'src/composables/useGetStatusColor'
 
 interface Application {
   applicationId: string
@@ -85,6 +86,7 @@ interface Application {
 
 const $q = useQuasar()
 const loading = ref(false)
+const { getStatusColor } = useGetStatusColor()
 
 const applications = ref<Application[]>([
   {
@@ -128,17 +130,6 @@ const filteredApplications = computed(() => {
     return true
   })
 })
-
-const getStatusColor = (status: ApplicationStatus) => {
-  const colors: Record<ApplicationStatus, string> = {
-    'Not Started': 'grey',
-    'In Progress': 'blue',
-    'Submitted': 'orange',
-    'Awarded': 'green',
-    'Not Awarded': 'red'
-  }
-  return colors[status] || 'grey'
-}
 
 const confirmDelete = (application: Application) => {
   $q.dialog({

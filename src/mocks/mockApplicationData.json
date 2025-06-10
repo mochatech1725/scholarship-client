@@ -54,7 +54,7 @@
         "relationship": "Work Supervisor",
         "created": "2024-01-01T00:00:00.000Z"
       },
-      "status": "Completed",
+      "status": "Submitted",
       "requestDate": "2024-03-01",
       "dueDate": "2024-04-01",
       "submissionMethod": "DirectEmail",
@@ -75,7 +75,7 @@
         "relationship": "Research Advisor",
         "created": "2024-01-01T00:00:00.000Z"
       },
-      "status": "Completed",
+      "status": "Submitted",
       "requestDate": "2024-03-01",
       "dueDate": "2024-04-01",
       "submissionMethod": "DirectEmail",

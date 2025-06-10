@@ -65,7 +65,8 @@
 import { ref, onMounted, watch } from 'vue'
 import { useQuasar } from 'quasar'
 import { useRecommendationStore } from 'stores/recommendation.store'
-import type { Recommendation, RecommendationStatus } from 'src/types'
+import type { Recommendation } from 'src/types'
+import { useGetStatusColor } from 'src/composables/useGetStatusColor'
 
 const props = defineProps<{
   applicationId: string
@@ -74,6 +75,7 @@ const props = defineProps<{
 const $q = useQuasar()
 const recommendationStore = useRecommendationStore()
 const recommendations = ref<Recommendation[]>([])
+const { getStatusColor } = useGetStatusColor()
 
 const recommendationColumns = [
   {
@@ -124,17 +126,6 @@ const loadRecommendations = async () => {
       type: 'negative',
       message: 'Failed to load recommendations'
     })
-  }
-}
-
-const getStatusColor = (status: RecommendationStatus) => {
-  switch (status.toLowerCase()) {
-    case 'pending':
-      return 'warning'
-    case 'completed':
-      return 'positive'
-    default:
-      return 'grey'
   }
 }
 
