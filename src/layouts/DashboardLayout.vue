@@ -35,8 +35,8 @@
           label="Applications"
         />
         <q-route-tab
-          :to="{ name: 'scholarships' }"
-          name="scholarships"
+          :to="{ name: 'scholarshipSearch' }"
+          name="scholarshipSearch"
           icon="search"
           label="Scholarship Search"
         />
@@ -80,8 +80,8 @@ onMounted(async () => {
     // Set active tab based on current route
     if (route.path.includes('/applications')) {
       activeTab.value = 'applications'
-    } else if (route.path.includes('/scholarships')) {
-      activeTab.value = 'scholarships'
+    } else if (route.path.includes('/scholarship')) {
+      activeTab.value = 'scholarshipSearch'
     } else if (route.path.includes('/profile')) {
       activeTab.value = 'profile'
     }

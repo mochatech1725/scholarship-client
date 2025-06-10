@@ -59,7 +59,7 @@
           v-if="authStore.isAuthenticated"
           clickable
           v-ripple
-          :to="{ name: 'scholarships' }"
+          :to="{ name: 'scholarshipSearch' }"
           exact
         >
           <q-item-section avatar>

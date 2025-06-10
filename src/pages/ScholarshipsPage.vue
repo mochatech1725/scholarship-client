@@ -78,9 +78,6 @@
             <p class="q-mt-sm">{{ scholarship.description }}</p>
           </q-card-section>
 
-          <q-card-actions align="right">
-            <q-btn flat color="primary" label="View Details" :to="`/dashboard/scholarships/${scholarship.id}`" />
-          </q-card-actions>
         </q-card>
       </div>
     </div>
@@ -115,7 +112,6 @@
 
           <q-card-actions align="right">
             <q-btn flat color="primary" label="View Details" :to="`/scholarships/${scholarship.id}`" />
-            <q-btn flat color="primary" label="Apply" @click="applyForScholarship(scholarship)" />
           </q-card-actions>
         </q-card>
       </div>
@@ -125,7 +121,6 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useQuasar } from 'quasar'
 
 interface Scholarship {
   id: string
@@ -138,7 +133,6 @@ interface Scholarship {
   requirements: string[]
 }
 
-const $q = useQuasar()
 const searchQuery = ref('')
 const searchResults = ref<Scholarship[]>([])
 const recommendedScholarships = ref<Scholarship[]>([])
@@ -202,20 +196,6 @@ const onSearch = () => {
   ]
 }
 
-const applyForScholarship = (scholarship: Scholarship) => {
-  $q.dialog({
-    title: 'Apply for Scholarship',
-    message: `Would you like to apply for the ${scholarship.name}?`,
-    cancel: true,
-    persistent: true
-  }).onOk(() => {
-    // TODO: Implement application logic
-    $q.notify({
-      color: 'positive',
-      message: 'Application started successfully'
-    })
-  })
-}
 
 onMounted(() => {
   // TODO: Implement actual API call
