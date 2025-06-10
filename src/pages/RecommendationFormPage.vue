@@ -141,7 +141,7 @@ const form = ref<Omit<Recommendation, 'created'>>({
   studentId: '', // TODO: Get from auth store
   recommenderId: '',
   dueDate: '',
-  status: 'pending',
+  status: 'Pending',
   submissionMethod: 'DirectEmail',
   requestDate: new Date().toISOString(),
   submissionDate: null

@@ -26,7 +26,7 @@ export interface Recommendation {
   studentId: string
   recommenderId: string
   dueDate: string
-  status: string
+  status: RecommendationStatus
   submissionMethod: 'DirectEmail' | 'StudentUpload' | 'DirectMail'
   requestDate: string
   submissionDate: string | null
@@ -48,7 +48,7 @@ export interface Application {
   renewable: boolean
   documentInfoLink: string
   currentAction: string
-  status: string
+  status: ApplicationStatus
   submissionDate: string
   openDate: string
   dueDate: string
@@ -104,6 +104,13 @@ export const statusOptions = [
   'Not Started',
   'In Progress',
   'Submitted',
-  'Accepted',
-  'Rejected'
+  'Awarded',
+  'Not Awarded'
+] as const 
+
+export type RecommendationStatus = typeof recomendationOptions[number]
+
+export const recomendationOptions = [
+  'Pending',
+  'Completed'
 ] as const 

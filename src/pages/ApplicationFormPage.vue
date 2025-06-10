@@ -299,7 +299,7 @@ import { useApplicationStore } from 'stores/application.store'
 import { useRecommenderStore } from 'stores/recommender.store'
 import { useEssayStore } from 'stores/essay.store'
 import { useScholarshipContextStore } from 'stores/scholarship-context.store'
-import type { Application, Recommendation, Recommender, Essay } from 'src/types'
+import type { Application, Recommendation, Recommender, Essay, RecommendationStatus} from 'src/types'
 import { targetTypeOptions, statusOptions } from 'src/types'
 
 const route = useRoute()
@@ -390,7 +390,7 @@ const rules = {
   ],
   targetType: [
     (val: string) => !!val || 'Target type is required',
-    (val: string) => ['merit', 'need', 'both'].includes(val) || 'Target type must be merit, need, or both'
+    (val: string) => ['Merit', 'Need', 'Both'].includes(val) || 'Target type must be Merit, Need, or Both'
   ],
   company: [
     (val: string) => !!val || 'Company name is required'
@@ -491,14 +491,12 @@ const onSubmit = async () => {
   }
 }
 
-const getStatusColor = (status: string) => {
+const getStatusColor = (status: RecommendationStatus) => {
   switch (status.toLowerCase()) {
     case 'pending':
       return 'warning'
-    case 'submitted':
+    case 'completed':
       return 'positive'
-    case 'declined':
-      return 'negative'
     default:
       return 'grey'
   }
