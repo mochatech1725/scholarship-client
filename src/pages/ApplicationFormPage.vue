@@ -9,7 +9,7 @@
         color="primary"
         icon="arrow_back"
         label="Back"
-        to="/dashboard/applications"
+        :to="{ name: 'applicationsList' }"
       />
     </div>
 
@@ -182,7 +182,7 @@
               color="primary"
               icon="add"
               label="Add Essay"
-              :to="`/dashboard/essay-form/${form.applicationId}`"
+              :to="{ name: 'essayCreate', params: { applicationId: form.applicationId } }"
             />
           </div>
 
@@ -201,7 +201,7 @@
                   round
                   color="primary"
                   icon="edit"
-                  :to="props.row.essayId ? `/dashboard/essay-form/${props.row.essayId}` : '#'"
+                  :to="props.row.essayId ? { name: 'essayEdit', params: { essayId: props.row.essayId } } : '#'"
                   dense
                 />
                 <q-btn
@@ -228,7 +228,7 @@
               color="primary"
               icon="add"
               label="Add Recommendation"
-              to="/dashboard/recommendation-form"
+              :to="{ name: 'recommenderCreate' }"
             />
           </div>
 
@@ -263,7 +263,7 @@
                   round
                   color="primary"
                   icon="edit"
-                  :to="`/dashboard/recommendation-form/${props.row.recommendationId}`"
+                  :to="{ name: 'recommenderEdit', params: { recommendationId: props.row.recommendationId } }"
                   dense
                 />
                 <q-btn
@@ -479,7 +479,7 @@ const onSubmit = async () => {
         message: 'Application created successfully'
       })
     }
-    await router.push('/applications')
+    await router.push({ name: 'applicationsList' })
   } catch (err) {
     console.error('Failed to save application:', err)
     $q.notify({

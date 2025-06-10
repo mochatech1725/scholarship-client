@@ -6,7 +6,7 @@
         color="primary"
         icon="add"
         label="Add Recommender"
-        to="/dashboard/recommender-form"
+        :to="{ name: 'recommenderCreate' }"
       />
     </div>
 
@@ -24,7 +24,7 @@
               round
               color="primary"
               icon="edit"
-              :to="`/dashboard/recommenders/${props.row.recommenderId}`"
+              :to="{ name: 'recommenderEdit', params: { recommenderId: props.row.recommenderId } }"
             />
             <q-btn
               flat

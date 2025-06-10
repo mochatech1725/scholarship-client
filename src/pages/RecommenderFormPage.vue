@@ -7,7 +7,7 @@
         color="primary"
         icon="arrow_back"
         label="Back"
-        to="/dashboard/recommenders"
+        :to="{ name: 'recommendersList' }"
       />
     </div>
 
@@ -79,7 +79,7 @@
               label="Cancel"
               color="grey"
               flat
-              to="/recommenders"
+              :to="{ name: 'recommendersList' }"
               class="q-mr-sm"
             />
             <q-btn
@@ -176,7 +176,7 @@ const onSubmit = async () => {
         message: 'Recommender created successfully'
       })
     }
-    await router.push('/recommenders')
+    await router.push({ name: 'recommendersList' })
   } catch {
     $q.notify({
       type: 'negative',
@@ -188,10 +188,10 @@ const onSubmit = async () => {
 }
 
 onMounted(() => {
-  const { id } = route.params
-  if (id && id !== 'new') {
+  const { recommenderId } = route.params
+  if (recommenderId && recommenderId !== 'new') {
     isEdit.value = true
-    void loadRecommender(id as string)
+    void loadRecommender(recommenderId as string)
   }
 })
 </script>
