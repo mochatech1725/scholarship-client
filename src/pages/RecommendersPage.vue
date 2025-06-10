@@ -1,42 +1,53 @@
 <template>
   <q-page padding>
-    <div class="row q-mb-md items-center justify-between">
-      <div class="text-h5">Recommenders</div>
-      <q-btn
-        color="primary"
-        icon="add"
-        label="Add Recommender"
-        :to="{ name: 'recommenderCreate' }"
-      />
-    </div>
+    <div class="text-h5 q-mb-lg">Recommenders</div>
 
-    <q-table
-      :rows="recommenders"
-      :columns="columns"
-      row-key="recommenderId"
-      :loading="loading"
-    >
-      <template v-slot:body-cell-actions="props">
-        <q-td :props="props">
-          <q-btn-group flat>
-            <q-btn
-              flat
-              round
-              color="primary"
-              icon="edit"
-              :to="{ name: 'recommenderEdit', params: { recommenderId: props.row.recommenderId } }"
-            />
-            <q-btn
-              flat
-              round
-              color="negative"
-              icon="delete"
-              @click="confirmDelete(props.row)"
-            />
-          </q-btn-group>
-        </q-td>
-      </template>
-    </q-table>
+    <div class="row q-col-gutter-md">
+      <div class="col-12">
+        <q-table
+          :rows="recommenders"
+          :columns="columns"
+          row-key="id"
+          flat
+          bordered
+          :pagination="{ rowsPerPage: 0 }"
+        >
+          <template v-slot:body-cell-status="props">
+            <q-td :props="props">
+              <q-chip
+                :color="getStatusColor(props.row.status)"
+                text-color="white"
+                dense
+                class="q-ml-sm"
+              >
+                {{ props.row.status }}
+              </q-chip>
+            </q-td>
+          </template>
+
+          <template v-slot:body-cell-actions="props">
+            <q-td :props="props" class="q-gutter-sm">
+              <q-btn
+                flat
+                round
+                color="primary"
+                icon="edit"
+                :to="`/recommenders/${props.row.id}/edit`"
+                dense
+              />
+              <q-btn
+                flat
+                round
+                color="negative"
+                icon="delete"
+                @click="confirmDelete(props.row)"
+                dense
+              />
+            </q-td>
+          </template>
+        </q-table>
+      </div>
+    </div>
 
     <q-dialog v-model="showDeleteDialog" persistent>
       <q-card>
@@ -55,17 +66,41 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useQuasar } from 'quasar'
-import { useRecommenderStore } from 'src/stores/recommender.store'
-import type { Recommender } from 'src/types'
 
 const $q = useQuasar()
-const recommenderStore = useRecommenderStore()
-const loading = ref(false)
-const recommenders = ref<Recommender[]>([])
-const showDeleteDialog = ref(false)
-const selectedRecommender = ref<Recommender | null>(null)
+
+interface Recommender {
+  id: string
+  firstName: string
+  lastName: string
+  email: string
+  organization: string
+  title: string
+  status: string
+}
+
+const recommenders = ref<Recommender[]>([
+  {
+    id: '1',
+    firstName: 'John',
+    lastName: 'Smith',
+    email: 'john.smith@example.com',
+    organization: 'University of Technology',
+    title: 'Professor',
+    status: 'Active'
+  },
+  {
+    id: '2',
+    firstName: 'Sarah',
+    lastName: 'Johnson',
+    email: 'sarah.johnson@example.com',
+    organization: 'Tech Institute',
+    title: 'Department Head',
+    status: 'Pending'
+  }
+])
 
 const columns = [
   {
@@ -75,17 +110,28 @@ const columns = [
     align: 'left' as const
   },
   {
-    name: 'relationship',
-    label: 'Relationship',
-    field: 'relationship',
+    name: 'email',
+    label: 'Email',
+    field: 'email',
     align: 'left' as const
   },
   {
-    name: 'created',
-    label: 'Created',
-    field: 'created',
-    align: 'left' as const,
-    format: (val: string) => new Date(val).toLocaleDateString()
+    name: 'organization',
+    label: 'Organization',
+    field: 'organization',
+    align: 'left' as const
+  },
+  {
+    name: 'title',
+    label: 'Title',
+    field: 'title',
+    align: 'left' as const
+  },
+  {
+    name: 'status',
+    label: 'Status',
+    field: 'status',
+    align: 'center' as const
   },
   {
     name: 'actions',
@@ -95,46 +141,35 @@ const columns = [
   }
 ]
 
-const loadRecommenders = async () => {
-  try {
-    loading.value = true
-    recommenders.value = await recommenderStore.getRecommenders()
-  } catch (err) {
-    console.error('Failed to load recommenders:', err)
-    $q.notify({
-      type: 'negative',
-      message: 'Failed to load recommenders'
-    })
-  } finally {
-    loading.value = false
+const showDeleteDialog = ref(false)
+const recommenderToDelete = ref<Recommender | null>(null)
+
+const getStatusColor = (status: string) => {
+  switch (status.toLowerCase()) {
+    case 'active':
+      return 'positive'
+    case 'pending':
+      return 'warning'
+    case 'inactive':
+      return 'negative'
+    default:
+      return 'grey'
   }
 }
 
 const confirmDelete = (recommender: Recommender) => {
-  selectedRecommender.value = recommender
+  recommenderToDelete.value = recommender
   showDeleteDialog.value = true
 }
 
-const deleteRecommender = async () => {
-  if (!selectedRecommender.value) return
-
-  try {
-    await recommenderStore.deleteRecommender(selectedRecommender.value.recommenderId!)
+const deleteRecommender = () => {
+  if (recommenderToDelete.value) {
+    // TODO: Implement actual delete logic
+    recommenders.value = recommenders.value.filter(r => r.id !== recommenderToDelete.value?.id)
     $q.notify({
       type: 'positive',
       message: 'Recommender deleted successfully'
     })
-    await loadRecommenders()
-  } catch (err) {
-    console.error('Failed to delete recommender:', err)
-    $q.notify({
-      type: 'negative',
-      message: 'Failed to delete recommender'
-    })
   }
 }
-
-onMounted(() => {
-  void loadRecommenders()
-})
 </script> 
