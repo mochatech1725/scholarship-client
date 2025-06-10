@@ -177,66 +177,7 @@
       <Essay :application-id="form.applicationId" />
 
       <!-- Recommendations Section -->
-      <q-card class="q-pa-md">
-        <q-card-section>
-          <div class="row items-center justify-between q-mb-md">
-            <div class="text-h6">Recommendations</div>
-            <q-btn
-              flat
-              color="primary"
-              icon="add"
-              label="Add Recommendation"
-              :to="{ name: 'recommenderCreate' }"
-            />
-          </div>
-
-          <q-table
-            :rows="form.recommendations"
-            :columns="recommendationColumns"
-            row-key="recommendationId"
-            flat
-            bordered
-            dense
-          >
-            <template v-slot:body-cell-recommender="props">
-              <q-td :props="props">
-                {{ props.row.recommender?.firstName }} {{ props.row.recommender?.lastName }}
-              </q-td>
-            </template>
-            <template v-slot:body-cell-status="props">
-              <q-td :props="props">
-                <q-chip
-                  :color="getStatusColor(props.row.status)"
-                  text-color="white"
-                  dense
-                >
-                  {{ props.row.status }}
-                </q-chip>
-              </q-td>
-            </template>
-            <template v-slot:body-cell-actions="props">
-              <q-td :props="props" class="q-gutter-sm">
-                <q-btn
-                  flat
-                  round
-                  color="primary"
-                  icon="edit"
-                  :to="{ name: 'recommenderEdit', params: { recommendationId: props.row.recommendationId } }"
-                  dense
-                />
-                <q-btn
-                  flat
-                  round
-                  color="negative"
-                  icon="delete"
-                  @click="confirmDeleteRecommendation(props.row)"
-                  dense
-                />
-              </q-td>
-            </template>
-          </q-table>
-        </q-card-section>
-      </q-card>
+      <Recommendation :application-id="form.applicationId" />
 
       <div class="row justify-end q-mt-md">
         <q-btn
@@ -254,17 +195,16 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'stores/application.store'
-import { useRecommenderStore } from 'stores/recommender.store'
 import { useScholarshipContextStore } from 'stores/scholarship-context.store'
-import type { Application, Recommendation, Recommender, RecommendationStatus} from 'src/types'
+import type { Application } from 'src/types'
 import { targetTypeOptions, statusOptions } from 'src/types'
 import Essay from 'components/Essay.vue'
+import Recommendation from 'components/Recommendation.vue'
 
 const route = useRoute()
 const router = useRouter()
 const $q = useQuasar()
 const applicationStore = useApplicationStore()
-const recommenderStore = useRecommenderStore()
 const scholarshipContextStore = useScholarshipContextStore()
 const loading = ref(false)
 const isEdit = ref(false)
@@ -291,8 +231,6 @@ const form = ref<Omit<Application, 'created'>>({
   essays: [],
   recommendations: []
 })
-
-const recommenders = ref<Recommender[]>([])
 
 const rules = {
   scholarshipName: [
@@ -323,56 +261,6 @@ const rules = {
   dueDate: [
     (val: string) => !!val || 'Due date is required'
   ]
-}
-
-const recommendationColumns = [
-  {
-    name: 'recommender',
-    label: 'Recommender',
-    field: (row: Recommendation) => {
-      if (!row.recommender) return 'Loading...'
-      return `${row.recommender.firstName} ${row.recommender.lastName} (${row.recommender.emailAddress})`
-    },
-    align: 'left' as const
-  },
-  {
-    name: 'status',
-    label: 'Status',
-    field: 'status',
-    align: 'left' as const
-  },
-  {
-    name: 'dueDate',
-    label: 'Due Date',
-    field: 'dueDate',
-    align: 'left' as const,
-    format: (val: string) => new Date(val).toLocaleDateString()
-  },
-  {
-    name: 'submissionDate',
-    label: 'Submitted',
-    field: 'submissionDate',
-    align: 'left' as const,
-    format: (val: string | null) => val ? new Date(val).toLocaleDateString() : '-'
-  },
-  {
-    name: 'actions',
-    label: 'Actions',
-    field: 'actions',
-    align: 'right' as const
-  }
-]
-
-const loadRecommenders = async () => {
-  try {
-    recommenders.value = await recommenderStore.getRecommenders()
-  } catch (err) {
-    console.error('Failed to load recommenders:', err)
-    $q.notify({
-      type: 'negative',
-      message: 'Failed to load recommenders'
-    })
-  }
 }
 
 const loadApplication = async () => {
@@ -425,29 +313,12 @@ const onSubmit = async () => {
   }
 }
 
-const getStatusColor = (status: RecommendationStatus) => {
-  switch (status.toLowerCase()) {
-    case 'pending':
-      return 'warning'
-    case 'completed':
-      return 'positive'
-    default:
-      return 'grey'
-  }
-}
-
-const confirmDeleteRecommendation = (recommendation: Recommendation) => {
-  // Implement the confirmation logic here
-  console.log('Confirming deletion of recommendation:', recommendation)
-}
-
 onMounted(async () => {
   if (route.params.applicationId) {
     isEdit.value = true
     await loadApplication()
     scholarshipContextStore.setCurrentScholarshipName(form.value.scholarshipName)
   }
-  await loadRecommenders()
 })
 
 onBeforeUnmount(() => {

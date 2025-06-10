@@ -20,7 +20,7 @@ export interface Recommender {
 }
 
 export interface Recommendation {
-  recommendationId?: string
+  recommendationId: string
   recommender?: Recommender
   applicationId: string
   studentId: string

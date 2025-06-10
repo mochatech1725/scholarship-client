@@ -22,6 +22,15 @@ export const useRecommendationStore = defineStore('recommendation', {
 
     async updateRecommendation(id: string, recommendation: Omit<Recommendation, 'created'>) {
       return await mockService.updateRecommendation(id, recommendation)
+    },
+
+    async deleteRecommendation(id: string) {
+      // TODO: Implement API call
+      await new Promise(resolve => setTimeout(resolve, 100)) // Simulate API delay
+      const index = this.recommendations.findIndex(r => r.recommendationId === id)
+      if (index !== -1) {
+        this.recommendations.splice(index, 1)
+      }
     }
   }
 }) 

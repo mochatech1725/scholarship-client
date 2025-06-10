@@ -52,7 +52,23 @@ export const mockService = {
   // Recommendation methods
   getRecommendationsByApplication: async (applicationId: string): Promise<Recommendation[]> => {
     await new Promise(resolve => setTimeout(resolve, 500))
-    return typedRecommendationData.filter(rec => rec.applicationId === applicationId)
+    const recommendations = typedRecommendationData.filter(rec => rec.applicationId === applicationId)
+    
+    // Load recommenders
+    const recommenders = await mockService.getRecommenders()
+    
+    // Add recommender data to each recommendation
+    return recommendations.map(rec => {
+      const recommender = recommenders.find(r => r.recommenderId === rec.recommenderId)
+      if (!recommender) {
+        console.warn(`No recommender found for recommendation ${rec.recommendationId}`)
+        return rec
+      }
+      return {
+        ...rec,
+        recommender
+      }
+    })
   },
 
   getRecommendation: async (id: string): Promise<Recommendation> => {
