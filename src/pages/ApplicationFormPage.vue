@@ -474,7 +474,7 @@ const onSubmit = async () => {
   try {
     loading.value = true
     if (isEdit.value) {
-      const id = route.params.id as string
+      const id = route.params.applicationId as string
       await applicationStore.updateApplication(id, form.value)
       $q.notify({
         type: 'positive',
