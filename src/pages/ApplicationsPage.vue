@@ -40,7 +40,7 @@
                   round
                   color="primary"
                   icon="edit"
-                  :to="`/dashboard/application-form/${props.row.scholarshipId}`"
+                  :to="`/dashboard/application-form/${props.row.applicationId}`"
                 />
                 <q-btn
                   flat

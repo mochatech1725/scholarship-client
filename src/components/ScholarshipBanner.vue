@@ -1,7 +1,7 @@
 <template>
   <div v-if="show" class="scholarship-banner q-px-xl q-py-sm bg-grey-2">
     <div class="text-subtitle1 text-grey-8">
-      Scholarship: {{ scholarshipContextStore.currentScholarshipName }}
+      Current Scholarship: {{ scholarshipContextStore.currentScholarshipName }}
     </div>
   </div>
 </template>
@@ -15,7 +15,12 @@ const route = useRoute()
 const scholarshipContextStore = useScholarshipContextStore()
 
 const show = computed(() => {
-  return route.name === 'application-form' && route.params.scholarshipId
+  return route.name === 'applicationEdit' || 
+         route.name === 'applicationCreate' ||
+         route.name === 'essayEdit' ||
+         route.name === 'essayCreate' ||
+         route.name === 'recommendationEdit' ||
+         route.name === 'recommendationCreate'
 })
 </script>
 

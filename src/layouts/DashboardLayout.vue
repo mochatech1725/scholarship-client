@@ -29,19 +29,19 @@
         narrow-indicator
       >
         <q-route-tab
-          to="/dashboard/applications"
+          :to="{ name: 'applicationsList' }"
           name="applications"
           icon="description"
           label="Applications"
         />
         <q-route-tab
-          to="/dashboard/scholarships"
+          :to="{ name: 'scholarships' }"
           name="scholarships"
           icon="search"
           label="Scholarship Search"
         />
         <q-route-tab
-          to="/dashboard/recommenders"
+          :to="{ name: 'recommendersList' }"
           name="recommenders"
           icon="assignment"
           label="Recommenders"

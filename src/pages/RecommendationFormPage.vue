@@ -219,7 +219,7 @@ const onSubmit = async () => {
         message: 'Recommendation created successfully'
       })
     }
-    await router.push(`/dashboard/applications`)
+    await router.push({ name: 'applicationsList' })
   } catch (err) {
     console.error('Failed to save recommendation:', err)
     $q.notify({

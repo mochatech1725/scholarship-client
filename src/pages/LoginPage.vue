@@ -9,7 +9,7 @@
         :loading="isLoading"
       />
       <div class="text-center q-mt-sm">
-        <router-link to="/register">Don't have an account? Register</router-link>
+        <router-link :to="{ name: 'register' }">Don't have an account? Register</router-link>
       </div>
     </div>
   </q-page>

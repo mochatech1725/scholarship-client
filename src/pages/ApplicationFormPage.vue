@@ -303,6 +303,7 @@ import { useRecommenderStore } from 'stores/recommender.store'
 import { useEssayStore } from 'stores/essay.store'
 import { useScholarshipContextStore } from 'stores/scholarship-context.store'
 import type { Application, Recommendation, Recommender } from 'src/types'
+import { targetTypeOptions, statusOptions } from 'src/types'
 
 const route = useRoute()
 const router = useRouter()
@@ -329,7 +330,7 @@ const form = ref<Omit<Application, 'created'>>({
   renewable: false,
   documentInfoLink: '',
   currentAction: '',
-  status: 'not_started',
+  status: 'Not Started',
   submissionDate: '',
   openDate: '',
   dueDate: '',
@@ -337,8 +338,6 @@ const form = ref<Omit<Application, 'created'>>({
   recommendations: []
 })
 
-const targetTypeOptions = ['merit', 'need', 'both']
-const statusOptions = ['Not Started', 'In Progress', 'Submitted', 'Accepted', 'Rejected']
 const recommenders = ref<Recommender[]>([])
 
 const essayColumns = [
@@ -523,7 +522,7 @@ const confirmDeleteRecommendation = (recommendation: Recommendation) => {
 }
 
 onMounted(async () => {
-  if (route.params.scholarshipId) {
+  if (route.params.applicationId) {
     isEdit.value = true
     await loadApplication()
     scholarshipContextStore.setCurrentScholarshipName(form.value.scholarshipName)

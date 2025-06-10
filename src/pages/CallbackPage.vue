@@ -22,14 +22,14 @@ const handleCallback = async () => {
     const success = await authStore.handleCallback()
     if (success) {
       const { appState } = await auth0.handleRedirectCallback()
-      const target = appState?.target || '/dashboard/applications'
+      const target = appState?.target || { name: 'applicationsList' }
       await router.push(target)
     } else {
-      await router.push('/login')
+      await router.push({ name: 'login' })
     }
   } catch (err) {
     console.error('Callback handling failed:', err)
-    await router.push('/login')
+    await router.push({ name: 'login' })
   }
 }
 

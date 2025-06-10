@@ -96,4 +96,14 @@ export const areaOptions = [
   'Social Sciences',
   'Sports',
   'Technology'
+] as const
+
+export type ApplicationStatus = typeof statusOptions[number]
+
+export const statusOptions = [
+  'Not Started',
+  'In Progress',
+  'Submitted',
+  'Accepted',
+  'Rejected'
 ] as const 

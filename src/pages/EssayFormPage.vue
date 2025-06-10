@@ -7,7 +7,7 @@
         color="primary"
         icon="arrow_back"
         label="Back"
-        to="/dashboard/essays"
+        :to="{ name: 'essaysList' }"
       />
     </div>
 
@@ -59,7 +59,7 @@
           label="Cancel"
           color="grey"
           flat
-          to="/dashboard/essays"
+          :to="{ name: 'essaysList' }"
           class="q-mr-sm"
         />
         <q-btn
@@ -152,7 +152,7 @@ const onSubmit = async () => {
         message: 'Essay created successfully'
       })
     }
-    await router.push('/essays')
+    await router.push({ name: 'essaysList' })
   } catch (err) {
     console.error('Failed to save essay:', err)
     $q.notify({

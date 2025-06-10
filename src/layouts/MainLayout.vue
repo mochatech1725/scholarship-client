@@ -44,7 +44,7 @@
           v-if="authStore.isAuthenticated"
           clickable
           v-ripple
-          to="/dashboard/applications"
+          :to="{ name: 'applicationsList' }"
           exact
         >
           <q-item-section avatar>
@@ -59,7 +59,7 @@
           v-if="authStore.isAuthenticated"
           clickable
           v-ripple
-          to="/dashboard/scholarships"
+          :to="{ name: 'scholarships' }"
           exact
         >
           <q-item-section avatar>
@@ -74,7 +74,7 @@
           v-if="authStore.isAuthenticated"
           clickable
           v-ripple
-          to="/dashboard/profile"
+          :to="{ name: 'editProfile' }"
           exact
         >
           <q-item-section avatar>
@@ -89,7 +89,7 @@
           v-if="!authStore.isAuthenticated"
           clickable
           v-ripple
-          to="/login"
+          :to="{ name: 'login' }"
           exact
         >
           <q-item-section avatar>
@@ -104,7 +104,7 @@
           v-if="!authStore.isAuthenticated"
           clickable
           v-ripple
-          to="/register"
+          :to="{ name: 'register' }"
           exact
         >
           <q-item-section avatar>
@@ -160,7 +160,7 @@ watch(
   () => authStore.isAuthenticated,
   async (isAuthenticated) => {
     if (!isAuthenticated && router.currentRoute.value.path !== '/login') {
-      await router.push('/login')
+      await router.push({ name: 'login' })
     } else if (isAuthenticated) {
       console.log('**** authStore.isAuthenticated changed to true')
     }
