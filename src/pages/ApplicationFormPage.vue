@@ -30,16 +30,6 @@
             </div>
 
             <div class="col-12 col-md-6">
-              <q-select
-                v-model="form.targetType"
-                :options="targetTypeOptions"
-                label="Target Type"
-                outlined
-                dense
-              />
-            </div>
-
-            <div class="col-12 col-md-6">
               <q-input
                 v-model="form.company"
                 label="Organization"
@@ -69,6 +59,16 @@
             </div>
 
             <div class="col-12 col-md-6">
+              <q-select
+                v-model="form.targetType"
+                :options="targetTypeOptions"
+                label="Target Type"
+                outlined
+                dense
+              />
+            </div>
+
+            <div class="col-12 col-md-6">
               <q-input
                 v-model.number="form.amount"
                 label="Amount"
@@ -81,11 +81,10 @@
               />
             </div>
 
-            <div class="col-12 col-md-6">
-              <q-input
-                v-model="form.platform"
-                label="Platform"
-                outlined
+            <div class="col-12">
+              <q-toggle
+                v-model="form.renewable"
+                label="Renewable"
                 dense
               />
             </div>
@@ -94,6 +93,26 @@
               <q-input
                 v-model="form.theme"
                 label="Theme"
+                outlined
+                dense
+              />
+            </div>
+
+            <div class="col-12">
+              <q-input
+                v-model="form.requirements"
+                label="Requirements"
+                outlined
+                type="textarea"
+                autogrow
+                dense
+              />
+            </div>
+
+            <div class="col-12 col-md-6">
+              <q-input
+                v-model="form.platform"
+                label="Platform"
                 outlined
                 dense
               />
@@ -150,24 +169,6 @@
               />
             </div>
 
-            <div class="col-12">
-              <q-toggle
-                v-model="form.renewable"
-                label="Renewable"
-                dense
-              />
-            </div>
-
-            <div class="col-12">
-              <q-input
-                v-model="form.requirements"
-                label="Requirements"
-                outlined
-                type="textarea"
-                autogrow
-                dense
-              />
-            </div>
           </div>
         </q-card-section>
       </q-card>
