@@ -85,7 +85,6 @@
         <q-input
           v-model="form.requirements"
           label="Requirements"
-          type="textarea"
           outlined
           dense
         />
