@@ -1,14 +1,23 @@
 <template>
   <q-page class="q-pa-md">
-    <q-expansion-item
-      group="profile"
-      icon="person"
-      label="Profile"
-      header-class="text-h5"
-      default-opened
-    >
-      <q-form @submit="onSubmit" class="q-gutter-y-sm">
-        <div class="row q-col-gutter-xs">
+    <q-form @submit="onSubmit">
+      <div class="row justify-end q-mb-md">
+        <q-btn
+          type="submit"
+          color="primary"
+          :loading="loading"
+          label="Save Profile"
+        />
+      </div>
+
+      <q-expansion-item
+        group="profile"
+        icon="person"
+        label="Profile"
+        header-class="text-h5"
+        default-opened
+      >
+        <div class="row q-col-gutter-sm">
           <div class="col-12 col-md-6">
             <q-input
               v-model="form.firstName"
@@ -50,17 +59,15 @@
             />
           </div>
         </div>
-      </q-form>
-    </q-expansion-item>
+      </q-expansion-item>
 
-    <q-expansion-item
-      group="profile"
-      icon="search"
-      label="Search Preferences"
-      header-class="text-h5"
-      class="q-mt-md"
-    >
-      <q-form @submit="onSubmit" class="q-gutter-y-sm">
+      <q-expansion-item
+        group="profile"
+        icon="search"
+        label="Search Preferences"
+        header-class="text-h5"
+        class="q-mt-md"
+      >
         <div class="row q-col-gutter-sm">
           <div class="col-12 col-md-6">
             <q-select
@@ -104,18 +111,8 @@
             />
           </div>
         </div>
-      </q-form>
-    </q-expansion-item>
-
-    <div class="row justify-end q-mt-lg">
-      <q-btn
-        type="submit"
-        color="primary"
-        :loading="loading"
-        label="Save Profile"
-        @click="onSubmit"
-      />
-    </div>
+      </q-expansion-item>
+    </q-form>
   </q-page>
 </template>
 
