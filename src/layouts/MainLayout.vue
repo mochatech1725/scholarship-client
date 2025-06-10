@@ -38,7 +38,7 @@
       bordered
     >
       <q-list>
-        <q-item-label header>Navigation</q-item-label>
+        <q-item-label header class="text-primary text-weight-medium">Navigation</q-item-label>
 
         <q-item
           v-if="authStore.isAuthenticated"
@@ -50,7 +50,7 @@
           <q-item-section avatar>
             <q-icon name="description" />
           </q-item-section>
-          <q-item-section>
+          <q-item-section class="text-primary">
             Applications
           </q-item-section>
         </q-item>
@@ -65,7 +65,7 @@
           <q-item-section avatar>
             <q-icon name="search" />
           </q-item-section>
-          <q-item-section>
+          <q-item-section class="text-primary">
             Scholarship Search
           </q-item-section>
         </q-item>
@@ -80,7 +80,7 @@
           <q-item-section avatar>
             <q-icon name="person" />
           </q-item-section>
-          <q-item-section>
+          <q-item-section class="text-primary">
             Profile
           </q-item-section>
         </q-item>
@@ -95,7 +95,7 @@
           <q-item-section avatar>
             <q-icon name="login" />
           </q-item-section>
-          <q-item-section>
+          <q-item-section class="text-primary">
             Login
           </q-item-section>
         </q-item>
@@ -110,7 +110,7 @@
           <q-item-section avatar>
             <q-icon name="person_add" />
           </q-item-section>
-          <q-item-section>
+          <q-item-section class="text-primary">
             Register
           </q-item-section>
         </q-item>

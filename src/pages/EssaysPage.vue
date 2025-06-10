@@ -94,13 +94,6 @@ const columns = [
     format: (val: string) => val ? 'View' : 'Not uploaded'
   },
   {
-    name: 'created',
-    label: 'Created',
-    field: 'created',
-    align: 'left' as const,
-    format: (val: string) => new Date(val).toLocaleDateString()
-  },
-  {
     name: 'actions',
     label: 'Actions',
     field: 'actions',

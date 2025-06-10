@@ -186,38 +186,35 @@
             />
           </div>
 
-          <q-expansion-item
-            group="essays"
-            icon="list"
-            label="Available Essays"
-            header-class="text-primary"
+          <q-table
+            :rows="availableEssays"
+            :columns="essayColumns"
+            row-key="id"
+            flat
+            bordered
+            dense
           >
-            <q-card>
-              <q-card-section>
-                <q-table
-                  :rows="availableEssays"
-                  :columns="essayColumns"
-                  row-key="id"
+            <template v-slot:body-cell-actions="props">
+              <q-td :props="props" class="q-gutter-sm">
+                <q-btn
                   flat
-                  bordered
+                  round
+                  color="primary"
+                  icon="edit"
+                  :to="props.row.essayId ? `/dashboard/essay-form/${props.row.essayId}` : '#'"
                   dense
-                >
-                  <template v-slot:body-cell-actions="props">
-                    <q-td :props="props" class="q-gutter-sm">
-                      <q-btn
-                        flat
-                        round
-                        color="primary"
-                        icon="add"
-                        :to="`/dashboard/essay-form/${form.applicationId}`"
-                        dense
-                      />
-                    </q-td>
-                  </template>
-                </q-table>
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
+                />
+                <q-btn
+                  flat
+                  round
+                  color="negative"
+                  icon="delete"
+                  @click="confirmDeleteEssay(props.row)"
+                  dense
+                />
+              </q-td>
+            </template>
+          </q-table>
         </q-card-section>
       </q-card>
 
@@ -510,6 +507,40 @@ const getStatusColor = (status: string) => {
 const confirmDeleteRecommendation = (recommendation: Recommendation) => {
   // Implement the confirmation logic here
   console.log('Confirming deletion of recommendation:', recommendation)
+}
+
+const confirmDeleteEssay = (essay: Essay) => {
+  if (!essay.essayId) {
+    $q.notify({
+      color: 'negative',
+      message: 'Cannot delete essay: No essay ID found'
+    })
+    return
+  }
+
+  $q.dialog({
+    title: 'Confirm',
+    message: 'Are you sure you want to delete this essay?',
+    cancel: true,
+    persistent: true
+  }).onOk(() => {
+    void (async () => {
+      try {
+        await essayStore.deleteEssay(essay.essayId!)
+        await loadEssays()
+        $q.notify({
+          color: 'positive',
+          message: 'Essay deleted successfully'
+        })
+      } catch (err) {
+        console.error('Failed to delete essay:', err)
+        $q.notify({
+          color: 'negative',
+          message: 'Failed to delete essay'
+        })
+      }
+    })()
+  })
 }
 
 onMounted(async () => {

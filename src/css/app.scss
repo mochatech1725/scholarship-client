@@ -32,3 +32,17 @@ body {
 .text-weight-bold {
   font-weight: 700 !important;
 }
+
+// Table styles
+.q-table {
+  thead tr th {
+    color: var(--q-primary) !important;
+    font-weight: 600;
+  }
+}
+
+// Make sure expansion item headers are also blue
+.q-expansion-item__title {
+  color: var(--q-primary) !important;
+  font-weight: 600;
+}
