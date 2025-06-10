@@ -37,7 +37,7 @@ export interface Application {
   applicationId: string
   studentId: string
   scholarshipName: string
-  targetType: 'merit' | 'need' | 'both'
+  targetType: 'Merit' | 'Need' | 'Both'
   company: string
   companyWebsite: string
   platform: string

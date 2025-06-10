@@ -119,6 +119,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useRecommenderStore } from 'src/stores/recommender.store'
+import { mockService } from 'src/services/mock.service'
 import type { Recommender, Recommendation } from 'src/types'
 
 const route = useRoute()
@@ -173,33 +174,22 @@ const loadRecommenders = async () => {
 
 const loadRecommendation = async () => {
   try {
-    // TODO: Implement API call
-    await new Promise(resolve => setTimeout(resolve, 500)) // Simulate API delay
-
-    const mockRecommendation: Omit<Recommendation, 'created'> = {
-      recommendationId: recommendationId.value || '',
-      applicationId: form.value.applicationId,
-      studentId: 'student-1',
-      recommenderId: 'rec-1',
-      dueDate: '2024-04-01',
-      status: 'pending',
-      submissionMethod: 'DirectEmail',
-      requestDate: '2024-03-01',
-      submissionDate: null
+    if (!recommendationId.value) {
+      throw new Error('Recommendation ID is required')
     }
-
-    if (mockRecommendation) {
+    const recommendation = await mockService.getRecommendation(recommendationId.value)
+    if (recommendation) {
       form.value = {
-        ...mockRecommendation,
-        submissionDate: null
+        ...recommendation,
+        submissionDate: recommendation.submissionDate || null
       }
 
       if (form.value.recommenderId) {
-      const recommender = recommenders.value.find(r => r.recommenderId === form.value.recommenderId)
-      if (recommender) {
-        selectedRecommender.value = recommender
+        const recommender = recommenders.value.find(r => r.recommenderId === form.value.recommenderId)
+        if (recommender) {
+          selectedRecommender.value = recommender
+        }
       }
-    }
     }
   } catch (error) {
     console.error('Error loading recommendation:', error)
@@ -214,14 +204,16 @@ const onSubmit = async () => {
   try {
     loading.value = true
     if (isEdit.value) {
-      //const id = route.params.id as string
-      // TODO: Implement API call to update recommendation
+      if (!recommendationId.value) {
+        throw new Error('Recommendation ID is required')
+      }
+      await mockService.updateRecommendation(recommendationId.value, form.value)
       $q.notify({
         type: 'positive',
         message: 'Recommendation updated successfully'
       })
     } else {
-      // TODO: Implement API call to create recommendation
+      await mockService.createRecommendation(form.value)
       $q.notify({
         type: 'positive',
         message: 'Recommendation created successfully'

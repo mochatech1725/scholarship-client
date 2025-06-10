@@ -318,7 +318,7 @@ const form = ref<Omit<Application, 'created'>>({
   applicationId: '',
   studentId: '', // TODO: Get from auth store
   scholarshipName: '',
-  targetType: 'merit',
+  targetType: 'Merit',
   company: '',
   companyWebsite: '',
   platform: '',
@@ -456,100 +456,11 @@ const loadRecommenders = async () => {
 
 const loadApplication = async () => {
   try {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500))
-
-    // Simulate loading an application
-    const mockApplication: Application = {
-      applicationId: route.params.id as string,
-      studentId: 'student-1',
-      scholarshipName: 'Test Scholarship',
-      targetType: 'merit',
-      company: 'Test Company',
-      companyWebsite: 'https://testcompany.com',
-      applicationLink: 'https://testcompany.com/apply',
-      amount: 5000,
-      platform: 'Common App',
-      theme: 'Leadership',
-      openDate: '2024-01-01',
-      dueDate: '2024-05-01',
-      submissionDate: '2024-04-15',
-      status: 'in_progress',
-      currentAction: 'Waiting for recommendations',
-      renewable: true,
-      requirements: 'Test requirements',
-      documentInfoLink: 'https://testcompany.com/docs',
-      created: new Date().toISOString(),
-      recommendations: [
-        {
-          recommendationId: 'rec-1',
-          applicationId: route.params.id as string,
-          studentId: 'student-1',
-          recommenderId: 'rec-1',
-          recommender: {
-            recommenderId: 'rec-1',
-            firstName: 'John',
-            lastName: 'Smith',
-            emailAddress: 'john.smith@school.edu',
-            phoneNumber: '555-0123',
-            relationship: 'Academic Advisor',
-            created: new Date().toISOString()
-          },
-          status: 'pending',
-          requestDate: '2024-03-01',
-          dueDate: '2024-04-01',
-          submissionMethod: 'DirectEmail',
-          submissionDate: null,
-          created: new Date().toISOString()
-        },
-        {
-          recommendationId: 'rec-2',
-          applicationId: route.params.id as string,
-          studentId: 'student-1',
-          recommenderId: 'rec-2',
-          recommender: {
-            recommenderId: 'rec-2',
-            firstName: 'Sarah',
-            lastName: 'Johnson',
-            emailAddress: 'sarah.johnson@company.com',
-            phoneNumber: '555-0124',
-            relationship: 'Work Supervisor',
-            created: new Date().toISOString()
-          },
-          status: 'submitted',
-          requestDate: '2024-03-01',
-          dueDate: '2024-04-01',
-          submissionMethod: 'DirectEmail',
-          submissionDate: '2024-03-15',
-          created: new Date().toISOString()
-        },
-        {
-          recommendationId: 'rec-3',
-          applicationId: route.params.id as string,
-          studentId: 'student-1',
-          recommenderId: 'rec-3',
-          recommender: {
-            recommenderId: 'rec-3',
-            firstName: 'Michael',
-            lastName: 'Brown',
-            emailAddress: 'michael.brown@school.edu',
-            phoneNumber: '555-0125',
-            relationship: 'Research Advisor',
-            created: new Date().toISOString()
-          },
-          status: 'declined',
-          requestDate: '2024-03-01',
-          dueDate: '2024-04-01',
-          submissionMethod: 'DirectEmail',
-          submissionDate: null,
-          created: new Date().toISOString()
-        }
-      ],
-      essays: []
-    }
-
-    form.value = {
-      ...mockApplication
+    const application = await applicationStore.getApplication(route.params.id as string)
+    if (application) {
+      form.value = {
+        ...application
+      }
     }
   } catch (error) {
     console.error('Error loading application:', error)
@@ -615,7 +526,6 @@ onMounted(async () => {
   if (route.params.scholarshipId) {
     isEdit.value = true
     await loadApplication()
-    console.log('Setting scholarship name:', form.value.scholarshipName)
     scholarshipContextStore.setCurrentScholarshipName(form.value.scholarshipName)
   }
   await loadRecommenders()
@@ -623,7 +533,6 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
-  console.log('Clearing scholarship name')
   scholarshipContextStore.clearCurrentScholarshipName()
 })
 </script> 
