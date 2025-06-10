@@ -59,8 +59,7 @@
       <div class="col-auto">
         <ApplicationFilters
           v-model:filters="filters"
-          :status-options="statusOptions"
-          :date-range-options="dateRangeOptions"
+          :status-options="applicationStatusOptions"
         />
       </div>
     </div>
@@ -72,12 +71,14 @@ import { ref, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import type { QTableColumn } from 'quasar'
 import ApplicationFilters from 'src/components/ApplicationFilters.vue'
+import type { ApplicationStatus } from 'src/types'
+import { statusOptions } from 'src/types'
 
 interface Application {
   applicationId: string
   companyName: string
   scholarshipName: string
-  status: string
+  status: ApplicationStatus
   dueDate: string
   notes?: string
 }
@@ -90,20 +91,19 @@ const applications = ref<Application[]>([
     applicationId: '1',
     companyName: 'Google',
     scholarshipName: 'Google Scholarship',
-    status: 'Applied',
+    status: 'Submitted',
     dueDate: '2024-04-01',
     notes: 'Applied through company website'
   }
 ])
 
 const filters = ref({
-  status: null,
+  status: null as ApplicationStatus | null,
   companyName: '',
   dueDate: null
 })
 
-const statusOptions = ['Applied', 'Interview', 'Offer', 'Rejected', 'Draft']
-const dateRangeOptions = ['Last 7 days', 'Last 30 days', 'Last 90 days']
+const applicationStatusOptions = [...statusOptions]
 
 const columns: QTableColumn[] = [
   { name: 'companyName', label: 'Company', field: 'companyName', sortable: true, align: 'left' },
@@ -129,13 +129,13 @@ const filteredApplications = computed(() => {
   })
 })
 
-const getStatusColor = (status: string) => {
-  const colors: Record<string, string> = {
-    Applied: 'blue',
-    Interview: 'orange',
-    Offer: 'green',
-    Rejected: 'red',
-    Draft: 'grey'
+const getStatusColor = (status: ApplicationStatus) => {
+  const colors: Record<ApplicationStatus, string> = {
+    'Not Started': 'grey',
+    'In Progress': 'blue',
+    'Submitted': 'orange',
+    'Awarded': 'green',
+    'Not Awarded': 'red'
   }
   return colors[status] || 'grey'
 }
