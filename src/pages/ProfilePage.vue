@@ -71,16 +71,6 @@
         <div class="row q-col-gutter-sm">
           <div class="col-12 col-md-6">
             <q-select
-              v-model="preferences.educationLevel"
-              :options="educationLevelOptions"
-              label="Education Level"
-              outlined
-              dense
-            />
-          </div>
-
-          <div class="col-12 col-md-6">
-            <q-select
               v-model="preferences.targetTypes"
               :options="targetTypeOptions"
               label="Target Types"
@@ -120,7 +110,7 @@
 import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import type { Profile, SearchPreferences } from 'src/types'
-import { educationLevelOptions, targetTypeOptions, areaOptions } from 'src/types'
+import { targetTypeOptions, areaOptions } from 'src/types'
 import { useAuthStore } from 'stores/auth.store'
 
 const $q = useQuasar()
@@ -168,7 +158,7 @@ const loadProfile = () => {
     preferences.value = {
       educationLevel: 'College Freshman',
       targetTypes: ['Merit', 'Both'],
-      areas: ['STEM', 'Technology'],
+      areas: ['STEM'],
       minAmount: 1000
     }
   } catch (err) {

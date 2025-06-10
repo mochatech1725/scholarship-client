@@ -61,7 +61,7 @@ export interface Profile {
   firstName: string
   lastName: string
   emailAddress: string
-  phoneNumber?: string
+  phoneNumber: string
 }
 
 export type EducationLevel = typeof educationLevelOptions[number]
@@ -84,18 +84,33 @@ export const educationLevelOptions = [
   'Graduate Student'
 ] as const
 
-export const targetTypeOptions = ['Merit', 'Need', 'Both'] as const
+export const targetTypeOptions = [
+  'Merit',
+  'Need',
+  'Both',
+] as const
 
 export const areaOptions = [
   'STEM',
-  'Arts',
-  'Business',
-  'Education',
-  'Healthcare',
   'Humanities',
   'Social Sciences',
-  'Sports',
-  'Technology'
+  'Business',
+  'Arts',
+  'Education',
+  'Healthcare',
+  'Law',
+  'Public Policy',
+  'Environmental Science',
+  'Computer Science',
+  'Engineering',
+  'Mathematics',
+  'Physics',
+  'Chemistry',
+  'Biology',
+  'Medicine',
+  'Psychology',
+  'Economics',
+  'Other'
 ] as const
 
 export type ApplicationStatus = typeof statusOptions[number]
@@ -114,3 +129,19 @@ export const recomendationOptions = [
   'Pending',
   'Submitted'
 ] as const 
+
+export interface Scholarship {
+  id: string
+  name: string
+  organization: string
+  description: string
+  amount: number
+  deadline: string
+  targetType: string
+  theme: string
+  requirements: string
+  url: string
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+} 

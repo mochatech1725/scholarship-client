@@ -52,18 +52,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-
-interface Scholarship {
-  id: string
-  name: string
-  organization: string
-  amount: number
-  deadline: string
-  description: string
-  educationLevel: string
-  requirements: string[]
-  website: string
-}
+import type { Scholarship } from 'src/types'
+import mockRecommendations from 'src/mocks/mockScholarshipRecommendationsData.json'
 
 const searchResults = ref<Scholarship[]>([])
 const recommendedScholarships = ref<Scholarship[]>([])
@@ -94,15 +84,9 @@ const scholarshipColumns = [
     align: 'left' as const
   },
   {
-    name: 'educationLevel',
-    label: 'Education Level',
-    field: (row: Scholarship) => row.educationLevel,
-    align: 'left' as const
-  },
-  {
-    name: 'website',
+    name: 'url',
     label: 'Website',
-    field: (row: Scholarship) => row.website,
+    field: (row: Scholarship) => row.url,
     align: 'left' as const
   }
 ]
@@ -115,58 +99,14 @@ const onSearch = () => {
   // TODO: Implement actual search logic
   // For now, using mock data
   searchResults.value = [
-    {
-      id: '1',
-      name: 'STEM Excellence Scholarship',
-      organization: 'Tech Foundation',
-      amount: 10000,
-      deadline: '2024-05-01',
-      description: 'Awarded to outstanding students pursuing degrees in STEM fields.',
-      educationLevel: 'College Freshman',
-      requirements: ['3.5+ GPA', 'STEM Major', 'Essay'],
-      website: 'https://techfoundation.org/scholarships/stem-excellence'
-    },
-    {
-      id: '2',
-      name: 'Arts Achievement Award',
-      organization: 'Creative Arts Society',
-      amount: 5000,
-      deadline: '2024-04-15',
-      description: 'Supporting talented students in the arts and humanities.',
-      educationLevel: 'High School Senior',
-      requirements: ['Portfolio', 'Essay', 'Letters of Recommendation'],
-      website: 'https://creativearts.org/achievement-award'
-    }
+
   ]
 }
 
 onMounted(() => {
   // TODO: Implement actual API call
   // For now, using mock data
-  recommendedScholarships.value = [
-    {
-      id: '3',
-      name: 'Future Leaders Scholarship',
-      organization: 'Leadership Foundation',
-      amount: 15000,
-      deadline: '2024-06-01',
-      description: 'Supporting the next generation of leaders in business and technology.',
-      educationLevel: 'College Junior',
-      requirements: ['3.0+ GPA', 'Leadership Experience', 'Essay'],
-      website: 'https://leadershipfoundation.org/future-leaders'
-    },
-    {
-      id: '4',
-      name: 'Community Service Award',
-      organization: 'Service Foundation',
-      amount: 8000,
-      deadline: '2024-07-15',
-      description: 'Recognizing students who have made significant contributions to their communities.',
-      educationLevel: 'College Sophomore',
-      requirements: ['Community Service Hours', 'Essay', 'Letters of Recommendation'],
-      website: 'https://servicefoundation.org/community-award'
-    }
-  ]
+  recommendedScholarships.value = mockRecommendations as Scholarship[]
 })
 
 defineExpose({
