@@ -16,25 +16,36 @@
         <q-form @submit="onSubmit" class="q-gutter-md">
           <div class="row q-col-gutter-md">
             <div class="col-12">
-              <q-select
-                v-model="form.recommenderId"
-                :options="recommenders"
-                option-label="displayName"
-                option-value="recommenderId"
-                label="Recommender"
+              <q-input
+                v-model="selectedRecommender.firstName"
+                label="First Name"
                 outlined
                 dense
+                readonly
                 class="max-width-300"
-              >
-                <template v-slot:option="scope">
-                  <q-item v-bind="scope.itemProps">
-                    <q-item-section>
-                      <q-item-label>{{ scope.opt.firstName }} {{ scope.opt.lastName }}</q-item-label>
-                      <q-item-label caption>{{ scope.opt.emailAddress }}</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </template>
-              </q-select>
+              />
+            </div>
+
+            <div class="col-12">
+              <q-input
+                v-model="selectedRecommender.lastName"
+                label="Last Name"
+                outlined
+                dense
+                readonly
+                class="max-width-300"
+              />
+            </div>
+
+            <div class="col-12">
+              <q-input
+                v-model="selectedRecommender.emailAddress"
+                label="Email Address"
+                outlined
+                dense
+                readonly
+                class="max-width-300"
+              />
             </div>
 
             <div class="col-12">
@@ -138,10 +149,25 @@ const form = ref<Omit<Recommendation, 'created'>>({
 const recommenders = ref<Recommender[]>([])
 const submissionMethodOptions = ['DirectEmail', 'StudentUpload', 'DirectMail'] as const
 
+const selectedRecommender = ref<Recommender>({
+  recommenderId: '',
+  firstName: '',
+  lastName: '',
+  emailAddress: '',
+  phoneNumber: '',
+  relationship: '',
+  created: new Date().toISOString()
+})
 
 const loadRecommenders = async () => {
   try {
     recommenders.value = await recommenderStore.getRecommenders()
+    if (form.value.recommenderId) {
+      const recommender = recommenders.value.find(r => r.recommenderId === form.value.recommenderId)
+      if (recommender) {
+        selectedRecommender.value = recommender
+      }
+    }
   } catch (err) {
     console.error('Failed to load recommenders:', err)
     $q.notify({
