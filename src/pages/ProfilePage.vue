@@ -1,110 +1,120 @@
 <template>
-  <q-page padding>
-    <div class="text-h5 q-mb-lg">Profile</div>
+  <q-page class="q-pa-md">
+    <q-expansion-item
+      group="profile"
+      icon="person"
+      label="Profile"
+      header-class="text-h5"
+      default-opened
+    >
+      <q-form @submit="onSubmit" class="q-gutter-y-sm">
+        <div class="row q-col-gutter-xs">
+          <div class="col-12 col-md-6">
+            <q-input
+              v-model="form.firstName"
+              label="First Name"
+              :rules="rules.firstName"
+              outlined
+              dense
+            />
+          </div>
 
-    <div class="row q-col-gutter-lg">
-      <!-- Personal Information -->
-      <div class="col-12 col-md-6">
-        <q-card>
-          <q-card-section>
-            <div class="text-h6">Personal Information</div>
-          </q-card-section>
+          <div class="col-12 col-md-6">
+            <q-input
+              v-model="form.lastName"
+              label="Last Name"
+              :rules="rules.lastName"
+              outlined
+              dense
+            />
+          </div>
 
-          <q-card-section>
-            <q-form @submit="onUpdateProfile" class="q-gutter-md">
-              <q-input
-                v-model="profile.firstName"
-                label="First Name"
-                :rules="[val => !!val || 'First name is required']"
-              />
+          <div class="col-12 col-md-6">
+            <q-input
+              v-model="form.emailAddress"
+              label="Email"
+              type="email"
+              :rules="rules.emailAddress"
+              outlined
+              dense
+            />
+          </div>
 
-              <q-input
-                v-model="profile.lastName"
-                label="Last Name"
-                :rules="[val => !!val || 'Last name is required']"
-              />
+          <div class="col-12 col-md-6">
+            <q-input
+              v-model="form.phoneNumber"
+              label="Phone Number"
+              :rules="rules.phoneNumber"
+              outlined
+              dense
+            />
+          </div>
+        </div>
+      </q-form>
+    </q-expansion-item>
 
-              <q-input
-                v-model="profile.emailAddress"
-                label="Email"
-                type="email"
-                :rules="[
-                  val => !!val || 'Email is required',
-                  val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || 'Invalid email format'
-                ]"
-              />
+    <q-expansion-item
+      group="profile"
+      icon="search"
+      label="Search Preferences"
+      header-class="text-h5"
+      class="q-mt-md"
+    >
+      <q-form @submit="onSubmit" class="q-gutter-y-sm">
+        <div class="row q-col-gutter-sm">
+          <div class="col-12 col-md-6">
+            <q-select
+              v-model="preferences.educationLevel"
+              :options="educationLevelOptions"
+              label="Education Level"
+              outlined
+              dense
+            />
+          </div>
 
-              <q-input
-                v-model="profile.phoneNumber"
-                label="Phone Number (Optional)"
-                mask="(###) ###-####"
-              />
+          <div class="col-12 col-md-6">
+            <q-select
+              v-model="preferences.targetTypes"
+              :options="targetTypeOptions"
+              label="Target Types"
+              multiple
+              outlined
+              dense
+            />
+          </div>
 
-              <div class="row justify-end">
-                <q-btn
-                  label="Update Profile"
-                  type="submit"
-                  color="primary"
-                  :loading="loading"
-                />
-              </div>
-            </q-form>
-          </q-card-section>
-        </q-card>
-      </div>
+          <div class="col-12 col-md-6">
+            <q-select
+              v-model="preferences.areas"
+              :options="areaOptions"
+              label="Areas of Interest"
+              multiple
+              outlined
+              dense
+            />
+          </div>
 
-      <!-- Search Preferences -->
-      <div class="col-12 col-md-6">
-        <q-card>
-          <q-card-section>
-            <div class="text-h6">Search Preferences</div>
-          </q-card-section>
+          <div class="col-12 col-md-6">
+            <q-input
+              v-model.number="preferences.minAmount"
+              label="Minimum Amount"
+              type="number"
+              outlined
+              dense
+            />
+          </div>
+        </div>
+      </q-form>
+    </q-expansion-item>
 
-          <q-card-section>
-            <q-form @submit="onUpdatePreferences" class="q-gutter-md">
-              <q-select
-                v-model="preferences.educationLevel"
-                :options="educationLevelOptions"
-                label="Education Level"
-                :rules="[val => !!val || 'Education level is required']"
-              />
-
-              <q-select
-                v-model="preferences.targetTypes"
-                :options="targetTypeOptions"
-                label="Target Types"
-                multiple
-                use-chips
-                :rules="[val => val.length > 0 || 'At least one target type is required']"
-              />
-
-              <q-select
-                v-model="preferences.areas"
-                :options="areaOptions"
-                label="Areas of Interest"
-                multiple
-                use-chips
-              />
-
-              <q-input
-                v-model.number="preferences.minAmount"
-                label="Minimum Amount"
-                type="number"
-                prefix="$"
-              />
-
-              <div class="row justify-end">
-                <q-btn
-                  label="Save Preferences"
-                  type="submit"
-                  color="primary"
-                  :loading="loading"
-                />
-              </div>
-            </q-form>
-          </q-card-section>
-        </q-card>
-      </div>
+    <div class="row justify-end q-mt-lg">
+      <q-btn
+        type="submit"
+        color="primary"
+        :loading="loading"
+        label="Save Profile"
+        @click="onSubmit"
+      />
     </div>
   </q-page>
 </template>
@@ -112,15 +122,15 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
-import { useAuthStore } from 'stores/auth.store'
 import type { Profile, SearchPreferences } from 'src/types'
 import { educationLevelOptions, targetTypeOptions, areaOptions } from 'src/types'
+import { useAuthStore } from 'stores/auth.store'
 
 const $q = useQuasar()
 const authStore = useAuthStore()
 const loading = ref(false)
 
-const profile = ref<Profile>({
+const form = ref<Profile>({
   firstName: '',
   lastName: '',
   emailAddress: '',
@@ -134,19 +144,30 @@ const preferences = ref<SearchPreferences>({
   minAmount: 0
 })
 
-const loadProfile = async () => {
-  loading.value = true
+const rules = {
+  firstName: [(val: string) => !!val || 'First name is required'],
+  lastName: [(val: string) => !!val || 'Last name is required'],
+  emailAddress: [
+    (val: string) => !!val || 'Email is required',
+    (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || 'Invalid email format'
+  ],
+  phoneNumber: [(val: string) => !val || /^\d{10}$/.test(val.replace(/\D/g, '')) || 'Invalid phone number']
+}
+
+const loadProfile = () => {
   try {
-    // TODO: Implement API call
-    // For now, using mock data
-    await new Promise(resolve => setTimeout(resolve, 500)) // Simulate API delay
-    profile.value = {
-      firstName: authStore.user?.firstName || '',
-      lastName: authStore.user?.lastName || '',
-      emailAddress: authStore.user?.emailAddress || '',
-      phoneNumber: authStore.user?.phoneNumber || ''
+    loading.value = true
+    // TODO: Implement API call to get profile data
+    // For now, just set basic user info from auth store
+    const user = authStore.user
+    if (user) {
+      form.value.firstName = user.firstName
+      form.value.lastName = user.lastName
+      form.value.emailAddress = user.emailAddress
+      form.value.phoneNumber = user.phoneNumber || ''
     }
 
+    // TODO: Load preferences from API
     preferences.value = {
       educationLevel: 'College Freshman',
       targetTypes: ['Merit', 'Both'],
@@ -156,7 +177,7 @@ const loadProfile = async () => {
   } catch (err) {
     console.error('Failed to load profile:', err)
     $q.notify({
-      color: 'negative',
+      type: 'negative',
       message: 'Failed to load profile'
     })
   } finally {
@@ -164,19 +185,19 @@ const loadProfile = async () => {
   }
 }
 
-const onUpdateProfile = async () => {
-  loading.value = true
+const onSubmit = async () => {
   try {
-    // TODO: Implement API call
-    await new Promise(resolve => setTimeout(resolve, 500)) // Simulate API delay
+    loading.value = true
+    // TODO: Implement profile and preferences update logic
+    await new Promise(resolve => setTimeout(resolve, 1000)) // Simulate API call
     $q.notify({
-      color: 'positive',
+      type: 'positive',
       message: 'Profile updated successfully'
     })
   } catch (err) {
     console.error('Failed to update profile:', err)
     $q.notify({
-      color: 'negative',
+      type: 'negative',
       message: 'Failed to update profile'
     })
   } finally {
@@ -184,27 +205,7 @@ const onUpdateProfile = async () => {
   }
 }
 
-const onUpdatePreferences = async () => {
-  loading.value = true
-  try {
-    // TODO: Implement API call
-    await new Promise(resolve => setTimeout(resolve, 500)) // Simulate API delay
-    $q.notify({
-      color: 'positive',
-      message: 'Preferences updated successfully'
-    })
-  } catch (err) {
-    console.error('Failed to update preferences:', err)
-    $q.notify({
-      color: 'negative',
-      message: 'Failed to update preferences'
-    })
-  } finally {
-    loading.value = false
-  }
-}
-
 onMounted(() => {
-  void loadProfile()
+  loadProfile()
 })
 </script> 
