@@ -1,6 +1,6 @@
 <template>
   <q-form @submit="onSubmit" class="q-gutter-md">
-    <div class="row q-col-gutter-md">
+    <div class="row q-col-gutter-sm">
       <div class="col-12 col-md-6">
         <q-input
           v-model="form.scholarshipName"
@@ -63,15 +63,6 @@
 
       <div class="col-12 col-md-6">
         <q-input
-          v-model="form.theme"
-          label="Theme"
-          outlined
-          dense
-        />
-      </div>
-
-      <div class="col-12 col-md-6">
-        <q-input
           v-model.number="form.amount"
           label="Amount"
           type="number"
@@ -81,19 +72,28 @@
         />
       </div>
 
-      <div class="col-12">
+      <div class="col-12 col-md-6">
+        <q-checkbox
+          v-model="form.renewable"
+          label="Renewable"
+        />
+      </div>
+
+      <div class="col-12 col-md-6">
+        <q-input
+          v-model="form.theme"
+          label="Theme"
+          outlined
+          dense
+        />
+      </div>
+      
+      <div class="col-12 col-md-6">
         <q-input
           v-model="form.requirements"
           label="Requirements"
           outlined
           dense
-        />
-      </div>
-
-      <div class="col-12 col-md-6">
-        <q-checkbox
-          v-model="form.renewable"
-          label="Renewable"
         />
       </div>
 
