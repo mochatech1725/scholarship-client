@@ -17,7 +17,7 @@
       "applicationId": "app-1",
       "studentId": "student-1",
       "recommenderId": "rec-2",
-      "status": "Completed",
+      "status": "Submitted",
       "requestDate": "2024-03-01",
       "dueDate": "2024-04-01",
       "submissionMethod": "DirectEmail",

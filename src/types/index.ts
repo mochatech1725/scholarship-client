@@ -112,5 +112,5 @@ export type RecommendationStatus = typeof recomendationOptions[number]
 
 export const recomendationOptions = [
   'Pending',
-  'Completed'
+  'Submitted'
 ] as const 
