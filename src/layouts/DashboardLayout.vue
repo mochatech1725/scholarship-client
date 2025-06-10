@@ -13,6 +13,9 @@
           icon="person"
         >
           <q-list>
+            <q-item clickable v-close-popup :to="{ name: 'editProfile' }">
+              <q-item-section>Profile</q-item-section>
+            </q-item>
             <q-item clickable v-close-popup @click="onLogout">
               <q-item-section>
                 <q-item-label>Logout</q-item-label>
@@ -82,6 +85,8 @@ onMounted(async () => {
       activeTab.value = 'applications'
     } else if (route.path.includes('/scholarship')) {
       activeTab.value = 'scholarshipSearch'
+    } else if (route.path.includes('/recommenders')) {
+      activeTab.value = 'recommenders'
     } else if (route.path.includes('/profile')) {
       activeTab.value = 'profile'
     }
