@@ -177,7 +177,7 @@
       <Essay :application-id="form.applicationId" />
 
       <!-- Recommendations Section -->
-      <Recommendation :application-id="form.applicationId" />
+      <Recommendations :application-id="form.applicationId" />
 
       <div class="row justify-end q-mt-md">
         <q-btn
@@ -199,7 +199,7 @@ import { useScholarshipContextStore } from 'stores/scholarship-context.store'
 import type { Application } from 'src/types'
 import { targetTypeOptions, statusOptions } from 'src/types'
 import Essay from 'components/Essay.vue'
-import Recommendation from 'components/Recommendation.vue'
+import Recommendations from 'components/Recommendations.vue'
 
 const route = useRoute()
 const router = useRouter()
