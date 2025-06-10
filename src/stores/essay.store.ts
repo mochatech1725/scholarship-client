@@ -8,44 +8,24 @@ export const useEssayStore = defineStore('essay', {
   }),
 
   actions: {
-    // These methods are currently using in-memory storage as placeholders
-    // They will be replaced with actual API calls in the future
     async createEssay(essay: Omit<Essay, 'essayId' | 'created'>) {
-      // TODO: Implement API call
-      await new Promise(resolve => setTimeout(resolve, 100)) // Simulate API delay
-      const newEssay: Essay = {
-        ...essay,
-        essayId: crypto.randomUUID(),
-        created: new Date().toISOString()
-      }
-      this.essays.push(newEssay)
-      return newEssay
+      return await mockService.createEssay(essay)
     },
 
     async getEssays() {
-      // TODO: Implement API call
-      await new Promise(resolve => setTimeout(resolve, 100)) // Simulate API delay
-      return this.essays
+      return await mockService.getEssaysByApplication('') // TODO: Get all essays
     },
 
     async getEssaysByApplication(applicationId: string) {
       return await mockService.getEssaysByApplication(applicationId)
     },
 
+    async getEssay(id: string) {
+      return await mockService.getEssay(id)
+    },
+
     async updateEssay(id: string, updates: Omit<Essay, 'essayId' | 'created'>) {
-      // TODO: Implement API call
-      await new Promise(resolve => setTimeout(resolve, 100)) // Simulate API delay
-      const index = this.essays.findIndex(e => e.essayId === id)
-      if (index !== -1) {
-        const existingEssay = this.essays[index]
-        if (existingEssay) {
-          this.essays[index] = {
-            ...updates,
-            essayId: existingEssay.essayId || crypto.randomUUID(),
-            created: existingEssay.created
-          }
-        }
-      }
+      return await mockService.updateEssay(id, updates)
     },
 
     async deleteEssay(id: string) {

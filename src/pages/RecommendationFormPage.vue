@@ -136,7 +136,7 @@ const recommendationId = computed(() => {
 })
 
 const form = ref<Omit<Recommendation, 'created'>>({
-  recommendationId: route.params.recommendationId as string,
+  recommendationId: recommendationId.value || '',
   applicationId: '',
   studentId: '', // TODO: Get from auth store
   recommenderId: '',

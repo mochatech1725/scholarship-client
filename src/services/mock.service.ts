@@ -49,6 +49,31 @@ export const mockService = {
     return essayData.essays.filter(essay => essay.applicationId === applicationId)
   },
 
+  getEssay: async (id: string): Promise<Essay> => {
+    await new Promise(resolve => setTimeout(resolve, 500))
+    const essay = essayData.essays.find(essay => essay.essayId === id)
+    if (!essay) {
+      throw new Error('Essay not found')
+    }
+    return essay
+  },
+
+  createEssay: async (essay: Omit<Essay, 'created'>): Promise<Essay> => {
+    await new Promise(resolve => setTimeout(resolve, 500))
+    return {
+      ...essay,
+      created: new Date().toISOString()
+    } as Essay
+  },
+
+  updateEssay: async (id: string, essay: Omit<Essay, 'created'>): Promise<Essay> => {
+    await new Promise(resolve => setTimeout(resolve, 500))
+    return {
+      ...essay,
+      created: new Date().toISOString()
+    } as Essay
+  },
+
   // Recommendation methods
   getRecommendationsByApplication: async (applicationId: string): Promise<Recommendation[]> => {
     await new Promise(resolve => setTimeout(resolve, 500))

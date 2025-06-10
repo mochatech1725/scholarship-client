@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useEssayStore } from 'src/stores/essay.store'
@@ -87,8 +87,13 @@ const essayStore = useEssayStore()
 const loading = ref(false)
 
 const isEdit = ref(false)
+
+const essayId = computed(() => {
+  return route.params.essayId
+})
+
 const form = ref<Omit<Essay, 'created'>>({
-  essayId: route.params.essayId as string,
+  essayId: essayId.value as string,
   applicationId: '', // TODO: Get from parent application
   studentId: '', // TODO: Get from auth store
   count: 0,
@@ -113,11 +118,10 @@ const rules = {
 
 const loadEssay = async (id: string) => {
   try {
-    const essays = await essayStore.getEssays()
-    const essay = essays.find(e => e.essayId === id)
+    const essay = await essayStore.getEssay(id)
     if (essay) {
       form.value = {
-        essayId: essay.essayId || '',
+        essayId: essay.essayId || id,
         applicationId: essay.applicationId,
         studentId: essay.studentId,
         count: essay.count,
@@ -165,10 +169,9 @@ const onSubmit = async () => {
 }
 
 onMounted(() => {
-  const { essayId } = route.params
-  if (essayId && essayId !== 'new') {
+  if (essayId.value) {
     isEdit.value = true
-    void loadEssay(essayId as string)
+    void loadEssay(essayId.value as string)
   }
 })
 </script> 

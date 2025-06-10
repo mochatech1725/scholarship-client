@@ -174,7 +174,7 @@
       </q-card>
 
       <!-- Essays Section -->
-      <Essay :application-id="form.applicationId" />
+      <Essays :application-id="form.applicationId" />
 
       <!-- Recommendations Section -->
       <Recommendations :application-id="form.applicationId" />
@@ -198,7 +198,7 @@ import { useApplicationStore } from 'stores/application.store'
 import { useScholarshipContextStore } from 'stores/scholarship-context.store'
 import type { Application } from 'src/types'
 import { targetTypeOptions, statusOptions } from 'src/types'
-import Essay from 'components/Essay.vue'
+import Essays from 'components/Essays.vue'
 import Recommendations from 'components/Recommendations.vue'
 
 const route = useRoute()
