@@ -27,10 +27,10 @@ export const useEssayStore = defineStore('essay', {
       return this.essays
     },
 
-    async getEssaysByScholarship(scholarshipId: string) {
+    async getEssaysByScholarship(applicationId: string) {
       // TODO: Implement API call
       await new Promise(resolve => setTimeout(resolve, 100)) // Simulate API delay
-      return this.essays.filter(essay => essay.scholarshipId === scholarshipId)
+      return this.essays.filter(essay => essay.applicationId === applicationId)
     },
 
     async updateEssay(id: string, updates: Omit<Essay, 'essayId' | 'created'>) {

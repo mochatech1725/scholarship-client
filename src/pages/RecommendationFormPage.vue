@@ -97,7 +97,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useRecommenderStore } from 'src/stores/recommender.store'
@@ -111,26 +111,21 @@ const loading = ref(false)
 
 const isEdit = ref(false)
 
-// Get and validate route parameters
-const recommendationId = Array.isArray(route.params.recommendationId) 
-  ? route.params.recommendationId[0] 
-  : route.params.recommendationId || ''
-
-const scholarshipId = route.params.scholarshipId
-
-if (!scholarshipId || Array.isArray(scholarshipId)) {
-  throw new Error('Invalid scholarship ID')
-}
+const recommendationId = computed(() => {
+  const id = route.params.recommendationId
+  return Array.isArray(id) ? id[0] : id
+})
 
 const form = ref<Omit<Recommendation, 'created'>>({
-  recommendationId: typeof recommendationId === 'string' ? recommendationId : '',
-  scholarshipId: scholarshipId,
+  recommendationId: typeof recommendationId.value === 'string' ? recommendationId.value : '',
+  applicationId: '',
   studentId: '', // TODO: Get from auth store
   recommenderId: '',
   dueDate: '',
-  status: 'Pending',
+  status: 'pending',
   submissionMethod: 'DirectEmail',
-  requestDate: new Date().toISOString().split('T')[0] || new Date().toISOString().slice(0, 10)
+  requestDate: new Date().toISOString(),
+  submissionDate: null
 })
 
 const recommenders = ref<Recommender[]>([])
@@ -164,41 +159,31 @@ const loadRecommenders = async () => {
   }
 }
 
-const loadRecommendation = async (id: string) => {
+const loadRecommendation = async () => {
   try {
-    // TODO: Implement API call to load recommendation
-    // For now, using mock data
+    // TODO: Implement API call
     await new Promise(resolve => setTimeout(resolve, 500)) // Simulate API delay
-    
-    const mockData = {
-      '1': {
-        recommendationId: '1',
-        scholarshipId,
-        studentId: '', // TODO: Get from auth store
-        recommenderId: '1',
-        dueDate: '2024-04-15',
-        status: 'Pending',
-        submissionMethod: 'DirectEmail' as const,
-        requestDate: new Date().toISOString().split('T')[0],
-        created: new Date().toISOString()
-      }
+
+    const mockRecommendation: Omit<Recommendation, 'created'> = {
+      recommendationId: recommendationId.value || '',
+      applicationId: form.value.applicationId,
+      studentId: 'student-1',
+      recommenderId: 'rec-1',
+      dueDate: '2024-04-01',
+      status: 'pending',
+      submissionMethod: 'DirectEmail',
+      requestDate: '2024-03-01',
+      submissionDate: null
     }
 
-    const mockRecommendation = mockData[id as keyof typeof mockData]
     if (mockRecommendation) {
       form.value = {
-        recommendationId: mockRecommendation.recommendationId,
-        scholarshipId: mockRecommendation.scholarshipId,
-        studentId: mockRecommendation.studentId,
-        recommenderId: mockRecommendation.recommenderId,
-        dueDate: mockRecommendation.dueDate,
-        status: mockRecommendation.status,
-        submissionMethod: mockRecommendation.submissionMethod,
-        requestDate: mockRecommendation.requestDate!
+        ...mockRecommendation,
+        submissionDate: null
       }
     }
-  } catch (err) {
-    console.error('Failed to load recommendation:', err)
+  } catch (error) {
+    console.error('Error loading recommendation:', error)
     $q.notify({
       type: 'negative',
       message: 'Failed to load recommendation'
@@ -223,7 +208,7 @@ const onSubmit = async () => {
         message: 'Recommendation created successfully'
       })
     }
-    await router.push(`/dashboard/applications/${scholarshipId}`)
+    await router.push(`/dashboard/applications`)
   } catch (err) {
     console.error('Failed to save recommendation:', err)
     $q.notify({
@@ -237,9 +222,9 @@ const onSubmit = async () => {
 
 onMounted(async () => {
   await loadRecommenders()
-  if (recommendationId) {
+  if (recommendationId.value) {
     isEdit.value = true
-    await loadRecommendation(recommendationId)
+    await loadRecommendation()
   }
 })
 </script>

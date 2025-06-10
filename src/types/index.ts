@@ -1,6 +1,6 @@
 export interface Essay {
   essayId?: string
-  scholarshipId: string
+  applicationId: string
   studentId: string
   essayLink: string
   count: string
@@ -22,19 +22,20 @@ export interface Recommender {
 export interface Recommendation {
   recommendationId?: string
   recommender?: Recommender
-  scholarshipId: string
+  applicationId: string
   studentId: string
   recommenderId: string
   dueDate: string
   status: string
   submissionMethod: 'DirectEmail' | 'StudentUpload' | 'DirectMail'
   requestDate: string
+  submissionDate: string | null
   created: string
 }
 
 export interface Application {
+  applicationId: string
   studentId: string
-  scholarshipId: string
   scholarshipName: string
   targetType: 'merit' | 'need' | 'both'
   company: string

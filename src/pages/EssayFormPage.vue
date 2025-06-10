@@ -89,7 +89,7 @@ const loading = ref(false)
 const isEdit = ref(false)
 const form = ref<Omit<Essay, 'created'>>({
   essayId: route.params.essayId as string,
-  scholarshipId: '', // TODO: Get from parent application
+  applicationId: '', // TODO: Get from parent application
   studentId: '', // TODO: Get from auth store
   count: '',
   units: '',
@@ -118,7 +118,7 @@ const loadEssay = async (id: string) => {
     if (essay) {
       form.value = {
         essayId: essay.essayId || '',
-        scholarshipId: essay.scholarshipId,
+        applicationId: essay.applicationId,
         studentId: essay.studentId,
         count: essay.count,
         units: essay.units,
@@ -139,7 +139,7 @@ const onSubmit = async () => {
   try {
     loading.value = true
     if (isEdit.value) {
-      const id = route.params.id as string
+      const id = route.params.essayId as string
       await essayStore.updateEssay(id, form.value)
       $q.notify({
         type: 'positive',

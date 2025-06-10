@@ -163,7 +163,7 @@ const onSubmit = async () => {
   try {
     loading.value = true
     if (isEdit.value) {
-      const id = route.params.id as string
+      const id = route.params.recommenderId as string
       await recommenderStore.updateRecommender(id, form.value)
       $q.notify({
         type: 'positive',

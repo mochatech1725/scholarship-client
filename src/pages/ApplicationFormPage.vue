@@ -1,7 +1,9 @@
 <template>
   <q-page padding class="q-px-xl">
     <div class="row q-mb-lg items-center justify-between">
-      <div class="text-h5">{{ isEdit ? 'Edit Application' : 'New Application' }}</div>
+      <div>
+        <div class="text-h5">{{ isEdit ? 'Edit Application' : 'New Application' }}</div>
+      </div>
       <q-btn
         flat
         color="primary"
@@ -23,6 +25,7 @@
                 label="Scholarship Name"
                 :rules="rules.scholarshipName"
                 outlined
+                dense
               />
             </div>
 
@@ -32,6 +35,7 @@
                 :options="targetTypeOptions"
                 label="Target Type"
                 outlined
+                dense
               />
             </div>
 
@@ -40,6 +44,7 @@
                 v-model="form.company"
                 label="Organization"
                 outlined
+                dense
               />
             </div>
 
@@ -49,6 +54,7 @@
                 label="Organization Website"
                 outlined
                 type="url"
+                dense
               />
             </div>
 
@@ -58,6 +64,7 @@
                 label="Application Link"
                 outlined
                 type="url"
+                dense
               />
             </div>
 
@@ -70,6 +77,7 @@
                 type="number"
                 step="0.01"
                 prefix="$"
+                dense
               />
             </div>
 
@@ -78,6 +86,7 @@
                 v-model="form.platform"
                 label="Platform"
                 outlined
+                dense
               />
             </div>
 
@@ -86,23 +95,17 @@
                 v-model="form.theme"
                 label="Theme"
                 outlined
+                dense
               />
             </div>
-          </div>
-        </q-card-section>
-      </q-card>
 
-      <!-- Dates and Status Section -->
-      <q-card class="q-pa-md">
-        <q-card-section>
-          <div class="text-h6 q-mb-md">Dates and Status</div>
-          <div class="row q-col-gutter-md">
             <div class="col-12 col-md-4">
               <q-input
                 v-model="form.openDate"
                 label="Open Date"
                 outlined
                 type="date"
+                dense
               />
             </div>
 
@@ -113,6 +116,7 @@
                 :rules="rules.dueDate"
                 outlined
                 type="date"
+                dense
               />
             </div>
 
@@ -122,6 +126,7 @@
                 label="Submission Date"
                 outlined
                 type="date"
+                dense
               />
             </div>
 
@@ -132,6 +137,7 @@
                 label="Status"
                 :rules="rules.status"
                 outlined
+                dense
               />
             </div>
 
@@ -140,6 +146,7 @@
                 v-model="form.currentAction"
                 label="Current Action"
                 outlined
+                dense
               />
             </div>
 
@@ -147,23 +154,21 @@
               <q-toggle
                 v-model="form.renewable"
                 label="Renewable"
+                dense
+              />
+            </div>
+
+            <div class="col-12">
+              <q-input
+                v-model="form.requirements"
+                label="Requirements"
+                outlined
+                type="textarea"
+                autogrow
+                dense
               />
             </div>
           </div>
-        </q-card-section>
-      </q-card>
-
-      <!-- Requirements Section -->
-      <q-card class="q-pa-md">
-        <q-card-section>
-          <div class="text-h6 q-mb-md">Requirements</div>
-          <q-input
-            v-model="form.requirements"
-            label="Requirements"
-            outlined
-            type="textarea"
-            autogrow
-          />
         </q-card-section>
       </q-card>
 
@@ -177,7 +182,7 @@
               color="primary"
               icon="add"
               label="Add Essay"
-              :to="`/dashboard/essay-form/${form.scholarshipId}`"
+              :to="`/dashboard/essay-form/${form.applicationId}`"
             />
           </div>
 
@@ -195,6 +200,7 @@
                   row-key="id"
                   flat
                   bordered
+                  dense
                 >
                   <template v-slot:body-cell-actions="props">
                     <q-td :props="props" class="q-gutter-sm">
@@ -203,7 +209,7 @@
                         round
                         color="primary"
                         icon="add"
-                        :to="`/dashboard/essay-form/${form.scholarshipId}`"
+                        :to="`/dashboard/essay-form/${form.applicationId}`"
                         dense
                       />
                     </q-td>
@@ -235,6 +241,7 @@
             row-key="recommendationId"
             flat
             bordered
+            dense
           >
             <template v-slot:body-cell-recommender="props">
               <q-td :props="props">
@@ -267,7 +274,7 @@
                   round
                   color="negative"
                   icon="delete"
-                  @click="removeRecommendation(props.rowIndex)"
+                  @click="confirmDeleteRecommendation(props.row)"
                   dense
                 />
               </q-td>
@@ -276,19 +283,11 @@
         </q-card-section>
       </q-card>
 
-      <div class="row justify-end q-mt-lg">
+      <div class="row justify-end q-mt-md">
         <q-btn
-          label="Cancel"
-          color="grey"
-          flat
-          to="/dashboard/applications"
-          class="q-mr-sm"
-        />
-        <q-btn
-          label="Save"
           type="submit"
           color="primary"
-          :loading="loading"
+          :label="isEdit ? 'Update Application' : 'Create Application'"
         />
       </div>
     </q-form>
@@ -296,12 +295,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'stores/application.store'
 import { useRecommenderStore } from 'stores/recommender.store'
 import { useEssayStore } from 'stores/essay.store'
+import { useScholarshipContextStore } from 'stores/scholarship-context.store'
 import type { Application, Recommendation, Recommender } from 'src/types'
 
 const route = useRoute()
@@ -310,12 +310,13 @@ const $q = useQuasar()
 const applicationStore = useApplicationStore()
 const recommenderStore = useRecommenderStore()
 const essayStore = useEssayStore()
+const scholarshipContextStore = useScholarshipContextStore()
 const loading = ref(false)
-
 const isEdit = ref(false)
-const form = ref<Application>({
-  studentId: '',
-  scholarshipId: '',
+
+const form = ref<Omit<Application, 'created'>>({
+  applicationId: '',
+  studentId: '', // TODO: Get from auth store
   scholarshipName: '',
   targetType: 'merit',
   company: '',
@@ -328,11 +329,10 @@ const form = ref<Application>({
   renewable: false,
   documentInfoLink: '',
   currentAction: '',
-  status: '',
+  status: 'not_started',
   submissionDate: '',
   openDate: '',
   dueDate: '',
-  created: new Date().toISOString(),
   essays: [],
   recommendations: []
 })
@@ -352,7 +352,10 @@ const recommendationColumns = [
   {
     name: 'recommender',
     label: 'Recommender',
-    field: (row: Recommendation) => row.recommender ? `${row.recommender.firstName} ${row.recommender.lastName}` : '',
+    field: (row: Recommendation) => {
+      if (!row.recommender) return 'Loading...'
+      return `${row.recommender.firstName} ${row.recommender.lastName} (${row.recommender.emailAddress})`
+    },
     align: 'left' as const
   },
   {
@@ -369,6 +372,13 @@ const recommendationColumns = [
     format: (val: string) => new Date(val).toLocaleDateString()
   },
   {
+    name: 'submissionDate',
+    label: 'Submitted',
+    field: 'submissionDate',
+    align: 'left' as const,
+    format: (val: string | null) => val ? new Date(val).toLocaleDateString() : '-'
+  },
+  {
     name: 'actions',
     label: 'Actions',
     field: 'actions',
@@ -378,7 +388,7 @@ const recommendationColumns = [
 
 const availableEssays = ref<Array<{
   essayId?: string;
-  scholarshipId: string;
+  applicationId: string;
   studentId: string;
   essayLink: string;
   count: string;
@@ -420,7 +430,7 @@ const rules = {
 
 const loadEssays = async () => {
   try {
-    const essays = await essayStore.getEssaysByScholarship(form.value.scholarshipId)
+    const essays = await essayStore.getEssaysByScholarship(form.value.applicationId)
     form.value.essays = essays
     availableEssays.value = essays
   } catch (err) {
@@ -444,81 +454,105 @@ const loadRecommenders = async () => {
   }
 }
 
-const removeRecommendation = (index: number) => {
-  form.value.recommendations.splice(index, 1)
-}
-
-const loadApplication = async (id: string) => {
+const loadApplication = async () => {
   try {
-    // TODO: Implement API call
-    // For now, using mock data
-    await new Promise(resolve => setTimeout(resolve, 500)) // Simulate API delay
-    
-    // Use the id to determine which mock data to return
-    const mockData = {
-      '1': {
-        scholarshipId: '1',
-        scholarshipName: 'Academic Excellence Scholarship',
-        targetType: 'merit' as const,
-        company: 'University Foundation',
-        companyWebsite: 'https://example.com/scholarship1',
-        platform: 'University Portal',
-        applicationLink: 'https://example.com/apply1',
-        theme: 'Academic',
-        amount: 5000,
-        requirements: 'Minimum 3.5 GPA, Full-time student',
-        renewable: true,
-        documentInfoLink: 'https://example.com/docs1',
-        currentAction: 'Review Requirements',
-        status: 'Not Started',
-        submissionDate: '2024-04-15',
-        openDate: '2024-01-01',
-        dueDate: '2024-05-01',
-        created: new Date().toISOString(),
-        essays: [
-          {
-            essayId: '1',
-            scholarshipId: '1',
-            studentId: '',
-            count: '1',
-            units: '500',
-            theme: 'Academic Goals',
-            essayLink: 'https://example.com/essay1',
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500))
+
+    // Simulate loading an application
+    const mockApplication: Application = {
+      applicationId: route.params.id as string,
+      studentId: 'student-1',
+      scholarshipName: 'Test Scholarship',
+      targetType: 'merit',
+      company: 'Test Company',
+      companyWebsite: 'https://testcompany.com',
+      applicationLink: 'https://testcompany.com/apply',
+      amount: 5000,
+      platform: 'Common App',
+      theme: 'Leadership',
+      openDate: '2024-01-01',
+      dueDate: '2024-05-01',
+      submissionDate: '2024-04-15',
+      status: 'in_progress',
+      currentAction: 'Waiting for recommendations',
+      renewable: true,
+      requirements: 'Test requirements',
+      documentInfoLink: 'https://testcompany.com/docs',
+      created: new Date().toISOString(),
+      recommendations: [
+        {
+          recommendationId: 'rec-1',
+          applicationId: route.params.id as string,
+          studentId: 'student-1',
+          recommenderId: 'rec-1',
+          recommender: {
+            recommenderId: 'rec-1',
+            firstName: 'John',
+            lastName: 'Smith',
+            emailAddress: 'john.smith@school.edu',
+            phoneNumber: '555-0123',
+            relationship: 'Academic Advisor',
             created: new Date().toISOString()
-          }
-        ],
-        recommendations: [
-          {
-            recommendationId: '1',
-            scholarshipId: '1',
-            studentId: '',
-            recommenderId: '1',
-            recommender: {
-              recommenderId: '1',
-              firstName: 'John',
-              lastName: 'Smith',
-              relationship: 'Teacher',
-              emailAddress: 'john.smith@example.com',
-              phoneNumber: '1234567890',
-              created: new Date().toISOString()
-            },
-            status: 'Pending',
-            dueDate: '2024-04-15',
-            submissionMethod: 'DirectEmail' as const,
-            requestDate: new Date().toISOString().split('T')[0] || '2024-01-01',
+          },
+          status: 'pending',
+          requestDate: '2024-03-01',
+          dueDate: '2024-04-01',
+          submissionMethod: 'DirectEmail',
+          submissionDate: null,
+          created: new Date().toISOString()
+        },
+        {
+          recommendationId: 'rec-2',
+          applicationId: route.params.id as string,
+          studentId: 'student-1',
+          recommenderId: 'rec-2',
+          recommender: {
+            recommenderId: 'rec-2',
+            firstName: 'Sarah',
+            lastName: 'Johnson',
+            emailAddress: 'sarah.johnson@company.com',
+            phoneNumber: '555-0124',
+            relationship: 'Work Supervisor',
             created: new Date().toISOString()
-          }
-        ]
-      }
+          },
+          status: 'submitted',
+          requestDate: '2024-03-01',
+          dueDate: '2024-04-01',
+          submissionMethod: 'DirectEmail',
+          submissionDate: '2024-03-15',
+          created: new Date().toISOString()
+        },
+        {
+          recommendationId: 'rec-3',
+          applicationId: route.params.id as string,
+          studentId: 'student-1',
+          recommenderId: 'rec-3',
+          recommender: {
+            recommenderId: 'rec-3',
+            firstName: 'Michael',
+            lastName: 'Brown',
+            emailAddress: 'michael.brown@school.edu',
+            phoneNumber: '555-0125',
+            relationship: 'Research Advisor',
+            created: new Date().toISOString()
+          },
+          status: 'declined',
+          requestDate: '2024-03-01',
+          dueDate: '2024-04-01',
+          submissionMethod: 'DirectEmail',
+          submissionDate: null,
+          created: new Date().toISOString()
+        }
+      ],
+      essays: []
     }
 
-    const mockApplication = mockData[id as keyof typeof mockData] || mockData['1']
     form.value = {
-      ...form.value,
       ...mockApplication
     }
-  } catch (err) {
-    console.error('Failed to load application:', err)
+  } catch (error) {
+    console.error('Error loading application:', error)
     $q.notify({
       type: 'negative',
       message: 'Failed to load application'
@@ -537,7 +571,11 @@ const onSubmit = async () => {
         message: 'Application updated successfully'
       })
     } else {
-      await applicationStore.createApplication(form.value)
+      const newApplication: Application = {
+        ...form.value,
+        created: new Date().toISOString()
+      }
+      await applicationStore.createApplication(newApplication)
       $q.notify({
         type: 'positive',
         message: 'Application created successfully'
@@ -568,12 +606,24 @@ const getStatusColor = (status: string) => {
   }
 }
 
+const confirmDeleteRecommendation = (recommendation: Recommendation) => {
+  // Implement the confirmation logic here
+  console.log('Confirming deletion of recommendation:', recommendation)
+}
+
 onMounted(async () => {
-  if (route.params.id) {
+  if (route.params.scholarshipId) {
     isEdit.value = true
-    await loadApplication(route.params.id as string)
+    await loadApplication()
+    console.log('Setting scholarship name:', form.value.scholarshipName)
+    scholarshipContextStore.setCurrentScholarshipName(form.value.scholarshipName)
   }
   await loadRecommenders()
   await loadEssays()
+})
+
+onBeforeUnmount(() => {
+  console.log('Clearing scholarship name')
+  scholarshipContextStore.clearCurrentScholarshipName()
 })
 </script> 

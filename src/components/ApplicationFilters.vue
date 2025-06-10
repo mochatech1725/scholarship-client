@@ -1,0 +1,83 @@
+<template>
+  <div class="application-filters">
+    <q-card class="q-pa-md">
+      <div class="row items-center justify-between q-mb-md">
+        <div class="text-h6">Filters</div>
+        <q-btn
+          flat
+          round
+          :icon="isExpanded ? 'expand_less' : 'expand_more'"
+          @click="isExpanded = !isExpanded"
+        />
+      </div>
+
+      <q-slide-transition>
+        <div v-show="isExpanded">
+          <div class="q-gutter-y-md">
+            <q-select
+              v-model="localFilters.status"
+              :options="statusOptions"
+              label="Status"
+              clearable
+              outlined
+              dense
+            />
+
+            <q-input
+              v-model="localFilters.companyName"
+              label="Company Name"
+              clearable
+              outlined
+              dense
+            />
+
+            <q-input
+              v-model="localFilters.dueDate"
+              label="Due Date"
+              type="date"
+              outlined
+              dense
+            />
+          </div>
+        </div>
+      </q-slide-transition>
+    </q-card>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+
+const isExpanded = ref(true)
+
+const props = defineProps<{
+  filters: {
+    status: string | null
+    companyName: string
+    dueDate: string | null
+  }
+  statusOptions: string[]
+}>()
+
+const emit = defineEmits<{
+  'update:filters': [value: typeof props.filters]
+}>()
+
+const localFilters = ref({ ...props.filters })
+
+watch(localFilters, (newValue) => {
+  emit('update:filters', newValue)
+}, { deep: true })
+
+watch(() => props.filters, (newValue) => {
+  localFilters.value = { ...newValue }
+}, { deep: true })
+</script>
+
+<style scoped>
+.application-filters {
+  width: 300px;
+  position: sticky;
+  top: 20px;
+}
+</style> 
