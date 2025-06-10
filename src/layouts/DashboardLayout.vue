@@ -87,9 +87,7 @@ onMounted(async () => {
       activeTab.value = 'scholarshipSearch'
     } else if (route.path.includes('/recommenders')) {
       activeTab.value = 'recommenders'
-    } else if (route.path.includes('/profile')) {
-      activeTab.value = 'profile'
-    }
+    } 
   } catch (err) {
     console.error('Failed to initialize auth store:', err)
     $q.notify({

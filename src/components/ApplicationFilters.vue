@@ -1,18 +1,18 @@
 <template>
-  <div class="application-filters">
+  <div class="application-filters" :class="{ expanded: isExpanded }">
     <q-card class="q-pa-md">
       <div class="row items-center justify-between q-mb-md">
         <div class="text-h6">Filters</div>
         <q-btn
           flat
           round
-          :icon="isExpanded ? 'expand_less' : 'expand_more'"
+          :icon="isExpanded ? 'chevron_left' : 'chevron_right'"
           @click="isExpanded = !isExpanded"
         />
       </div>
 
       <q-slide-transition>
-        <div v-show="isExpanded">
+        <div v-show="isExpanded" class="filter-content">
           <div class="q-gutter-y-md">
             <q-select
               v-model="localFilters.status"
@@ -79,5 +79,14 @@ watch(() => props.filters, (newValue) => {
   width: 300px;
   position: sticky;
   top: 20px;
+  transition: width 0.3s ease;
+}
+
+.application-filters:not(.expanded) {
+  width: 120px;
+}
+
+.filter-content {
+  min-width: 280px;
 }
 </style> 
