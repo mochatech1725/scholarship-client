@@ -174,50 +174,7 @@
       </q-card>
 
       <!-- Essays Section -->
-      <q-card class="q-pa-md">
-        <q-card-section>
-          <div class="row items-center justify-between q-mb-md">
-            <div class="text-h6">Essays</div>
-            <q-btn
-              flat
-              color="primary"
-              icon="add"
-              label="Add Essay"
-              :to="{ name: 'essayCreate', params: { applicationId: form.applicationId } }"
-            />
-          </div>
-
-          <q-table
-            :rows="availableEssays"
-            :columns="essayColumns"
-            row-key="id"
-            flat
-            bordered
-            dense
-          >
-            <template v-slot:body-cell-actions="props">
-              <q-td :props="props" class="q-gutter-sm">
-                <q-btn
-                  flat
-                  round
-                  color="primary"
-                  icon="edit"
-                  :to="props.row.essayId ? { name: 'essayEdit', params: { essayId: props.row.essayId } } : '#'"
-                  dense
-                />
-                <q-btn
-                  flat
-                  round
-                  color="negative"
-                  icon="delete"
-                  @click="confirmDeleteEssay(props.row)"
-                  dense
-                />
-              </q-td>
-            </template>
-          </q-table>
-        </q-card-section>
-      </q-card>
+      <Essay :application-id="form.applicationId" />
 
       <!-- Recommendations Section -->
       <q-card class="q-pa-md">
@@ -298,23 +255,22 @@ import { useRoute, useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'stores/application.store'
 import { useRecommenderStore } from 'stores/recommender.store'
-import { useEssayStore } from 'stores/essay.store'
 import { useScholarshipContextStore } from 'stores/scholarship-context.store'
-import type { Application, Recommendation, Recommender, Essay, RecommendationStatus} from 'src/types'
+import type { Application, Recommendation, Recommender, RecommendationStatus} from 'src/types'
 import { targetTypeOptions, statusOptions } from 'src/types'
+import Essay from 'components/Essay.vue'
 
 const route = useRoute()
 const router = useRouter()
 const $q = useQuasar()
 const applicationStore = useApplicationStore()
 const recommenderStore = useRecommenderStore()
-const essayStore = useEssayStore()
 const scholarshipContextStore = useScholarshipContextStore()
 const loading = ref(false)
 const isEdit = ref(false)
 
 const form = ref<Omit<Application, 'created'>>({
-  applicationId: '',
+  applicationId: route.params.applicationId as string || crypto.randomUUID(),
   studentId: '', // TODO: Get from auth store
   scholarshipName: '',
   targetType: 'Merit',
@@ -338,12 +294,36 @@ const form = ref<Omit<Application, 'created'>>({
 
 const recommenders = ref<Recommender[]>([])
 
-const essayColumns = [
-  { name: 'theme', label: 'Theme', field: 'theme', sortable: true, align: 'left' as const },
-  { name: 'count', label: 'Count', field: 'count', sortable: true, align: 'left' as const },
-  { name: 'units', label: 'Units', field: 'units', sortable: true, align: 'left' as const },
-  { name: 'actions', label: 'Actions', field: 'actions', align: 'right' as const }
-]
+const rules = {
+  scholarshipName: [
+    (val: string) => !!val || 'Scholarship name is required'
+  ],
+  targetType: [
+    (val: string) => !!val || 'Target type is required',
+    (val: string) => ['Merit', 'Need', 'Both'].includes(val) || 'Target type must be Merit, Need, or Both'
+  ],
+  company: [
+    (val: string) => !!val || 'Company name is required'
+  ],
+  companyWebsite: [
+    (val: string) => !!val || 'Company website is required',
+    (val: string) => /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(val) || 'Please enter a valid website URL'
+  ],
+  applicationLink: [
+    (val: string) => !!val || 'Application link is required',
+    (val: string) => /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(val) || 'Please enter a valid URL'
+  ],
+  amount: [
+    (val: number) => !isNaN(val) || 'Amount must be a number',
+    (val: number) => val >= 0 || 'Amount must be a positive number'
+  ],
+  status: [
+    (val: string) => !!val || 'Status is required'
+  ],
+  dueDate: [
+    (val: string) => !!val || 'Due date is required'
+  ]
+}
 
 const recommendationColumns = [
   {
@@ -382,53 +362,6 @@ const recommendationColumns = [
     align: 'right' as const
   }
 ]
-
-const availableEssays = ref<Essay[]>([])
-
-const rules = {
-  scholarshipName: [
-    (val: string) => !!val || 'Scholarship name is required'
-  ],
-  targetType: [
-    (val: string) => !!val || 'Target type is required',
-    (val: string) => ['Merit', 'Need', 'Both'].includes(val) || 'Target type must be Merit, Need, or Both'
-  ],
-  company: [
-    (val: string) => !!val || 'Company name is required'
-  ],
-  companyWebsite: [
-    (val: string) => !!val || 'Company website is required',
-    (val: string) => /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(val) || 'Please enter a valid website URL'
-  ],
-  applicationLink: [
-    (val: string) => !!val || 'Application link is required',
-    (val: string) => /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(val) || 'Please enter a valid URL'
-  ],
-  amount: [
-    (val: number) => !isNaN(val) || 'Amount must be a number',
-    (val: number) => val >= 0 || 'Amount must be a positive number'
-  ],
-  status: [
-    (val: string) => !!val || 'Status is required'
-  ],
-  dueDate: [
-    (val: string) => !!val || 'Due date is required'
-  ]
-}
-
-const loadEssays = async () => {
-  try {
-    const essays = await essayStore.getEssaysByApplication(form.value.applicationId)
-    form.value.essays = essays
-    availableEssays.value = essays
-  } catch (err) {
-    console.error('Failed to load essays:', err)
-    $q.notify({
-      type: 'negative',
-      message: 'Failed to load essays'
-    })
-  }
-}
 
 const loadRecommenders = async () => {
   try {
@@ -508,40 +441,6 @@ const confirmDeleteRecommendation = (recommendation: Recommendation) => {
   console.log('Confirming deletion of recommendation:', recommendation)
 }
 
-const confirmDeleteEssay = (essay: Essay) => {
-  if (!essay.essayId) {
-    $q.notify({
-      color: 'negative',
-      message: 'Cannot delete essay: No essay ID found'
-    })
-    return
-  }
-
-  $q.dialog({
-    title: 'Confirm',
-    message: 'Are you sure you want to delete this essay?',
-    cancel: true,
-    persistent: true
-  }).onOk(() => {
-    void (async () => {
-      try {
-        await essayStore.deleteEssay(essay.essayId!)
-        await loadEssays()
-        $q.notify({
-          color: 'positive',
-          message: 'Essay deleted successfully'
-        })
-      } catch (err) {
-        console.error('Failed to delete essay:', err)
-        $q.notify({
-          color: 'negative',
-          message: 'Failed to delete essay'
-        })
-      }
-    })()
-  })
-}
-
 onMounted(async () => {
   if (route.params.applicationId) {
     isEdit.value = true
@@ -549,7 +448,6 @@ onMounted(async () => {
     scholarshipContextStore.setCurrentScholarshipName(form.value.scholarshipName)
   }
   await loadRecommenders()
-  await loadEssays()
 })
 
 onBeforeUnmount(() => {
