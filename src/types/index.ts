@@ -3,7 +3,7 @@ export interface Essay {
   applicationId: string
   studentId: string
   essayLink: string
-  count: string
+  count: number
   units: string
   theme: string
   created: string

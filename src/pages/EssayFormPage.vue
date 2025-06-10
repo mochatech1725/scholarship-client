@@ -91,7 +91,7 @@ const form = ref<Omit<Essay, 'created'>>({
   essayId: route.params.essayId as string,
   applicationId: '', // TODO: Get from parent application
   studentId: '', // TODO: Get from auth store
-  count: '',
+  count: 0,
   units: '',
   theme: '',
   essayLink: ''
@@ -99,12 +99,12 @@ const form = ref<Omit<Essay, 'created'>>({
 
 const rules = {
   count: [
-    (val: string) => !!val || 'Count is required'
-  ],
-  units: [
     (val: number) => !isNaN(val) || 'Units must be a number',
     (val: number) => val >= 0 || 'Units must be a positive number'
   ],
+  units: [
+    (val: string) => !!val || 'Count is required'
+  ]
   // essayLink: [
   //   (val: string) => !!val || 'Essay link is required',
   //   (val: string) => /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(val) || 'Please enter a valid URL'
@@ -165,10 +165,10 @@ const onSubmit = async () => {
 }
 
 onMounted(() => {
-  const { id } = route.params
-  if (id && id !== 'new') {
+  const { essayId } = route.params
+  if (essayId && essayId !== 'new') {
     isEdit.value = true
-    void loadEssay(id as string)
+    void loadEssay(essayId as string)
   }
 })
 </script> 

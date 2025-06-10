@@ -302,7 +302,7 @@ import { useApplicationStore } from 'stores/application.store'
 import { useRecommenderStore } from 'stores/recommender.store'
 import { useEssayStore } from 'stores/essay.store'
 import { useScholarshipContextStore } from 'stores/scholarship-context.store'
-import type { Application, Recommendation, Recommender } from 'src/types'
+import type { Application, Recommendation, Recommender, Essay } from 'src/types'
 import { targetTypeOptions, statusOptions } from 'src/types'
 
 const route = useRoute()
@@ -385,16 +385,7 @@ const recommendationColumns = [
   }
 ]
 
-const availableEssays = ref<Array<{
-  essayId?: string;
-  applicationId: string;
-  studentId: string;
-  essayLink: string;
-  count: string;
-  units: string;
-  theme: string;
-  created: string;
-}>>([])
+const availableEssays = ref<Essay[]>([])
 
 const rules = {
   scholarshipName: [
