@@ -13,19 +13,6 @@
           dense
           :pagination="{ rowsPerPage: 0 }"
         >
-          <template v-slot:body-cell-status="props">
-            <q-td :props="props">
-              <q-chip
-                :color="getStatusColor(props.row.status)"
-                text-color="white"
-                dense
-                size="sm"
-              >
-                {{ props.row.status }}
-              </q-chip>
-            </q-td>
-          </template>
-
           <template v-slot:body-cell-actions="props">
             <q-td :props="props" class="q-gutter-xs">
               <q-btn
@@ -69,41 +56,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
+import type { Recommender } from 'src/types'
+import { mockService } from 'src/services/mock.service'
 
 const $q = useQuasar()
-
-interface Recommender {
-  id: string
-  firstName: string
-  lastName: string
-  email: string
-  organization: string
-  title: string
-  status: string
-}
-
-const recommenders = ref<Recommender[]>([
-  {
-    id: '1',
-    firstName: 'John',
-    lastName: 'Smith',
-    email: 'john.smith@example.com',
-    organization: 'University of Technology',
-    title: 'Professor',
-    status: 'Active'
-  },
-  {
-    id: '2',
-    firstName: 'Sarah',
-    lastName: 'Johnson',
-    email: 'sarah.johnson@example.com',
-    organization: 'Tech Institute',
-    title: 'Department Head',
-    status: 'Pending'
-  }
-])
+const recommenders = ref<Recommender[]>([])
 
 const columns = [
   {
@@ -116,30 +75,23 @@ const columns = [
   {
     name: 'email',
     label: 'Email',
-    field: 'email',
+    field: 'emailAddress',
     align: 'left' as const,
     style: 'width: 200px'
   },
   {
-    name: 'organization',
-    label: 'Org',
-    field: 'organization',
-    align: 'left' as const,
-    style: 'width: 150px'
-  },
-  {
-    name: 'title',
-    label: 'Title',
-    field: 'title',
+    name: 'phone',
+    label: 'Phone',
+    field: 'phoneNumber',
     align: 'left' as const,
     style: 'width: 120px'
   },
   {
-    name: 'status',
-    label: 'Status',
-    field: 'status',
-    align: 'center' as const,
-    style: 'width: 100px'
+    name: 'relationship',
+    label: 'Relationship',
+    field: 'relationship',
+    align: 'left' as const,
+    style: 'width: 150px'
   },
   {
     name: 'actions',
@@ -153,16 +105,15 @@ const columns = [
 const showDeleteDialog = ref(false)
 const recommenderToDelete = ref<Recommender | null>(null)
 
-const getStatusColor = (status: string) => {
-  switch (status.toLowerCase()) {
-    case 'active':
-      return 'positive'
-    case 'pending':
-      return 'warning'
-    case 'inactive':
-      return 'negative'
-    default:
-      return 'grey'
+const loadRecommenders = async () => {
+  try {
+    recommenders.value = await mockService.getRecommenders()
+  } catch (err) {
+    console.error('Failed to load recommenders:', err)
+    $q.notify({
+      type: 'negative',
+      message: 'Failed to load recommenders'
+    })
   }
 }
 
@@ -174,11 +125,15 @@ const confirmDelete = (recommender: Recommender) => {
 const deleteRecommender = () => {
   if (recommenderToDelete.value) {
     // TODO: Implement actual delete logic
-    recommenders.value = recommenders.value.filter(r => r.id !== recommenderToDelete.value?.id)
+    recommenders.value = recommenders.value.filter(r => r.recommenderId !== recommenderToDelete.value?.recommenderId)
     $q.notify({
       type: 'positive',
       message: 'Recommender deleted successfully'
     })
   }
 }
+
+onMounted(() => {
+  void loadRecommenders()
+})
 </script> 
