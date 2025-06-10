@@ -73,6 +73,17 @@
                 class="max-width-300"
               />
             </div>
+
+            <div class="col-12">
+              <q-input
+                v-model="form.submissionDate"
+                label="Submission Date"
+                type="date"
+                outlined
+                dense
+                class="max-width-300"
+              />
+            </div>
           </div>
 
           <div class="row justify-end q-mt-lg">
