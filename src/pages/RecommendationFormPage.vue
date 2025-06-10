@@ -22,7 +22,6 @@
                 option-label="displayName"
                 option-value="recommenderId"
                 label="Recommender"
-                :rules="rules.recommenderId"
                 outlined
                 dense
                 class="max-width-300"
@@ -43,7 +42,6 @@
                 v-model="form.dueDate"
                 label="Due Date"
                 type="date"
-                :rules="rules.dueDate"
                 outlined
                 dense
                 class="max-width-300"
@@ -55,7 +53,6 @@
                 v-model="form.submissionMethod"
                 :options="submissionMethodOptions"
                 label="Submission Method"
-                :rules="rules.submissionMethod"
                 outlined
                 dense
                 class="max-width-300"
@@ -67,7 +64,6 @@
                 v-model="form.requestDate"
                 label="Request Date"
                 type="date"
-                :rules="rules.requestDate"
                 outlined
                 dense
                 class="max-width-300"
@@ -141,22 +137,7 @@ const form = ref<Omit<Recommendation, 'created'>>({
 
 const recommenders = ref<Recommender[]>([])
 const submissionMethodOptions = ['DirectEmail', 'StudentUpload', 'DirectMail'] as const
-type SubmissionMethod = typeof submissionMethodOptions[number]
 
-const rules = {
-  recommenderId: [
-    (val: string) => !!val || 'Recommender is required'
-  ],
-  dueDate: [
-    (val: string) => !!val || 'Due date is required'
-  ],
-  submissionMethod: [
-    (val: SubmissionMethod) => !!val || 'Submission method is required'
-  ],
-  requestDate: [
-    (val: string) => !!val || 'Request date is required'
-  ]
-}
 
 const loadRecommenders = async () => {
   try {
