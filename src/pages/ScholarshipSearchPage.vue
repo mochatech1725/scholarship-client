@@ -2,15 +2,15 @@
   <q-page padding>
     <div class="text-h5 q-mb-lg">Search Scholarships</div>
 
-    <div class="row q-col-gutter-md">
-      <!-- Results Section -->
-      <div class="col-12 col-md-8">
-        <ScholarshipSearchResults ref="searchResultsRef" />
-      </div>
+    <!-- Filter Section -->
+    <div class="q-mb-lg">
+      <ScholarshipSearchFilter @search="onSearch" />
+    </div>
 
-      <!-- Filter Section -->
-      <div class="col-12 col-md-4">
-        <ScholarshipSearchFilter @search="onSearch" />
+    <!-- Results Section -->
+    <div class="row">
+      <div class="col-12">
+        <ScholarshipSearchResults ref="searchResultsRef" />
       </div>
     </div>
   </q-page>

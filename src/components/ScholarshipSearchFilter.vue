@@ -1,14 +1,16 @@
 <template>
+  <div class="text-h6 q-mb-md">Search Filter</div>
+
   <q-card class="q-pa-sm">
     <q-card-section class="q-pa-sm">
-      <div class="text-subtitle1 q-mb-sm">Filter</div>
-      <div class="q-gutter-y-sm">
+      <div class="row items-center q-gutter-x-md">
         <q-input
           v-model="searchQuery"
           label="Search"
           clearable
           dense
           @update:model-value="onSearch"
+          class="col-6"
         >
           <template v-slot:append>
             <q-icon name="search" />
@@ -16,30 +18,23 @@
         </q-input>
 
         <q-select
-          v-model="filters.educationLevel"
-          :options="educationLevelOptions"
-          label="Education Level"
+          v-model="filters.theme"
+          :options="themeOptions"
+          label="Theme"
           clearable
           dense
           @update:model-value="onSearch"
+          class="col-2"
         />
 
         <q-select
-          v-model="filters.amount"
-          :options="amountOptions"
-          label="Minimum Amount"
+          v-model="filters.targetType"
+          :options="targetTypeOptions"
+          label="Target Type"
           clearable
           dense
           @update:model-value="onSearch"
-        />
-
-        <q-select
-          v-model="filters.deadline"
-          :options="deadlineOptions"
-          label="Application Deadline"
-          clearable
-          dense
-          @update:model-value="onSearch"
+          class="col-2"
         />
       </div>
     </q-card-section>
@@ -48,34 +43,24 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { targetTypeOptions } from 'src/types'
 
 const searchQuery = ref('')
 const filters = ref({
-  educationLevel: null,
-  amount: null,
-  deadline: null
+  theme: null,
+  targetType: null
 })
 
-const educationLevelOptions = [
-  'High School Senior',
-  'College Freshman',
-  'College Sophomore',
-  'College Junior',
-  'College Senior',
-  'Graduate Student'
-]
-
-const amountOptions = [
-  { label: '$1,000+', value: 1000 },
-  { label: '$5,000+', value: 5000 },
-  { label: '$10,000+', value: 10000 },
-  { label: '$25,000+', value: 25000 }
-]
-
-const deadlineOptions = [
-  { label: 'Next 7 days', value: 7 },
-  { label: 'Next 30 days', value: 30 },
-  { label: 'Next 90 days', value: 90 }
+const themeOptions = [
+  'STEM',
+  'Arts',
+  'Business',
+  'Education',
+  'Healthcare',
+  'Humanities',
+  'Social Sciences',
+  'Sports',
+  'Technology'
 ]
 
 const emit = defineEmits(['search'])
