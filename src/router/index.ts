@@ -19,7 +19,7 @@ const router = createRouter({
 });
 
 // Public routes that don't require authentication
-const publicRoutes = ['/login', '/register', '/callback'];
+const publicRoutes = ['login', 'register', 'callback'];
 
 router.beforeEach(async (to, from, next) => {
   const auth0 = useAuth0();
@@ -37,7 +37,7 @@ router.beforeEach(async (to, from, next) => {
   }
 
   // Wait for authentication state to be determined
-  if (!auth0.isAuthenticated.value && !publicRoutes.includes(to.path)) {
+  if (!auth0.isAuthenticated.value && !publicRoutes.includes(to.name as string)) {
     await new Promise<void>(resolve => {
       const unwatch = watch(auth0.isAuthenticated, (isAuthenticated) => {
         if (isAuthenticated) {
@@ -48,19 +48,18 @@ router.beforeEach(async (to, from, next) => {
     });
   }
 
-  // Redirect root to appropriate page
-  if (to.path === '/') {
-    return next(auth0.isAuthenticated.value ? '/dashboard/applications' : '/login');
+  if (to.name === 'home') {
+    return next(auth0.isAuthenticated.value ? { name: 'applicationsList' } : { name: 'login' });
   }
 
   // Allow access to public routes
-  if (auth0.isAuthenticated.value || publicRoutes.includes(to.path) || !to.matched.some(record => record.meta.requiresAuth)) {
+  if (auth0.isAuthenticated.value || publicRoutes.includes(to.name as string) || !to.matched.some(record => record.meta.requiresAuth)) {
     return next();
   }
 
   // Redirect to login
-  const isLogout = from.path.startsWith('/dashboard');
-  return next(isLogout ? '/login' : { path: '/login', query: { redirect: to.fullPath } });
+  const isLogout = from.name?.toString().startsWith('dashboard');
+  return next(isLogout ? { name: 'login' } : { name: 'login', query: { redirect: to.fullPath } });
 });
 
 export default router; 
