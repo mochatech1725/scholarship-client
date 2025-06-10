@@ -1,0 +1,31 @@
+{
+  "recommenders": [
+    {
+      "recommenderId": "rec-1",
+      "firstName": "John",
+      "lastName": "Smith",
+      "emailAddress": "john.smith@school.edu",
+      "phoneNumber": "555-0123",
+      "relationship": "Academic Advisor",
+      "created": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "recommenderId": "rec-2",
+      "firstName": "Sarah",
+      "lastName": "Johnson",
+      "emailAddress": "sarah.johnson@company.com",
+      "phoneNumber": "555-0124",
+      "relationship": "Work Supervisor",
+      "created": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "recommenderId": "rec-3",
+      "firstName": "Michael",
+      "lastName": "Brown",
+      "emailAddress": "michael.brown@school.edu",
+      "phoneNumber": "555-0125",
+      "relationship": "Research Advisor",
+      "created": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+} 

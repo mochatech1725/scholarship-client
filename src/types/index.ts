@@ -55,4 +55,45 @@ export interface Application {
   created: string
   essays: Essay[]
   recommendations: Recommendation[]
-} 
+}
+
+export interface Profile {
+  firstName: string
+  lastName: string
+  emailAddress: string
+  phoneNumber?: string
+}
+
+export type EducationLevel = typeof educationLevelOptions[number]
+export type TargetType = typeof targetTypeOptions[number]
+export type Area = typeof areaOptions[number]
+
+export interface SearchPreferences {
+  educationLevel: EducationLevel
+  targetTypes: TargetType[]
+  areas: Area[]
+  minAmount: number
+}
+
+export const educationLevelOptions = [
+  'High School Senior',
+  'College Freshman',
+  'College Sophomore',
+  'College Junior',
+  'College Senior',
+  'Graduate Student'
+] as const
+
+export const targetTypeOptions = ['Merit', 'Need', 'Both'] as const
+
+export const areaOptions = [
+  'STEM',
+  'Arts',
+  'Business',
+  'Education',
+  'Healthcare',
+  'Humanities',
+  'Social Sciences',
+  'Sports',
+  'Technology'
+] as const 

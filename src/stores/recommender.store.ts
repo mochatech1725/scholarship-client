@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { mockService } from 'src/services/mock.service'
 import type { Recommender } from 'src/types'
 
 export const useRecommenderStore = defineStore('recommender', {
@@ -20,9 +21,7 @@ export const useRecommenderStore = defineStore('recommender', {
     },
 
     async getRecommenders() {
-      // TODO: Implement API call
-      await new Promise(resolve => setTimeout(resolve, 100)) // Simulate API delay
-      return this.recommenders
+      return await mockService.getRecommenders()
     },
 
     async updateRecommender(id: string, updates: Omit<Recommender, 'recommenderId' | 'created'>) {

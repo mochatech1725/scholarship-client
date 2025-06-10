@@ -113,20 +113,8 @@
 import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from 'stores/auth.store'
-
-interface Profile {
-  firstName: string
-  lastName: string
-  emailAddress: string
-  phoneNumber?: string
-}
-
-interface SearchPreferences {
-  educationLevel: string
-  targetTypes: string[]
-  areas: string[]
-  minAmount: number
-}
+import type { Profile, SearchPreferences } from 'src/types'
+import { educationLevelOptions, targetTypeOptions, areaOptions } from 'src/types'
 
 const $q = useQuasar()
 const authStore = useAuthStore()
@@ -140,34 +128,11 @@ const profile = ref<Profile>({
 })
 
 const preferences = ref<SearchPreferences>({
-  educationLevel: '',
+  educationLevel: 'College Freshman',
   targetTypes: [],
   areas: [],
   minAmount: 0
 })
-
-const educationLevelOptions = [
-  'High School Senior',
-  'College Freshman',
-  'College Sophomore',
-  'College Junior',
-  'College Senior',
-  'Graduate Student'
-]
-
-const targetTypeOptions = ['merit', 'need', 'both']
-
-const areaOptions = [
-  'STEM',
-  'Arts',
-  'Business',
-  'Education',
-  'Healthcare',
-  'Humanities',
-  'Social Sciences',
-  'Sports',
-  'Technology'
-]
 
 const loadProfile = async () => {
   loading.value = true
@@ -184,7 +149,7 @@ const loadProfile = async () => {
 
     preferences.value = {
       educationLevel: 'College Freshman',
-      targetTypes: ['merit', 'both'],
+      targetTypes: ['Merit', 'Both'],
       areas: ['STEM', 'Technology'],
       minAmount: 1000
     }

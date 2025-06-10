@@ -1,0 +1,87 @@
+{
+  "applicationId": "app-1",
+  "studentId": "student-1",
+  "scholarshipName": "Test Scholarship",
+  "targetType": "merit",
+  "company": "Test Company",
+  "companyWebsite": "https://testcompany.com",
+  "applicationLink": "https://testcompany.com/apply",
+  "amount": 5000,
+  "platform": "Common App",
+  "theme": "Leadership",
+  "openDate": "2024-01-01",
+  "dueDate": "2024-05-01",
+  "submissionDate": "2024-04-15",
+  "status": "in_progress",
+  "currentAction": "Waiting for recommendations",
+  "renewable": true,
+  "requirements": "Test requirements",
+  "documentInfoLink": "https://testcompany.com/docs",
+  "created": "2024-01-01T00:00:00.000Z",
+  "recommendations": [
+    {
+      "recommendationId": "rec-1",
+      "applicationId": "app-1",
+      "studentId": "student-1",
+      "recommenderId": "rec-1",
+      "recommender": {
+        "recommenderId": "rec-1",
+        "firstName": "John",
+        "lastName": "Smith",
+        "emailAddress": "john.smith@school.edu",
+        "phoneNumber": "555-0123",
+        "relationship": "Academic Advisor",
+        "created": "2024-01-01T00:00:00.000Z"
+      },
+      "status": "pending",
+      "requestDate": "2024-03-01",
+      "dueDate": "2024-04-01",
+      "submissionMethod": "DirectEmail",
+      "submissionDate": null,
+      "created": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "recommendationId": "rec-2",
+      "applicationId": "app-1",
+      "studentId": "student-1",
+      "recommenderId": "rec-2",
+      "recommender": {
+        "recommenderId": "rec-2",
+        "firstName": "Sarah",
+        "lastName": "Johnson",
+        "emailAddress": "sarah.johnson@company.com",
+        "phoneNumber": "555-0124",
+        "relationship": "Work Supervisor",
+        "created": "2024-01-01T00:00:00.000Z"
+      },
+      "status": "submitted",
+      "requestDate": "2024-03-01",
+      "dueDate": "2024-04-01",
+      "submissionMethod": "DirectEmail",
+      "submissionDate": "2024-03-15",
+      "created": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "recommendationId": "rec-3",
+      "applicationId": "app-1",
+      "studentId": "student-1",
+      "recommenderId": "rec-3",
+      "recommender": {
+        "recommenderId": "rec-3",
+        "firstName": "Michael",
+        "lastName": "Brown",
+        "emailAddress": "michael.brown@school.edu",
+        "phoneNumber": "555-0125",
+        "relationship": "Research Advisor",
+        "created": "2024-01-01T00:00:00.000Z"
+      },
+      "status": "declined",
+      "requestDate": "2024-03-01",
+      "dueDate": "2024-04-01",
+      "submissionMethod": "DirectEmail",
+      "submissionDate": null,
+      "created": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "essays": []
+} 

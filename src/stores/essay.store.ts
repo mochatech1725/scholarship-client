@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { mockService } from 'src/services/mock.service'
 import type { Essay } from 'src/types'
 
 export const useEssayStore = defineStore('essay', {
@@ -27,10 +28,8 @@ export const useEssayStore = defineStore('essay', {
       return this.essays
     },
 
-    async getEssaysByScholarship(applicationId: string) {
-      // TODO: Implement API call
-      await new Promise(resolve => setTimeout(resolve, 100)) // Simulate API delay
-      return this.essays.filter(essay => essay.applicationId === applicationId)
+    async getEssaysByApplication(applicationId: string) {
+      return await mockService.getEssaysByApplication(applicationId)
     },
 
     async updateEssay(id: string, updates: Omit<Essay, 'essayId' | 'created'>) {

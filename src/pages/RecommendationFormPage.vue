@@ -135,7 +135,7 @@ const recommendationId = computed(() => {
 })
 
 const form = ref<Omit<Recommendation, 'created'>>({
-  recommendationId: typeof recommendationId.value === 'string' ? recommendationId.value : '',
+  recommendationId: route.params.recommendationId as string,
   applicationId: '',
   studentId: '', // TODO: Get from auth store
   recommenderId: '',
@@ -162,12 +162,6 @@ const selectedRecommender = ref<Recommender>({
 const loadRecommenders = async () => {
   try {
     recommenders.value = await recommenderStore.getRecommenders()
-    if (form.value.recommenderId) {
-      const recommender = recommenders.value.find(r => r.recommenderId === form.value.recommenderId)
-      if (recommender) {
-        selectedRecommender.value = recommender
-      }
-    }
   } catch (err) {
     console.error('Failed to load recommenders:', err)
     $q.notify({
@@ -199,6 +193,13 @@ const loadRecommendation = async () => {
         ...mockRecommendation,
         submissionDate: null
       }
+
+      if (form.value.recommenderId) {
+      const recommender = recommenders.value.find(r => r.recommenderId === form.value.recommenderId)
+      if (recommender) {
+        selectedRecommender.value = recommender
+      }
+    }
     }
   } catch (error) {
     console.error('Error loading recommendation:', error)

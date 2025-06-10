@@ -430,7 +430,7 @@ const rules = {
 
 const loadEssays = async () => {
   try {
-    const essays = await essayStore.getEssaysByScholarship(form.value.applicationId)
+    const essays = await essayStore.getEssaysByApplication(form.value.applicationId)
     form.value.essays = essays
     availableEssays.value = essays
   } catch (err) {

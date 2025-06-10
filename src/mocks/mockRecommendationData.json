@@ -1,0 +1,40 @@
+{
+  "recommendations": [
+    {
+      "recommendationId": "rec-1",
+      "applicationId": "app-1",
+      "studentId": "student-1",
+      "recommenderId": "rec-1",
+      "status": "pending",
+      "requestDate": "2024-03-01",
+      "dueDate": "2024-04-01",
+      "submissionMethod": "DirectEmail",
+      "submissionDate": null,
+      "created": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "recommendationId": "rec-2",
+      "applicationId": "app-1",
+      "studentId": "student-1",
+      "recommenderId": "rec-2",
+      "status": "submitted",
+      "requestDate": "2024-03-01",
+      "dueDate": "2024-04-01",
+      "submissionMethod": "DirectEmail",
+      "submissionDate": "2024-03-15",
+      "created": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "recommendationId": "rec-3",
+      "applicationId": "app-1",
+      "studentId": "student-1",
+      "recommenderId": "rec-3",
+      "status": "declined",
+      "requestDate": "2024-03-01",
+      "dueDate": "2024-04-01",
+      "submissionMethod": "DirectEmail",
+      "submissionDate": null,
+      "created": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+} 

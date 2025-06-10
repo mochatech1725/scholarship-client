@@ -1,0 +1,27 @@
+import { defineStore } from 'pinia'
+import { mockService } from 'src/services/mock.service'
+import type { Recommendation } from 'src/types'
+
+export const useRecommendationStore = defineStore('recommendation', {
+  state: () => ({
+    recommendations: [] as Recommendation[]
+  }),
+
+  actions: {
+    async getRecommendationsByApplication(applicationId: string) {
+      return await mockService.getRecommendationsByApplication(applicationId)
+    },
+
+    async getRecommendation(id: string) {
+      return await mockService.getRecommendation(id)
+    },
+
+    async createRecommendation(recommendation: Omit<Recommendation, 'created'>) {
+      return await mockService.createRecommendation(recommendation)
+    },
+
+    async updateRecommendation(id: string, recommendation: Omit<Recommendation, 'created'>) {
+      return await mockService.updateRecommendation(id, recommendation)
+    }
+  }
+}) 
