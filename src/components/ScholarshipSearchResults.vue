@@ -62,6 +62,7 @@ interface Scholarship {
   description: string
   educationLevel: string
   requirements: string[]
+  website: string
 }
 
 const searchResults = ref<Scholarship[]>([])
@@ -97,6 +98,12 @@ const scholarshipColumns = [
     label: 'Education Level',
     field: (row: Scholarship) => row.educationLevel,
     align: 'left' as const
+  },
+  {
+    name: 'website',
+    label: 'Website',
+    field: (row: Scholarship) => row.website,
+    align: 'left' as const
   }
 ]
 
@@ -116,7 +123,8 @@ const onSearch = () => {
       deadline: '2024-05-01',
       description: 'Awarded to outstanding students pursuing degrees in STEM fields.',
       educationLevel: 'College Freshman',
-      requirements: ['3.5+ GPA', 'STEM Major', 'Essay']
+      requirements: ['3.5+ GPA', 'STEM Major', 'Essay'],
+      website: 'https://techfoundation.org/scholarships/stem-excellence'
     },
     {
       id: '2',
@@ -126,7 +134,8 @@ const onSearch = () => {
       deadline: '2024-04-15',
       description: 'Supporting talented students in the arts and humanities.',
       educationLevel: 'High School Senior',
-      requirements: ['Portfolio', 'Essay', 'Letters of Recommendation']
+      requirements: ['Portfolio', 'Essay', 'Letters of Recommendation'],
+      website: 'https://creativearts.org/achievement-award'
     }
   ]
 }
@@ -143,7 +152,8 @@ onMounted(() => {
       deadline: '2024-06-01',
       description: 'Supporting the next generation of leaders in business and technology.',
       educationLevel: 'College Junior',
-      requirements: ['3.0+ GPA', 'Leadership Experience', 'Essay']
+      requirements: ['3.0+ GPA', 'Leadership Experience', 'Essay'],
+      website: 'https://leadershipfoundation.org/future-leaders'
     },
     {
       id: '4',
@@ -153,7 +163,8 @@ onMounted(() => {
       deadline: '2024-07-15',
       description: 'Recognizing students who have made significant contributions to their communities.',
       educationLevel: 'College Sophomore',
-      requirements: ['Community Service Hours', 'Essay', 'Letters of Recommendation']
+      requirements: ['Community Service Hours', 'Essay', 'Letters of Recommendation'],
+      website: 'https://servicefoundation.org/community-award'
     }
   ]
 })

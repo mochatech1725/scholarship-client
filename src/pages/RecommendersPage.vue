@@ -10,6 +10,7 @@
           row-key="id"
           flat
           bordered
+          dense
           :pagination="{ rowsPerPage: 0 }"
         >
           <template v-slot:body-cell-status="props">
@@ -18,7 +19,7 @@
                 :color="getStatusColor(props.row.status)"
                 text-color="white"
                 dense
-                class="q-ml-sm"
+                size="sm"
               >
                 {{ props.row.status }}
               </q-chip>
@@ -26,7 +27,7 @@
           </template>
 
           <template v-slot:body-cell-actions="props">
-            <q-td :props="props" class="q-gutter-sm">
+            <q-td :props="props" class="q-gutter-xs">
               <q-btn
                 flat
                 round
@@ -34,6 +35,7 @@
                 icon="edit"
                 :to="`/recommenders/${props.row.id}/edit`"
                 dense
+                size="sm"
               />
               <q-btn
                 flat
@@ -42,6 +44,7 @@
                 icon="delete"
                 @click="confirmDelete(props.row)"
                 dense
+                size="sm"
               />
             </q-td>
           </template>
@@ -107,37 +110,43 @@ const columns = [
     name: 'name',
     label: 'Name',
     field: (row: Recommender) => `${row.firstName} ${row.lastName}`,
-    align: 'left' as const
+    align: 'left' as const,
+    style: 'width: 150px'
   },
   {
     name: 'email',
     label: 'Email',
     field: 'email',
-    align: 'left' as const
+    align: 'left' as const,
+    style: 'width: 200px'
   },
   {
     name: 'organization',
-    label: 'Organization',
+    label: 'Org',
     field: 'organization',
-    align: 'left' as const
+    align: 'left' as const,
+    style: 'width: 150px'
   },
   {
     name: 'title',
     label: 'Title',
     field: 'title',
-    align: 'left' as const
+    align: 'left' as const,
+    style: 'width: 120px'
   },
   {
     name: 'status',
     label: 'Status',
     field: 'status',
-    align: 'center' as const
+    align: 'center' as const,
+    style: 'width: 100px'
   },
   {
     name: 'actions',
-    label: 'Actions',
+    label: '',
     field: 'actions',
-    align: 'center' as const
+    align: 'center' as const,
+    style: 'width: 80px'
   }
 ]
 
