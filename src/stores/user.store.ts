@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
-import type { Profile, SearchPreferences } from 'src/types'
+import type { Profile, UserPreferences } from 'src/types'
 import { mockService } from 'src/services/mock.service'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
     profile: null as Profile | null,
-    preferences: null as SearchPreferences | null
+    preferences: null as UserPreferences | null
   }),
 
   actions: {
@@ -42,7 +42,7 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    async updatePreferences(preferences: SearchPreferences) {
+    async updatePreferences(preferences: UserPreferences) {
       try {
         const updatedPreferences = await mockService.updatePreferences(preferences)
         this.preferences = updatedPreferences

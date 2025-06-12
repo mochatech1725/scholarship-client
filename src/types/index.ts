@@ -57,22 +57,26 @@ export interface Application {
   recommendations: Recommendation[]
 }
 
-export interface Profile {
-  firstName: string
-  lastName: string
-  emailAddress: string
-  phoneNumber: string
-}
+
 
 export type EducationLevel = typeof educationLevelOptions[number]
 export type TargetType = typeof targetTypeOptions[number]
 export type Area = typeof areaOptions[number]
+
+export interface UserPreferences {
+  searchPreferences: SearchPreferences
+}
 
 export interface SearchPreferences {
   educationLevel: EducationLevel
   targetTypes: TargetType[]
   areas: Area[]
   minAmount: number
+}
+
+export interface Profile {
+  userId: string
+  userPreferences: UserPreferences
 }
 
 export const educationLevelOptions = [
@@ -152,5 +156,5 @@ export interface User {
   lastName: string
   emailAddress: string
   phoneNumber: string
-  preferences: SearchPreferences
+  profile: Profile
 } 

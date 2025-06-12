@@ -2,8 +2,8 @@ import applicationData from '../mocks/mockApplicationData.json'
 import recommenderData from '../mocks/mockRecommenderData.json'
 import essayData from '../mocks/mockEssayData.json'
 import recommendationData from '../mocks/mockRecommendationData.json'
-import type { Application, Recommender, Essay, Recommendation, Profile, SearchPreferences } from 'src/types'
-import { useAuthStore } from 'stores/auth.store'
+import type { Application, Recommender, Essay, Recommendation, Profile, UserPreferences } from 'src/types'
+import { useAuthStore } from 'src/stores/auth.store'
 
 type SubmissionMethod = 'DirectEmail' | 'StudentUpload' | 'DirectMail'
 
@@ -122,6 +122,7 @@ export const mockService = {
     } as Recommendation
   },
 
+  // Profile methods
   async getProfile(): Promise<Profile> {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500))
@@ -131,21 +132,28 @@ export const mockService = {
       throw new Error('No user found')
     }
     return {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      emailAddress: user.emailAddress,
-      phoneNumber: user.phoneNumber || ''
+      userId: user.userId,
+      userPreferences: {
+        searchPreferences: {
+          educationLevel: 'College Freshman',
+          targetTypes: ['Merit', 'Both'],
+          areas: ['STEM'],
+          minAmount: 1000
+        }
+      }
     }
   },
 
-  async getPreferences(): Promise<SearchPreferences> {
+  async getPreferences(): Promise<UserPreferences> {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500))
     return {
-      educationLevel: 'College Freshman',
-      targetTypes: ['Merit', 'Both'],
-      areas: ['STEM'],
-      minAmount: 1000
+      searchPreferences: {
+        educationLevel: 'College Freshman',
+        targetTypes: ['Merit', 'Both'],
+        areas: ['STEM'],
+        minAmount: 1000
+      }
     }
   },
 
@@ -155,7 +163,7 @@ export const mockService = {
     return profile
   },
 
-  async updatePreferences(preferences: SearchPreferences): Promise<SearchPreferences> {
+  async updatePreferences(preferences: UserPreferences): Promise<UserPreferences> {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500))
     return preferences

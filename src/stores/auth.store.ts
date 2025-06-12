@@ -33,11 +33,16 @@ export const useAuthStore = defineStore('auth', () => {
           lastName: auth0User.family_name || '',
           emailAddress: auth0User.email || '',
           phoneNumber: auth0User.phone_number || '',
-          preferences: {
-            educationLevel: 'College Freshman' as const,
-            targetTypes: [] as ('Merit' | 'Need' | 'Both')[],
-            areas: [] as typeof areaOptions[number][],
-            minAmount: 0
+          profile: {
+            userId: auth0User.sub || '',
+            userPreferences: {
+              searchPreferences: {
+                educationLevel: 'College Freshman' as const,
+                targetTypes: [] as ('Merit' | 'Need' | 'Both')[],
+                areas: [] as typeof areaOptions[number][],
+                minAmount: 0
+              }
+            }
           }
         }
       }
@@ -61,11 +66,16 @@ export const useAuthStore = defineStore('auth', () => {
           lastName: auth0User.family_name || '',
           emailAddress: auth0User.email || '',
           phoneNumber: auth0User.phone_number || '',
-          preferences: {
-            educationLevel: 'College Freshman' as const,
-            targetTypes: [] as ('Merit' | 'Need' | 'Both')[],
-            areas: [] as typeof areaOptions[number][],
-            minAmount: 0
+          profile: {
+            userId: auth0User.sub || '',
+            userPreferences: {
+              searchPreferences: {
+                educationLevel: 'College Freshman' as const,
+                targetTypes: [] as ('Merit' | 'Need' | 'Both')[],
+                areas: [] as typeof areaOptions[number][],
+                minAmount: 0
+              }
+            }
           }
         }
       }
