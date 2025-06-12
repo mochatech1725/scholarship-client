@@ -38,16 +38,17 @@
           label="Applications"
         />
         <q-route-tab
-          :to="{ name: 'scholarshipSearch' }"
-          name="scholarshipSearch"
-          icon="search"
-          label="Scholarship Search"
-        />
-        <q-route-tab
           :to="{ name: 'recommendersList' }"
           name="recommenders"
           icon="assignment"
           label="Recommenders"
+        />
+
+        <q-route-tab
+          :to="{ name: 'scholarshipSearch' }"
+          name="scholarshipSearch"
+          icon="search"
+          label="Scholarship Search"
         />
       </q-tabs>
     </q-header>

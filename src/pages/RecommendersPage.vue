@@ -12,6 +12,7 @@
           bordered
           dense
           :pagination="{ rowsPerPage: 0 }"
+          :loading="loading"
         >
           <template v-slot:body-cell-actions="props">
             <q-td :props="props" class="q-gutter-xs">
@@ -64,6 +65,7 @@ import { useRecommenderStore } from 'src/stores/recommender.store'
 const $q = useQuasar()
 const recommenderStore = useRecommenderStore()
 const recommenders = ref<Recommender[]>([])
+const loading = ref(false)
 
 const columns = [
   {
@@ -108,6 +110,7 @@ const recommenderToDelete = ref<Recommender | null>(null)
 
 const loadRecommenders = async () => {
   try {
+    loading.value = true
     recommenders.value = await recommenderStore.getRecommenders()
   } catch (err) {
     console.error('Failed to load recommenders:', err)
@@ -115,6 +118,8 @@ const loadRecommenders = async () => {
       type: 'negative',
       message: 'Failed to load recommenders'
     })
+  } finally {
+    loading.value = false
   }
 }
 

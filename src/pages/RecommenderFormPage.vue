@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-lg">
     <div class="row q-mb-md items-center justify-between">
-      <div class="text-h5">{{ isEdit ? 'Edit Recommendation' : 'New Recommendation' }}</div>
+      <div class="text-h5">{{ isEdit ? 'Edit Recommender' : 'New Recommender' }}</div>
       <q-btn
         flat
         color="primary"
