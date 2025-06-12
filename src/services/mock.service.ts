@@ -2,7 +2,8 @@ import applicationData from '../mocks/mockApplicationData.json'
 import recommenderData from '../mocks/mockRecommenderData.json'
 import essayData from '../mocks/mockEssayData.json'
 import recommendationData from '../mocks/mockRecommendationData.json'
-import type { Application, Recommender, Essay, Recommendation } from 'src/types'
+import type { Application, Recommender, Essay, Recommendation, Profile, SearchPreferences } from 'src/types'
+import { useAuthStore } from 'stores/auth.store'
 
 type SubmissionMethod = 'DirectEmail' | 'StudentUpload' | 'DirectMail'
 
@@ -119,5 +120,44 @@ export const mockService = {
       ...recommendation,
       created: new Date().toISOString()
     } as Recommendation
+  },
+
+  async getProfile(): Promise<Profile> {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500))
+    const authStore = useAuthStore()
+    const user = authStore.user
+    if (!user) {
+      throw new Error('No user found')
+    }
+    return {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      emailAddress: user.emailAddress,
+      phoneNumber: user.phoneNumber || ''
+    }
+  },
+
+  async getPreferences(): Promise<SearchPreferences> {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500))
+    return {
+      educationLevel: 'College Freshman',
+      targetTypes: ['Merit', 'Both'],
+      areas: ['STEM'],
+      minAmount: 1000
+    }
+  },
+
+  async updateProfile(profile: Profile): Promise<Profile> {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500))
+    return profile
+  },
+
+  async updatePreferences(preferences: SearchPreferences): Promise<SearchPreferences> {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500))
+    return preferences
   }
 } 

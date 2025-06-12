@@ -39,7 +39,6 @@
         <q-input
           v-model="form.phoneNumber"
           label="Phone Number"
-          :rules="rules.phoneNumber"
           outlined
           dense
           mask="(###) ###-####"
@@ -115,9 +114,9 @@ const rules = {
   emailAddress: [
     (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || 'Please enter a valid email address'
   ],
-  phoneNumber: [
-    (val: string) => val.replace(/[^0-9]/g, '').length === 10 || 'Please enter a valid 10-digit phone number'
-  ]
+  // phoneNumber: [
+  //   (val: string) => val.replace(/[^0-9]/g, '').length === 10 || 'Please enter a valid 10-digit phone number'
+  // ]
 }
 
 watch(() => props.initialData, (newData) => {
