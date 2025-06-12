@@ -1,0 +1,14 @@
+{
+  "profile": {
+    "firstName": "Teial",
+    "lastName": "Dickens",
+    "emailAddress": "teial.dickens@gmail.com",
+    "phoneNumber": "1234567890"
+  },
+  "preferences": {
+    "educationLevel": "College Freshman",
+    "targetTypes": ["Merit", "Both"],
+    "areas": ["STEM", "Computer Science"],
+    "minAmount": 1000
+  }
+} 
