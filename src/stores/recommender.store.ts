@@ -24,10 +24,10 @@ export const useRecommenderStore = defineStore('recommender', {
       return await mockService.getRecommenders()
     },
 
-    async updateRecommender(id: string, updates: Omit<Recommender, 'recommenderId' | 'created'>) {
+    async updateRecommender(recommenderId: string, updates: Omit<Recommender, 'recommenderId' | 'created'>) {
       // TODO: Implement API call
       await new Promise(resolve => setTimeout(resolve, 100)) // Simulate API delay
-      const index = this.recommenders.findIndex(r => r.recommenderId === id)
+      const index = this.recommenders.findIndex(r => r.recommenderId === recommenderId)
       if (index !== -1) {
         const existingRecommender = this.recommenders[index]
         if (existingRecommender) {
@@ -41,10 +41,10 @@ export const useRecommenderStore = defineStore('recommender', {
       }
     },
 
-    async deleteRecommender(id: string) {
+    async deleteRecommender(recommenderId: string) {
       // TODO: Implement API call
       await new Promise(resolve => setTimeout(resolve, 100)) // Simulate API delay
-      const index = this.recommenders.findIndex(r => r.recommenderId === id)
+      const index = this.recommenders.findIndex(r => r.recommenderId === recommenderId)
       if (index !== -1) {
         this.recommenders.splice(index, 1)
       }

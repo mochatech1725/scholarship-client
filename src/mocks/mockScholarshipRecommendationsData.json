@@ -1,6 +1,6 @@
 [
   {
-    "id": "3",
+    "scholarshipId": "3",
     "name": "Future Leaders Scholarship",
     "organization": "Leadership Foundation",
     "amount": 15000,
@@ -15,7 +15,7 @@
     "updatedAt": "2024-01-01"
   },
   {
-    "id": "4",
+    "scholarshipId": "4",
     "name": "Community Service Award",
     "organization": "Service Foundation",
     "amount": 8000,
@@ -30,7 +30,7 @@
     "updatedAt": "2024-01-01"
   },
   {
-    "id": "1",
+    "scholarshipId": "1",
     "name": "STEM Excellence Scholarship",
     "organization": "Tech Foundation",
     "amount": 10000,
@@ -45,7 +45,7 @@
     "updatedAt": "2024-01-01"
   },
   {
-    "id": "2",
+    "scholarshipId": "2",
     "name": "Arts Achievement Award",
     "organization": "Creative Arts Society",
     "amount": 5000,

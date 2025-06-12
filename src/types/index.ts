@@ -131,7 +131,7 @@ export const recomendationOptions = [
 ] as const 
 
 export interface Scholarship {
-  id: string
+  scholarshipId: string
   name: string
   organization: string
   description: string
