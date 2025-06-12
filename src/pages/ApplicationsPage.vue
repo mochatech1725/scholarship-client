@@ -40,7 +40,7 @@
                   round
                   color="primary"
                   icon="edit"
-                  :to="`/dashboard/application-form/${props.row.applicationId}`"
+                  :to="{ name: 'applicationEdit', params: { applicationId: props.row.applicationId } }"
                 />
                 <q-btn
                   flat
