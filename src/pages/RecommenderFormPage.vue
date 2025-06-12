@@ -13,83 +13,16 @@
 
     <div class="row justify-center">
       <div class="col-12 col-md-8 col-lg-6">
-        <q-form @submit="onSubmit" class="q-gutter-md">
-          <div class="row q-col-gutter-md">
-            <div class="col-12 col-md-6">
-              <q-input
-                v-model="form.firstName"
-                label="First Name"
-                :rules="rules.firstName"
-                outlined
-                dense
-                class="max-width-300"
-              />
-            </div>
-
-            <div class="col-12 col-md-6">
-              <q-input
-                v-model="form.lastName"
-                label="Last Name"
-                :rules="rules.lastName"
-                outlined
-                dense
-                class="max-width-300"
-              />
-            </div>
-
-            <div class="col-12 col-md-6">
-              <q-input
-                v-model="form.emailAddress"
-                label="Email Address"
-                :rules="rules.emailAddress"
-                outlined
-                dense
-                type="email"
-                class="max-width-300"
-              />
-            </div>
-
-            <div class="col-12 col-md-6">
-              <q-input
-                v-model="form.phoneNumber"
-                label="Phone Number"
-                :rules="rules.phoneNumber"
-                outlined
-                dense
-                mask="(###) ###-####"
-                class="max-width-300"
-              />
-            </div>
-
-            <div class="col-12">
-              <q-select
-                v-model="form.relationship"
-                :options="relationshipOptions"
-                label="Relationship"
-                :rules="rules.relationship"
-                outlined
-                dense
-                class="max-width-300"
-              />
-            </div>
-          </div>
-
-          <div class="row justify-end q-mt-lg">
-            <q-btn
-              label="Cancel"
-              color="grey"
-              flat
-              :to="{ name: 'recommendersList' }"
-              class="q-mr-sm"
-            />
-            <q-btn
-              label="Save"
-              type="submit"
-              color="primary"
-              :loading="loading"
-            />
-          </div>
-        </q-form>
+        <q-card class="q-pa-md">
+          <q-card-section>
+            <RecommenderForm
+          :initial-data="formData"
+          :loading="loading"
+          @submit="onSubmit"
+          @cancel="onCancel"
+        />
+          </q-card-section>
+        </q-card>
       </div>
     </div>
   </q-page>
@@ -101,17 +34,15 @@ import { useRoute, useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useRecommenderStore } from 'src/stores/recommender.store'
 import type { Recommender } from 'src/types'
+import RecommenderForm from 'src/components/Recommender.vue'
 
 const route = useRoute()
 const router = useRouter()
 const $q = useQuasar()
 const recommenderStore = useRecommenderStore()
 const loading = ref(false)
-
-const relationshipOptions = ['Teacher', 'Counselor', 'Employer', 'Friend', 'Other']
-
 const isEdit = ref(false)
-const form = ref<Omit<Recommender, 'recommenderId' | 'created'> & { emailAddress: string; phoneNumber: string }>({
+const formData = ref<Omit<Recommender, 'recommenderId' | 'created'> & { emailAddress: string; phoneNumber: string }>({
   firstName: '',
   lastName: '',
   relationship: '',
@@ -119,30 +50,12 @@ const form = ref<Omit<Recommender, 'recommenderId' | 'created'> & { emailAddress
   phoneNumber: ''
 })
 
-const rules = {
-  firstName: [
-    (val: string) => !!val || 'First name is required'
-  ],
-  lastName: [
-    (val: string) => !!val || 'Last name is required'
-  ],
-  relationship: [
-    (val: string) => !!val || 'Relationship is required'
-  ],
-  emailAddress: [
-    (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || 'Please enter a valid email address'
-  ],
-  phoneNumber: [
-    (val: string) => val.replace(/[^0-9]/g, '').length === 10 || 'Please enter a valid 10-digit phone number'
-  ]
-}
-
 const loadRecommender = async (id: string) => {
   try {
     const recommenders = await recommenderStore.getRecommenders()
     const recommender = recommenders.find(r => r.recommenderId === id)
     if (recommender) {
-      form.value = {
+      formData.value = {
         firstName: recommender.firstName,
         lastName: recommender.lastName,
         relationship: recommender.relationship,
@@ -159,18 +72,18 @@ const loadRecommender = async (id: string) => {
   }
 }
 
-const onSubmit = async () => {
+const onSubmit = async (form: Omit<Recommender, 'recommenderId' | 'created'> & { emailAddress: string; phoneNumber: string }) => {
   try {
     loading.value = true
     if (isEdit.value) {
       const id = route.params.recommenderId as string
-      await recommenderStore.updateRecommender(id, form.value)
+      await recommenderStore.updateRecommender(id, form)
       $q.notify({
         type: 'positive',
         message: 'Recommender updated successfully'
       })
     } else {
-      await recommenderStore.createRecommender(form.value)
+      await recommenderStore.createRecommender(form)
       $q.notify({
         type: 'positive',
         message: 'Recommender created successfully'
@@ -187,11 +100,15 @@ const onSubmit = async () => {
   }
 }
 
-onMounted(() => {
+const onCancel = async () => {
+  await router.push({ name: 'recommendersList' })
+}
+
+onMounted(async () => {
   const { recommenderId } = route.params
   if (recommenderId && recommenderId !== 'new') {
     isEdit.value = true
-    void loadRecommender(recommenderId as string)
+    await loadRecommender(recommenderId as string)
   }
 })
 </script>

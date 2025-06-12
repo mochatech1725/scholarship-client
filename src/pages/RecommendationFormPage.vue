@@ -7,7 +7,7 @@
         color="primary"
         icon="arrow_back"
         label="Back"
-        to="/dashboard/applications"
+        to="{ name: 'applicationsList' }"
       />
     </div>
 

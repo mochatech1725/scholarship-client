@@ -7,7 +7,7 @@
         <q-table
           :rows="recommenders"
           :columns="columns"
-          row-key="id"
+          row-key="recommenderId"
           flat
           bordered
           dense
@@ -20,7 +20,7 @@
                 round
                 color="primary"
                 icon="edit"
-                :to="`/recommenders/${props.row.id}/edit`"
+                :to="{ name: 'recommenderEdit', params: { recommenderId: props.row.recommenderId } }"
                 dense
                 size="sm"
               />
@@ -59,9 +59,10 @@
 import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import type { Recommender } from 'src/types'
-import { mockService } from 'src/services/mock.service'
+import { useRecommenderStore } from 'src/stores/recommender.store'
 
 const $q = useQuasar()
+const recommenderStore = useRecommenderStore()
 const recommenders = ref<Recommender[]>([])
 
 const columns = [
@@ -107,7 +108,7 @@ const recommenderToDelete = ref<Recommender | null>(null)
 
 const loadRecommenders = async () => {
   try {
-    recommenders.value = await mockService.getRecommenders()
+    recommenders.value = await recommenderStore.getRecommenders()
   } catch (err) {
     console.error('Failed to load recommenders:', err)
     $q.notify({
