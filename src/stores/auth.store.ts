@@ -1,34 +1,18 @@
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useAuth0 } from '@auth0/auth0-vue'
 import { waitForAuth0Initialization } from 'src/boot/auth0'
+import type { User, areaOptions } from 'src/types'
 
-interface User {
-  personId: string
-  firstName: string
-  lastName: string
-  emailAddress: string
-  phoneNumber?: string | undefined
-}
+export type AuthStore = ReturnType<typeof useAuthStore>
 
 export const useAuthStore = defineStore('auth', () => {
   const auth0 = useAuth0()
   const isInitialized = ref(false)
   const isLoggingIn = ref(false)
+  const user = ref<User | null>(null)
 
-  const userInfo = computed<User | null>(() => {
-    if (!auth0?.user?.value) return null
-    const user = auth0.user.value
-    return {
-      personId: user.sub || '',
-      firstName: user.firstName || '',
-      lastName: user.lastName || '',
-      emailAddress: user.email || '',
-      phoneNumber: user.phoneNumber
-    }
-  })
-
-  const isAuthenticated = computed(() => {
+  const isUserAuthenticated = computed(() => {
     if (!isInitialized.value) return false
     return auth0?.isAuthenticated?.value ?? false
   })
@@ -39,8 +23,26 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       await waitForAuth0Initialization(auth0)
       isInitialized.value = true
+      
+      // If user is authenticated, set user data from Auth0
+      if (auth0?.isAuthenticated?.value && auth0.user.value) {
+        const auth0User = auth0.user.value
+        user.value = {
+          userId: auth0User.sub || '',
+          firstName: auth0User.given_name || '',
+          lastName: auth0User.family_name || '',
+          emailAddress: auth0User.email || '',
+          phoneNumber: auth0User.phone_number || '',
+          preferences: {
+            educationLevel: 'College Freshman' as const,
+            targetTypes: [] as ('Merit' | 'Need' | 'Both')[],
+            areas: [] as typeof areaOptions[number][],
+            minAmount: 0
+          }
+        }
+      }
     } catch (err) {
-      console.error('Failed to initialize auth store:', err)
+      console.error('Failed to initialize auth:', err)
       throw err
     }
   }
@@ -49,6 +51,24 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       await waitForAuth0Initialization(auth0)
       isInitialized.value = true
+      
+      // After successful authentication, set user data from Auth0
+      if (auth0?.isAuthenticated?.value && auth0.user.value) {
+        const auth0User = auth0.user.value
+        user.value = {
+          userId: auth0User.sub || '',
+          firstName: auth0User.given_name || '',
+          lastName: auth0User.family_name || '',
+          emailAddress: auth0User.email || '',
+          phoneNumber: auth0User.phone_number || '',
+          preferences: {
+            educationLevel: 'College Freshman' as const,
+            targetTypes: [] as ('Merit' | 'Need' | 'Both')[],
+            areas: [] as typeof areaOptions[number][],
+            minAmount: 0
+          }
+        }
+      }
       return true
     } catch (err) {
       console.error('Failed to handle callback:', err)
@@ -68,7 +88,7 @@ export const useAuthStore = defineStore('auth', () => {
       })
       return true
     } catch (err) {
-      console.error('Login failed:', err)
+      console.error('Failed to login:', err)
       return false
     } finally {
       isLoggingIn.value = false
@@ -80,13 +100,14 @@ export const useAuthStore = defineStore('auth', () => {
 
     try {
       isInitialized.value = false
+      user.value = null
       await auth0.logout({
         logoutParams: {
           returnTo: window.location.origin
         }
       })
     } catch (err) {
-      console.error('Logout failed:', err)
+      console.error('Failed to logout:', err)
     }
   }
 
@@ -102,14 +123,14 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   return {
-    user: userInfo,
-    isAuthenticated,
     isInitialized,
     isLoggingIn,
+    user,
+    isAuthenticated: isUserAuthenticated,
     initialize,
+    handleCallback,
     login,
     logout,
-    getToken,
-    handleCallback
+    getToken
   }
 }) 

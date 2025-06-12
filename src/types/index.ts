@@ -144,4 +144,13 @@ export interface Scholarship {
   isActive: boolean
   createdAt: string
   updatedAt: string
+}
+
+export interface User {
+  userId: string
+  firstName: string
+  lastName: string
+  emailAddress: string
+  phoneNumber: string
+  preferences: SearchPreferences
 } 
