@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import type { Profile, SearchPreferences } from 'src/types'
 import { mockService } from 'src/services/mock.service'
 
-export const useProfileStore = defineStore('profile', {
+export const useUserStore = defineStore('user', {
   state: () => ({
     profile: null as Profile | null,
     preferences: null as SearchPreferences | null

@@ -120,7 +120,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import type { Profile, SearchPreferences } from 'src/types'
-import { useProfileStore } from 'stores/profile.store'
+import { useUserStore } from 'stores/user.store'
 import { useAuthStore } from 'stores/auth.store'
 import { educationLevelOptions, targetTypeOptions, areaOptions } from 'src/types'
 
@@ -133,7 +133,7 @@ const emit = defineEmits<{
   (e: 'cancel'): void
 }>()
 
-const profileStore = useProfileStore()
+const userStore = useUserStore()
 const authStore = useAuthStore()
 const form = ref<Profile>({
   firstName: '',
@@ -172,16 +172,16 @@ onMounted(async () => {
         phoneNumber: user.phoneNumber || ''
       }
     }
-    const profile = await profileStore.loadProfile()
+    const profile = await userStore.loadProfile()
     if (profile) {
       form.value = profile
     }
-    const loadedPreferences = await profileStore.loadPreferences()
+    const loadedPreferences = await userStore.loadPreferences()
     if (loadedPreferences) {
       preferences.value = loadedPreferences
     }
   } catch (error) {
-    console.error('Failed to load profile:', error)
+    console.error('Failed to load user data:', error)
   }
 })
 </script>

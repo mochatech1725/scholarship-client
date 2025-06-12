@@ -15,13 +15,13 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
-import { useProfileStore } from 'stores/profile.store'
+import { useUserStore } from 'stores/user.store'
 import type { Profile, SearchPreferences } from 'src/types'
 import ProfileForm from 'src/components/ProfileForm.vue'
 
 const router = useRouter()
 const $q = useQuasar()
-const profileStore = useProfileStore()
+const userStore = useUserStore()
 
 const handleCancel = () => {
   router.back()
@@ -29,8 +29,8 @@ const handleCancel = () => {
 
 const onSubmit = async (form: Profile, preferences: SearchPreferences) => {
   try {
-    await profileStore.updateProfile(form)
-    await profileStore.updatePreferences(preferences)
+    await userStore.updateProfile(form)
+    await userStore.updatePreferences(preferences)
     $q.notify({
       color: 'positive',
       message: 'Profile updated successfully'
