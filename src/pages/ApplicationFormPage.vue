@@ -11,7 +11,11 @@
       />
     </div>
 
-    <Application />
+    <q-card class="q-pa-md">
+      <q-card-section>
+        <Application />
+      </q-card-section>
+    </q-card>
   </q-page>
 </template>
 
