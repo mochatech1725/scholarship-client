@@ -15,7 +15,7 @@
       <div class="col-12 col-md-6 col-lg-4">
         <q-card class="q-pa-md">
           <q-card-section>
-            <Recommendation :is-edit="isEdit" />
+            <RecommendationForm :is-edit="isEdit" @cancel="handleCancel" />
           </q-card-section>
         </q-card>
       </div>
@@ -25,11 +25,16 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
-import Recommendation from 'components/Recommendation.vue'
+import { useRoute, useRouter } from 'vue-router'
+import RecommendationForm from 'src/components/RecommendationForm.vue'
 
 const route = useRoute()
-const isEdit = ref(!!route.params.recommendationId)
+const router = useRouter()
+const isEdit = ref(route.params.id !== undefined)
+
+const handleCancel = () => {
+  router.back()
+}
 </script>
 
 <style scoped>

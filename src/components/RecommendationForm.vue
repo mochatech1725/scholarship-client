@@ -84,7 +84,7 @@
         label="Cancel"
         color="grey"
         flat
-        to="/dashboard/applications"
+        @click="$emit('cancel')"
         class="q-mr-sm"
       />
       <q-btn
@@ -98,22 +98,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { ref, onMounted, computed, defineEmits, defineProps } from 'vue'
+import { useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useRecommenderStore } from 'src/stores/recommender.store'
-import { mockService } from 'src/services/mock.service'
 import type { Recommender, Recommendation } from 'src/types'
 
-const props = defineProps<{
+defineProps<{
   isEdit: boolean
+  loading?: boolean
+}>()
+
+const emit = defineEmits<{
+  (e: 'submit', form: Omit<Recommendation, 'created'>): void
+  (e: 'cancel'): void
 }>()
 
 const route = useRoute()
-const router = useRouter()
 const $q = useQuasar()
 const recommenderStore = useRecommenderStore()
-const loading = ref(false)
 
 const recommendationId = computed(() => {
   const id = route.params.recommendationId
@@ -157,70 +160,12 @@ const loadRecommenders = async () => {
   }
 }
 
-const loadRecommendation = async () => {
-  try {
-    if (!recommendationId.value) {
-      throw new Error('Recommendation ID is required')
-    }
-    const recommendation = await mockService.getRecommendation(recommendationId.value)
-    if (recommendation) {
-      form.value = {
-        ...recommendation,
-        submissionDate: recommendation.submissionDate || null
-      }
-
-      if (form.value.recommenderId) {
-        const recommender = recommenders.value.find(r => r.recommenderId === form.value.recommenderId)
-        if (recommender) {
-          selectedRecommender.value = recommender
-        }
-      }
-    }
-  } catch (error) {
-    console.error('Error loading recommendation:', error)
-    $q.notify({
-      type: 'negative',
-      message: 'Failed to load recommendation'
-    })
-  }
-}
-
-const onSubmit = async () => {
-  try {
-    loading.value = true
-    if (props.isEdit) {
-      if (!recommendationId.value) {
-        throw new Error('Recommendation ID is required')
-      }
-      await mockService.updateRecommendation(recommendationId.value, form.value)
-      $q.notify({
-        type: 'positive',
-        message: 'Recommendation updated successfully'
-      })
-    } else {
-      await mockService.createRecommendation(form.value)
-      $q.notify({
-        type: 'positive',
-        message: 'Recommendation created successfully'
-      })
-    }
-    await router.push({ name: 'applicationsList' })
-  } catch (err) {
-    console.error('Failed to save recommendation:', err)
-    $q.notify({
-      type: 'negative',
-      message: `Failed to ${props.isEdit ? 'update' : 'create'} recommendation`
-    })
-  } finally {
-    loading.value = false
-  }
+const onSubmit = () => {
+  emit('submit', form.value)
 }
 
 onMounted(async () => {
   await loadRecommenders()
-  if (props.isEdit) {
-    await loadRecommendation()
-  }
 })
 </script>
 

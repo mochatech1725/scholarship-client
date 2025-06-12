@@ -34,7 +34,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useRecommenderStore } from 'src/stores/recommender.store'
 import type { Recommender } from 'src/types'
-import RecommenderForm from 'src/components/Recommender.vue'
+import RecommenderForm from 'src/components/RecommenderForm.vue'
 
 const route = useRoute()
 const router = useRouter()
