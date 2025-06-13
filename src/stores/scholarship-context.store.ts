@@ -2,7 +2,8 @@ import { defineStore } from 'pinia'
 
 export const useScholarshipContextStore = defineStore('scholarshipContext', {
   state: () => ({
-    currentScholarshipName: ''
+    currentScholarshipName: '',
+    applicationId: ''
   }),
 
   actions: {
@@ -12,6 +13,14 @@ export const useScholarshipContextStore = defineStore('scholarshipContext', {
 
     clearCurrentScholarshipName() {
       this.currentScholarshipName = ''
+    },
+
+    setApplicationId(id: string) {
+      this.applicationId = id
+    },
+
+    clearApplicationId() {
+      this.applicationId = ''
     }
   }
 }) 

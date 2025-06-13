@@ -1,9 +1,9 @@
-import type { Application, Recommender, Essay, Recommendation, Profile, User, EducationLevel, TargetType, Area, ApplicationStatus } from 'src/types'
+import type { Application, Recommender, Essay, Recommendation, Profile, User, EducationLevel, TargetType, Area } from 'src/types'
 import mockUserData from '../mocks/mockUserData.json'
 import applicationData from '../mocks/mockApplicationData.json'
 import recommenderData from '../mocks/mockRecommenderData.json'
 import essayData from '../mocks/mockEssayData.json'
-import { educationLevelOptions, targetTypeOptions, areaOptions, statusOptions } from 'src/types'
+import { educationLevelOptions, targetTypeOptions, areaOptions } from 'src/types'
 
 function castEducationLevel(val: string): EducationLevel {
   return educationLevelOptions.find(opt => opt === val) as EducationLevel
@@ -17,14 +17,6 @@ function castAreas(arr: string[]): Area[] {
   return arr.filter(val => areaOptions.includes(val as Area)) as Area[]
 }
 
-function castApplicationStatus(status: string): ApplicationStatus {
-  return statusOptions.find(opt => opt === status) as ApplicationStatus || 'Not Started'
-}
-
-// Type guards
-function isValidTargetType(val: string): val is 'Merit' | 'Need' | 'Both' {
-  return targetTypeOptions.includes(val as TargetType)
-}
 
 function isValidRecommendationStatus(val: string): val is 'Pending' | 'Submitted' {
   return val === 'Pending' || val === 'Submitted'
@@ -99,48 +91,32 @@ class MockService {
   // Application methods
   async getApplications(): Promise<Application[]> {
     await new Promise(resolve => setTimeout(resolve, 100))
-    const targetType = isValidTargetType(applicationData.targetType) 
-      ? applicationData.targetType 
-      : 'Merit'
+    return [applicationData as Application]
+  }
 
-    const app: Application = {
-      ...applicationData,
-      status: castApplicationStatus(applicationData.status),
-      targetType,
-      recommendations: getValidRecommendations(applicationData.recommendations)
+  async getApplicationsByUserId(userId: string): Promise<Application[]> {
+    await new Promise(resolve => setTimeout(resolve, 100))
+    
+    // In a real service, we would filter by userId
+    // For mock data, we'll just return the mock application if the userId matches the studentId
+    if (applicationData.studentId === userId) {
+      return [applicationData as Application]
     }
-    return [app]
+    return []
   }
 
   async getApplication(id: string): Promise<Application | null> {
     await new Promise(resolve => setTimeout(resolve, 100))
     if (applicationData.applicationId !== id) return null
-
-    const targetType = isValidTargetType(applicationData.targetType) 
-      ? applicationData.targetType 
-      : 'Merit'
-
-    const app: Application = {
-      ...applicationData,
-      status: castApplicationStatus(applicationData.status),
-      targetType,
-      recommendations: getValidRecommendations(applicationData.recommendations)
-    }
-    return app
+    return applicationData as Application
   }
 
   async createApplication(application: Omit<Application, 'applicationId'>): Promise<Application> {
     await new Promise(resolve => setTimeout(resolve, 100))
-    const targetType = isValidTargetType(application.targetType) 
-      ? application.targetType 
-      : 'Merit'
-
-    const newApp: Application = {
+    const newApp = {
       ...application,
-      applicationId: Math.random().toString(36).substr(2, 9),
-      targetType,
-      recommendations: getValidRecommendations(application.recommendations)
-    }
+      applicationId: Math.random().toString(36).substr(2, 9)
+    } as Application
     return newApp
   }
 
@@ -150,20 +126,10 @@ class MockService {
       throw new Error('Application not found')
     }
 
-    const targetType = application.targetType 
-      ? (isValidTargetType(application.targetType) ? application.targetType : 'Merit')
-      : (isValidTargetType(applicationData.targetType) ? applicationData.targetType : 'Merit')
-
-    const updatedApp: Application = {
+    return {
       ...applicationData,
-      ...application,
-      status: application.status ? castApplicationStatus(application.status) : castApplicationStatus(applicationData.status),
-      targetType,
-      recommendations: application.recommendations
-        ? getValidRecommendations(application.recommendations)
-        : getValidRecommendations(applicationData.recommendations)
-    }
-    return updatedApp
+      ...application
+    } as Application
   }
 
   async deleteApplication(id: string): Promise<void> {

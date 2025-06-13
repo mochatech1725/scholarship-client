@@ -67,48 +67,34 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import type { QTableColumn } from 'quasar'
 import ApplicationFilters from 'src/components/ApplicationFilters.vue'
-import type { ApplicationStatus } from 'src/types'
+import type { ApplicationStatus, Application } from 'src/types'
 import { statusOptions } from 'src/types'
 import { useGetStatusColor } from 'src/composables/useGetStatusColor'
-
-interface Application {
-  applicationId: string
-  companyName: string
-  scholarshipName: string
-  status: ApplicationStatus
-  dueDate: string
-  notes?: string
-}
+import { useApplicationStore } from 'src/stores/application.store'
+import { useUserStore } from 'src/stores/user.store'
 
 const $q = useQuasar()
 const loading = ref(false)
 const { getStatusColor } = useGetStatusColor()
+const applicationStore = useApplicationStore()
+const userStore = useUserStore()
 
-const applications = ref<Application[]>([
-  {
-    applicationId: '1',
-    companyName: 'Google',
-    scholarshipName: 'Google Scholarship',
-    status: 'Submitted',
-    dueDate: '2024-04-01',
-    notes: 'Applied through company website'
-  }
-])
+const applications = ref<Application[]>([])
 
 const filters = ref({
   status: null as ApplicationStatus | null,
-  companyName: '',
+  company: '',
   dueDate: null
 })
 
 const applicationStatusOptions = [...statusOptions]
 
 const columns: QTableColumn[] = [
-  { name: 'companyName', label: 'Company', field: 'companyName', sortable: true, align: 'left' },
+  { name: 'company', label: 'Company', field: 'company', sortable: true, align: 'left' },
   { name: 'scholarshipName', label: 'Scholarship', field: 'scholarshipName', sortable: true, align: 'left' },
   { name: 'status', label: 'Status', field: 'status', sortable: true, align: 'left' },
   { name: 'dueDate', label: 'Due Date', field: 'dueDate', sortable: true, align: 'left' },
@@ -125,11 +111,38 @@ const pagination = ref({
 const filteredApplications = computed(() => {
   return applications.value.filter(app => {
     if (filters.value.status && app.status !== filters.value.status) return false
-    if (filters.value.companyName && !app.companyName.toLowerCase().includes(filters.value.companyName.toLowerCase())) return false
+    if (filters.value.company && !app.company.toLowerCase().includes(filters.value.company.toLowerCase())) return false
     if (filters.value.dueDate && app.dueDate !== filters.value.dueDate) return false
     return true
   })
 })
+
+const loadApplications = async () => {
+  if (!userStore.user) {
+    await userStore.loadUser()
+  }
+  
+  if (!userStore.user) {
+    $q.notify({
+      color: 'negative',
+      message: 'User not found'
+    })
+    return
+  }
+  
+  loading.value = true
+  try {
+    applications.value = await applicationStore.getApplicationsByUserId(userStore.user.userId)
+  } catch (error) {
+    console.error('Failed to load applications:', error)
+    $q.notify({
+      color: 'negative',
+      message: 'Failed to load applications'
+    })
+  } finally {
+    loading.value = false
+  }
+}
 
 const confirmDelete = (application: Application) => {
   $q.dialog({
@@ -138,15 +151,11 @@ const confirmDelete = (application: Application) => {
     cancel: true,
     persistent: true
   }).onOk(() => {
-    deleteApplication(application)
+    void applicationStore.deleteApplication(application.applicationId)
   })
 }
 
-const deleteApplication = (application: Application) => {
-  applications.value = applications.value.filter(app => app.applicationId !== application.applicationId)
-  $q.notify({
-    color: 'positive',
-    message: 'Application deleted successfully'
-  })
-}
+onMounted(() => {
+  void loadApplications()
+})
 </script> 

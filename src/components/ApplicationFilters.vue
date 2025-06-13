@@ -24,7 +24,7 @@
             />
 
             <q-input
-              v-model="localFilters.companyName"
+              v-model="localFilters.company"
               label="Company Name"
               clearable
               outlined
@@ -53,7 +53,7 @@ const isExpanded = ref(true)
 const props = defineProps<{
   filters: {
     status: string | null
-    companyName: string
+    company: string
     dueDate: string | null
   }
   statusOptions: string[]

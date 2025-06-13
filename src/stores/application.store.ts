@@ -20,15 +20,13 @@ export const useApplicationStore = defineStore('application', {
       return await mockService.updateApplication(id, application)
     },
 
-    async getApplications() {
-      // TODO: Implement API call
-      await new Promise(resolve => setTimeout(resolve, 100)) // Simulate API delay
+    async getApplicationsByUserId(userId: string) {
+      this.applications = await mockService.getApplicationsByUserId(userId)
       return this.applications
     },
 
     async deleteApplication(id: string) {
-      // TODO: Implement API call
-      await new Promise(resolve => setTimeout(resolve, 100)) // Simulate API delay
+      await mockService.deleteApplication(id)
       const index = this.applications.findIndex(app => app.applicationId === id)
       if (index !== -1) {
         this.applications.splice(index, 1)

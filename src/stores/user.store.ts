@@ -8,9 +8,13 @@ export const useUserStore = defineStore('user', {
   }),
 
   actions: {
-    async loadUser() {
+    async loadUser(userId?: string) {
       try {
         const user = await mockService.getUser()
+        if (userId) {
+          user.userId = userId
+          user.profile.userId = userId
+        }
         this.user = user
         return user
       } catch (error) {

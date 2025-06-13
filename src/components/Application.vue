@@ -249,7 +249,7 @@ const rules = {
 
 const loadApplication = async () => {
   try {
-    const application = await applicationStore.getApplication(route.params.id as string)
+    const application = await applicationStore.getApplication(route.params.applicationId as string)
     if (application) {
       form.value = {
         ...application
