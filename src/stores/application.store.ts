@@ -12,7 +12,7 @@ export const useApplicationStore = defineStore('application', {
       return await mockService.getApplication(id)
     },
 
-    async createApplication(application: Omit<Application, 'created'>) {
+    async createApplication(application: Omit<Application, 'applicationId'>) {
       return await mockService.createApplication(application)
     },
 
@@ -29,7 +29,7 @@ export const useApplicationStore = defineStore('application', {
     async deleteApplication(id: string) {
       // TODO: Implement API call
       await new Promise(resolve => setTimeout(resolve, 100)) // Simulate API delay
-      const index = this.applications.findIndex(app => app.studentId === id)
+      const index = this.applications.findIndex(app => app.applicationId === id)
       if (index !== -1) {
         this.applications.splice(index, 1)
       }

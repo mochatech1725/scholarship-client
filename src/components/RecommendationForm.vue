@@ -128,6 +128,15 @@ const form = ref<Omit<Recommendation, 'created'>>({
   applicationId: '',
   studentId: '', // TODO: Get from auth store
   recommenderId: '',
+  recommender: {
+    recommenderId: '',
+    firstName: '',
+    lastName: '',
+    emailAddress: '',
+    phoneNumber: '',
+    relationship: '',
+    created: new Date().toISOString()
+  },
   dueDate: '',
   status: 'Pending',
   submissionMethod: 'DirectEmail',
@@ -161,6 +170,16 @@ const loadRecommenders = async () => {
 }
 
 const onSubmit = () => {
+  form.value.recommender = {
+    recommenderId: selectedRecommender.value.recommenderId,
+    firstName: selectedRecommender.value.firstName,
+    lastName: selectedRecommender.value.lastName,
+    emailAddress: selectedRecommender.value.emailAddress,
+    phoneNumber: selectedRecommender.value.phoneNumber,
+    relationship: selectedRecommender.value.relationship,
+    created: selectedRecommender.value.created
+  }
+  form.value.recommenderId = selectedRecommender.value.recommenderId
   emit('submit', form.value)
 }
 

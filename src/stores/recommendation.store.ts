@@ -9,14 +9,15 @@ export const useRecommendationStore = defineStore('recommendation', {
 
   actions: {
     async getRecommendationsByApplication(applicationId: string) {
-      return await mockService.getRecommendationsByApplication(applicationId)
+      const recommendations = await mockService.getRecommendations()
+      return recommendations.filter(r => r.applicationId === applicationId)
     },
 
     async getRecommendation(id: string) {
       return await mockService.getRecommendation(id)
     },
 
-    async createRecommendation(recommendation: Omit<Recommendation, 'created'>) {
+    async createRecommendation(recommendation: Omit<Recommendation, 'recommendationId'>) {
       return await mockService.createRecommendation(recommendation)
     },
 

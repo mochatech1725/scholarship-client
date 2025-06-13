@@ -14,6 +14,7 @@
     <ProfileForm
       v-if="isEdit"
       :is-edit="isEdit"
+      :profile="userStore.user?.profile ?? null"
       @submit="handleSubmit"
       @cancel="handleCancel"
     />
@@ -22,24 +23,48 @@
         <div class="col-12 col-md-6">
           <q-card flat bordered>
             <q-card-section>
+              <div class="text-h6">Personal Information</div>
+              <div class="q-mt-sm">
+                <div class="row q-col-gutter-sm">
+                  <div class="col-12">
+                    <div class="text-subtitle2">First Name</div>
+                    <div>{{ userStore.user?.firstName }}</div>
+                  </div>
+                  <div class="col-12">
+                    <div class="text-subtitle2">Last Name</div>
+                    <div>{{ userStore.user?.lastName }}</div>
+                  </div>
+                  <div class="col-12">
+                    <div class="text-subtitle2">Email</div>
+                    <div>{{ userStore.user?.emailAddress }}</div>
+                  </div>
+                </div>
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <q-card flat bordered>
+            <q-card-section>
               <div class="text-h6">Search Preferences</div>
               <div class="q-mt-sm">
                 <div class="row q-col-gutter-sm">
                   <div class="col-12">
                     <div class="text-subtitle2">Education Level</div>
-                    <div>{{ userStore.profile?.userPreferences.searchPreferences.educationLevel }}</div>
+                    <div>{{ userStore.user?.profile.userPreferences.searchPreferences.educationLevel }}</div>
                   </div>
                   <div class="col-12">
                     <div class="text-subtitle2">Target Types</div>
-                    <div>{{ userStore.profile?.userPreferences.searchPreferences.targetTypes.join(', ') }}</div>
+                    <div>{{ userStore.user?.profile.userPreferences.searchPreferences.targetTypes.join(', ') }}</div>
                   </div>
                   <div class="col-12">
                     <div class="text-subtitle2">Areas of Interest</div>
-                    <div>{{ userStore.profile?.userPreferences.searchPreferences.areas.join(', ') }}</div>
+                    <div>{{ userStore.user?.profile.userPreferences.searchPreferences.areas.join(', ') }}</div>
                   </div>
                   <div class="col-12">
                     <div class="text-subtitle2">Minimum Amount</div>
-                    <div>${{ userStore.profile?.userPreferences.searchPreferences.minAmount }}</div>
+                    <div>${{ userStore.user?.profile.userPreferences.searchPreferences.minAmount }}</div>
                   </div>
                 </div>
               </div>
@@ -64,9 +89,9 @@ const userStore = useUserStore()
 const authStore = useAuthStore()
 const isEdit = ref(false)
 
-const handleSubmit = async (form: Profile) => {
+const handleSubmit = async (profile: Profile) => {
   try {
-    await userStore.updateProfile(form)
+    await userStore.updateProfile(profile)
     $q.notify({
       type: 'positive',
       message: 'Profile updated successfully'
@@ -90,12 +115,12 @@ onMounted(async () => {
     if (!authStore.isInitialized) {
       await authStore.initialize()
     }
-    await userStore.loadProfile()
+    await userStore.loadUser()
   } catch (error) {
-    console.error('Failed to load profile:', error)
+    console.error('Failed to load user:', error)
     $q.notify({
       type: 'negative',
-      message: 'Failed to load profile'
+      message: 'Failed to load user'
     })
   }
 })

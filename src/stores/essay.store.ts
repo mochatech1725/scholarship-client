@@ -8,24 +8,21 @@ export const useEssayStore = defineStore('essay', {
   }),
 
   actions: {
-    async createEssay(essay: Omit<Essay, 'essayId' | 'created'>) {
-      return await mockService.createEssay(essay)
-    },
-
-    async getEssays() {
-      return await mockService.getEssaysByApplication('') // TODO: Get all essays
-    },
-
     async getEssaysByApplication(applicationId: string) {
-      return await mockService.getEssaysByApplication(applicationId)
+      const essays = await mockService.getEssays()
+      return essays.filter(e => e.applicationId === applicationId)
     },
 
     async getEssay(id: string) {
       return await mockService.getEssay(id)
     },
 
-    async updateEssay(id: string, updates: Omit<Essay, 'essayId' | 'created'>) {
-      return await mockService.updateEssay(id, updates)
+    async createEssay(essay: Omit<Essay, 'essayId'>) {
+      return await mockService.createEssay(essay)
+    },
+
+    async updateEssay(id: string, essay: Omit<Essay, 'created'>) {
+      return await mockService.updateEssay(id, essay)
     },
 
     async deleteEssay(id: string) {

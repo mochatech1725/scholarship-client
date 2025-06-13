@@ -1,5 +1,5 @@
 export interface Essay {
-  essayId?: string
+  essayId: string
   applicationId: string
   studentId: string
   essayLink: string
@@ -10,7 +10,7 @@ export interface Essay {
 }
 
 export interface Recommender {
-  recommenderId?: string
+  recommenderId: string
   firstName: string
   lastName: string
   relationship: string
@@ -21,7 +21,7 @@ export interface Recommender {
 
 export interface Recommendation {
   recommendationId: string
-  recommender?: Recommender
+  recommender: Recommender
   applicationId: string
   studentId: string
   recommenderId: string

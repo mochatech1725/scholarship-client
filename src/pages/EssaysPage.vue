@@ -47,7 +47,7 @@
 
         <q-card-actions align="right">
           <q-btn flat label="Cancel" color="primary" v-close-popup />
-          <q-btn flat label="Delete" color="negative" @click="deleteEssay" v-close-popup />
+          <q-btn flat label="Delete" color="negative" @click="() => deleteEssay('app-1')" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -101,10 +101,10 @@ const columns = [
   }
 ]
 
-const loadEssays = async () => {
+const loadEssays = async (applicationId: string) => {
   try {
     loading.value = true
-    essays.value = await essayStore.getEssays()
+    essays.value = await essayStore.getEssaysByApplication(applicationId)
   } catch (err) {
     console.error('Failed to load essays:', err)
     $q.notify({
@@ -121,7 +121,7 @@ const confirmDelete = (essay: Essay) => {
   showDeleteDialog.value = true
 }
 
-const deleteEssay = async () => {
+const deleteEssay = async (applicationId: string) => {
   if (!selectedEssay.value?.essayId) return
 
   try {
@@ -130,7 +130,7 @@ const deleteEssay = async () => {
       type: 'positive',
       message: 'Essay deleted successfully'
     })
-    await loadEssays()
+    await loadEssays(applicationId)
   } catch (err) {
     console.error('Failed to delete essay:', err)
     $q.notify({
@@ -141,6 +141,6 @@ const deleteEssay = async () => {
 }
 
 onMounted(() => {
-  void loadEssays()
+  void loadEssays('app-1')
 })
 </script> 

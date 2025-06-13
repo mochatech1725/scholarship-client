@@ -61,23 +61,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import type { Profile } from 'src/types'
-import { useUserStore } from 'src/stores/user.store'
-import { useAuthStore } from 'src/stores/auth.store'
 import { educationLevelOptions, targetTypeOptions, areaOptions } from 'src/types'
 
-defineProps<{
-  isEdit?: boolean
-}>()
+const props = defineProps<{ isEdit?: boolean; profile?: Profile | null }>()
 
-const emit = defineEmits<{
-  (e: 'submit', form: Profile): void
-  (e: 'cancel'): void
-}>()
+const emit = defineEmits<{ (e: 'submit', profile: Profile): void; (e: 'cancel'): void }>()
 
-const userStore = useUserStore()
-const authStore = useAuthStore()
 const form = ref<Profile>({
   userId: '',
   userPreferences: {
@@ -90,27 +81,19 @@ const form = ref<Profile>({
   }
 })
 
+watch(
+  () => [!!props.profile, props.profile],
+  ([hasProfile, newProfile]) => {
+    if (hasProfile && newProfile) {
+      form.value = JSON.parse(JSON.stringify(newProfile))
+    }
+  },
+  { immediate: true }
+)
+
 const onSubmit = () => {
   emit('submit', form.value)
 }
-
-onMounted(async () => {
-  try {
-    if (!authStore.isInitialized) {
-      await authStore.initialize()
-    }
-    const user = authStore.user
-    if (user) {
-      form.value.userId = user.userId
-    }
-    const profile = await userStore.loadProfile()
-    if (profile) {
-      form.value = profile
-    }
-  } catch (error) {
-    console.error('Failed to load user data:', error)
-  }
-})
 </script>
 
 <style scoped>

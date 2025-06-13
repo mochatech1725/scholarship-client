@@ -1,54 +1,31 @@
 import { defineStore } from 'pinia'
-import type { Profile, UserPreferences } from 'src/types'
+import type { User } from 'src/types'
 import { mockService } from 'src/services/mock.service'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    profile: null as Profile | null,
-    preferences: null as UserPreferences | null
+    user: null as User | null
   }),
 
   actions: {
-    async loadProfile() {
+    async loadUser() {
       try {
-        const profile = await mockService.getProfile()
-        this.profile = profile
-        return profile
+        const user = await mockService.getUser()
+        this.user = user
+        return user
       } catch (error) {
-        console.error('Failed to load profile:', error)
+        console.error('Failed to load user:', error)
         throw error
       }
     },
 
-    async loadPreferences() {
+    async updateProfile(profile: User['profile']) {
       try {
-        const preferences = await mockService.getPreferences()
-        this.preferences = preferences
-        return preferences
-      } catch (error) {
-        console.error('Failed to load preferences:', error)
-        throw error
-      }
-    },
-
-    async updateProfile(profile: Profile) {
-      try {
-        const updatedProfile = await mockService.updateProfile(profile)
-        this.profile = updatedProfile
-        return updatedProfile
+        const updatedUser = await mockService.updateProfile(profile)
+        this.user = updatedUser
+        return updatedUser
       } catch (error) {
         console.error('Failed to update profile:', error)
-        throw error
-      }
-    },
-
-    async updatePreferences(preferences: UserPreferences) {
-      try {
-        const updatedPreferences = await mockService.updatePreferences(preferences)
-        this.preferences = updatedPreferences
-        return updatedPreferences
-      } catch (error) {
-        console.error('Failed to update preferences:', error)
         throw error
       }
     }
