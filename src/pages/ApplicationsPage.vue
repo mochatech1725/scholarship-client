@@ -76,6 +76,7 @@ import { statusOptions } from 'src/types'
 import { useGetStatusColor } from 'src/composables/useGetStatusColor'
 import { useApplicationStore } from 'src/stores/application.store'
 import { useUserStore } from 'src/stores/user.store'
+import { storeToRefs } from 'pinia'
 
 const $q = useQuasar()
 const loading = ref(false)
@@ -83,7 +84,7 @@ const { getStatusColor } = useGetStatusColor()
 const applicationStore = useApplicationStore()
 const userStore = useUserStore()
 
-const applications = ref<Application[]>([])
+const { applications } = storeToRefs(applicationStore)
 
 const filters = ref({
   status: null as ApplicationStatus | null,
@@ -132,7 +133,7 @@ const loadApplications = async () => {
   
   loading.value = true
   try {
-    applications.value = await applicationStore.getApplicationsByUserId(userStore.user.userId)
+    await applicationStore.getApplicationsByUserId(userStore.user.userId)
   } catch (error) {
     console.error('Failed to load applications:', error)
     $q.notify({

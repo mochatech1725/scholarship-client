@@ -1,6 +1,6 @@
 {
   "applicationId": "app-1",
-  "studentId": "student-1",
+  "studentId": "auth0|6844d51eecdb753254ed6d53",
   "scholarshipName": "Test Scholarship",
   "targetType": "Merit",
   "company": "Test Company",
@@ -22,7 +22,7 @@
     {
       "recommendationId": "rec-1",
       "applicationId": "app-1",
-      "studentId": "student-1",
+      "studentId": "auth0|6844d51eecdb753254ed6d53",
       "recommenderId": "rec-1",
       "recommender": {
         "recommenderId": "rec-1",
@@ -43,7 +43,7 @@
     {
       "recommendationId": "rec-2",
       "applicationId": "app-1",
-      "studentId": "student-1",
+      "studentId": "auth0|6844d51eecdb753254ed6d53",
       "recommenderId": "rec-2",
       "recommender": {
         "recommenderId": "rec-2",
@@ -64,7 +64,7 @@
     {
       "recommendationId": "rec-3",
       "applicationId": "app-1",
-      "studentId": "student-1",
+      "studentId": "auth0|6844d51eecdb753254ed6d53",
       "recommenderId": "rec-3",
       "recommender": {
         "recommenderId": "rec-3",
@@ -83,5 +83,16 @@
       "created": "2024-01-01T00:00:00.000Z"
     }
   ],
-  "essays": []
+  "essays": [
+    {
+      "essayId": "essay-1",
+      "applicationId": "app-1",
+      "studentId": "auth0|6844d51eecdb753254ed6d53",
+      "essayLink": "https://docs.google.com/document/d/essay1",
+      "count": 500,
+      "units": "words",
+      "theme": "Leadership Experience",
+      "created": "2024-01-01T00:00:00.000Z"
+    }
+  ]
 } 

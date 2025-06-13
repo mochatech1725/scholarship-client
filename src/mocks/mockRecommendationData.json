@@ -3,7 +3,7 @@
     {
       "recommendationId": "rec-1",
       "applicationId": "app-1",
-      "studentId": "student-1",
+      "studentId": "auth0|6844d51eecdb753254ed6d53",
       "recommenderId": "rec-1",
       "status": "Pending",
       "requestDate": "2024-03-01",
@@ -15,7 +15,7 @@
     {
       "recommendationId": "rec-2",
       "applicationId": "app-1",
-      "studentId": "student-1",
+      "studentId": "auth0|6844d51eecdb753254ed6d53",
       "recommenderId": "rec-2",
       "status": "Submitted",
       "requestDate": "2024-03-01",
@@ -27,7 +27,7 @@
     {
       "recommendationId": "rec-3",
       "applicationId": "app-1",
-      "studentId": "student-1",
+      "studentId": "auth0|6844d51eecdb753254ed6d53",
       "recommenderId": "rec-3",
       "status": "Pending",
       "requestDate": "2024-03-01",
