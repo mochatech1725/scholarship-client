@@ -13,7 +13,7 @@
 
     <q-card class="q-pa-md">
       <q-card-section>
-        <Application />
+        <ApplicationForm />
       </q-card-section>
     </q-card>
   </q-page>
@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-import Application from 'components/Application.vue'
+import ApplicationForm from 'components/ApplicationForm.vue'
 
 const route = useRoute()
 const isEdit = ref(!!route.params.applicationId)

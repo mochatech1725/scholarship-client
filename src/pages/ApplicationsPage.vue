@@ -6,7 +6,7 @@
         color="primary"
         icon="add"
         label="New Application"
-        to="/dashboard/application-form"
+        :to="{ name: 'applicationCreate' }"
       />
     </div>
 
