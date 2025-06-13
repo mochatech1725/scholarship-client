@@ -8,9 +8,9 @@ export const useEssayStore = defineStore('essay', {
   }),
 
   actions: {
-    async getEssaysByApplication(applicationId: string) {
-      const essays = await mockService.getEssays()
-      return essays.filter(e => e.applicationId === applicationId)
+    async getEssaysByApplicationId(applicationId: string) {
+      this.essays = await mockService.getEssaysByApplicationId(applicationId)
+      return this.essays
     },
 
     async getEssay(id: string) {

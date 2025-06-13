@@ -60,10 +60,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import type { Essay } from 'src/types'
+import { useEssayStore } from 'src/stores/essay.store'
+import { useRoute } from 'vue-router'
 
-defineProps<{
+const props = defineProps<{
   isEdit?: boolean
 }>()
 
@@ -72,6 +74,8 @@ const emit = defineEmits<{
   (e: 'cancel'): void
 }>()
 
+const route = useRoute()
+const essayStore = useEssayStore()
 const form = ref<Omit<Essay, 'essayId' | 'created'>>({
   applicationId: '',
   studentId: '',
@@ -79,6 +83,29 @@ const form = ref<Omit<Essay, 'essayId' | 'created'>>({
   count: 0,
   units: '',
   theme: ''
+})
+
+const loadEssay = async () => {
+  const essayId = route.params.essayId as string
+  if (!essayId) return
+  
+  const essay = await essayStore.getEssay(essayId)
+  if (essay) {
+    form.value = {
+      applicationId: essay.applicationId,
+      studentId: essay.studentId,
+      essayLink: essay.essayLink,
+      count: essay.count,
+      units: essay.units,
+      theme: essay.theme
+    }
+  }
+}
+
+onMounted(() => {
+  if (props.isEdit) {
+    void loadEssay()
+  }
 })
 
 const onSubmit = () => {

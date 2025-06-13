@@ -70,7 +70,7 @@ const loadEssays = async () => {
   if (!props.applicationId) return
   
   try {
-    const loadedEssays = await essayStore.getEssaysByApplication(props.applicationId)
+    const loadedEssays = await essayStore.getEssaysByApplicationId(props.applicationId)
     essays.value = loadedEssays
   } catch (err) {
     console.error('Failed to load essays:', err)
@@ -105,7 +105,7 @@ const confirmDeleteEssay = (essay: Essay) => {
   }).onOk(() => {
     void (async () => {
       try {
-        await essayStore.deleteEssay(essay.essayId!)
+        await essayStore.deleteEssay(essay.essayId)
         await loadEssays()
         $q.notify({
           color: 'positive',

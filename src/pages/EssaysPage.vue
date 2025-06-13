@@ -6,7 +6,7 @@
         color="primary"
         icon="add"
         label="Add Essay"
-        to="/essays/new"
+        :to="{ name: 'essayCreate' }"
       />
     </div>
 
@@ -24,7 +24,7 @@
               round
               color="primary"
               icon="edit"
-              :to="`/essays/${props.row.essayId}`"
+              :to="{ name: 'essayEdit', params: { essayId: props.row.essayId } }"
             />
             <q-btn
               flat
@@ -68,43 +68,17 @@ const showDeleteDialog = ref(false)
 const selectedEssay = ref<Essay | null>(null)
 
 const columns = [
-  {
-    name: 'theme',
-    label: 'Theme',
-    field: 'theme',
-    align: 'left' as const
-  },
-  {
-    name: 'count',
-    label: 'Count',
-    field: 'count',
-    align: 'left' as const
-  },
-  {
-    name: 'units',
-    label: 'Units',
-    field: 'units',
-    align: 'left' as const
-  },
-  {
-    name: 'essayLink',
-    label: 'Essay Link',
-    field: 'essayLink',
-    align: 'left' as const,
-    format: (val: string) => val ? 'View' : 'Not uploaded'
-  },
-  {
-    name: 'actions',
-    label: 'Actions',
-    field: 'actions',
-    align: 'center' as const
-  }
+  { name: 'theme', label: 'Theme', field: 'theme', align: 'left' as const },
+  { name: 'count', label: 'Count', field: 'count', align: 'left' as const },
+  { name: 'units', label: 'Units', field: 'units', align: 'left' as const },
+  { name: 'essayLink', label: 'Essay Link', field: 'essayLink', align: 'left' as const, format: (val: string) => val ? 'View' : 'Not uploaded' },
+  { name: 'actions', label: 'Actions', field: 'actions', align: 'center' as const }
 ]
 
 const loadEssays = async (applicationId: string) => {
   try {
     loading.value = true
-    essays.value = await essayStore.getEssaysByApplication(applicationId)
+    essays.value = await essayStore.getEssaysByApplicationId(applicationId)
   } catch (err) {
     console.error('Failed to load essays:', err)
     $q.notify({

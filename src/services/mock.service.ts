@@ -178,6 +178,11 @@ class MockService {
     return essayData.essays as Essay[]
   }
 
+  async getEssaysByApplicationId(applicationId: string): Promise<Essay[]> {
+    await new Promise(resolve => setTimeout(resolve, 100))
+    return essayData.essays.filter(essay => essay.applicationId === applicationId) as Essay[]
+  }
+
   async getEssay(id: string): Promise<Essay | null> {
     await new Promise(resolve => setTimeout(resolve, 100))
     const essay = essayData.essays.find(essay => essay.essayId === id)
