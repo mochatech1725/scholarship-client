@@ -78,11 +78,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits, defineProps, watch } from 'vue'
+import { ref, defineEmits, defineProps, onMounted } from 'vue'
 import type { Recommender } from 'src/types'
 
 const props = defineProps<{
-  initialData?: Omit<Recommender, 'recommenderId' | 'created'> & { emailAddress: string; phoneNumber: string }
+  isEdit?: boolean
+  recommender: Recommender | null
   loading?: boolean
 }>()
 
@@ -118,16 +119,25 @@ const rules = {
   //   (val: string) => val.replace(/[^0-9]/g, '').length === 10 || 'Please enter a valid 10-digit phone number'
   // ]
 }
-
-watch(() => props.initialData, (newData) => {
-  if (newData) {
-    form.value = { ...newData }
+const loadData = () => {
+  if (props.isEdit && props.recommender) {
+    form.value = {
+      firstName: props.recommender.firstName,
+      lastName: props.recommender.lastName,
+      relationship: props.recommender.relationship,
+      emailAddress: props.recommender.emailAddress,
+      phoneNumber: props.recommender.phoneNumber
+    }
   }
-}, { immediate: true })
+}
 
 const onSubmit = () => {
   emit('submit', form.value)
 }
+
+onMounted(() => {
+  void loadData()
+})
 </script>
 
 <style scoped>

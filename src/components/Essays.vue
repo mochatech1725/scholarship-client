@@ -8,7 +8,7 @@
           color="primary"
           icon="add"
           label="Add Essay"
-          :to="{ name: 'essayCreate', params: { applicationId: applicationId } }"
+          :to="{ name: 'essayCreate', params: { applicationId: props?.application?.applicationId }}"
         />
       </div>
 
@@ -27,7 +27,7 @@
               round
               color="primary"
               icon="edit"
-              :to="props.row.essayId ? { name: 'essayEdit', params: { essayId: props.row.essayId } } : '#'"
+              :to="{ name: 'essayEdit', params: { essayId: props.row.essayId } }"
               dense
             />
             <q-btn
@@ -46,13 +46,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useEssayStore } from 'stores/essay.store'
-import type { Essay } from 'src/types'
+import type { Essay, Application } from 'src/types'
 
 const props = defineProps<{
-  applicationId: string
+  application: Application | null
 }>()
 
 const $q = useQuasar()
@@ -66,27 +66,9 @@ const essayColumns = [
   { name: 'actions', label: 'Actions', field: 'actions', align: 'right' as const }
 ]
 
-const loadEssays = async () => {
-  if (!props.applicationId) return
-  
-  try {
-    const loadedEssays = await essayStore.getEssaysByApplicationId(props.applicationId)
-    essays.value = loadedEssays
-  } catch (err) {
-    console.error('Failed to load essays:', err)
-    $q.notify({
-      type: 'negative',
-      message: 'Failed to load essays'
-    })
-  }
+const loadEssays = () => {
+  essays.value = props.application?.essays || []
 }
-
-// Watch for changes in applicationId
-watch(() => props.applicationId, (newId) => {
-  if (newId) {
-    void loadEssays()
-  }
-})
 
 const confirmDeleteEssay = (essay: Essay) => {
   if (!essay.essayId) {
@@ -106,7 +88,7 @@ const confirmDeleteEssay = (essay: Essay) => {
     void (async () => {
       try {
         await essayStore.deleteEssay(essay.essayId)
-        await loadEssays()
+        loadEssays()
         $q.notify({
           color: 'positive',
           message: 'Essay deleted successfully'
@@ -122,7 +104,7 @@ const confirmDeleteEssay = (essay: Essay) => {
   })
 }
 
-onMounted(async () => {
-  await loadEssays()
+onMounted( () => {
+  void loadEssays()
 })
 </script> 

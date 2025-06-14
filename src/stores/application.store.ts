@@ -31,6 +31,20 @@ export const useApplicationStore = defineStore('application', {
       if (index !== -1) {
         this.applications.splice(index, 1)
       }
+    },
+
+    async deleteRecommendation(id: string) {
+      await mockService.deleteRecommendation(id)
+      // Update the application in the store if needed
+      const application = this.applications.find(app => 
+        app.recommendations.some(rec => rec.recommendationId === id)
+      )
+      if (application) {
+        const index = application.recommendations.findIndex(rec => rec.recommendationId === id)
+        if (index !== -1) {
+          application.recommendations.splice(index, 1)
+        }
+      }
     }
   }
 }) 

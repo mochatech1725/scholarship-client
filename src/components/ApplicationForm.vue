@@ -159,10 +159,10 @@
     </div>
 
     <!-- Essays Section -->
-    <Essays :application-id="form.applicationId" />
+    <Essays :application="application" />
 
     <!-- Recommendations Section -->
-    <Recommendations :application-id="form.applicationId" />
+    <Recommendations :application="application" />
 
     <div class="row justify-end q-mt-md">
       <q-btn
@@ -192,6 +192,7 @@ const applicationStore = useApplicationStore()
 const scholarshipContextStore = useScholarshipContextStore()
 const loading = ref(false)
 const isEdit = ref(false)
+const application = ref<Application | null>(null)
 
 const form = ref<Omit<Application, 'created'>>({
   applicationId: route.params.applicationId as string || crypto.randomUUID(),
@@ -249,10 +250,11 @@ const rules = {
 
 const loadApplication = async () => {
   try {
-    const application = await applicationStore.getApplication(route.params.applicationId as string)
-    if (application) {
+    const fetchedApplication = await applicationStore.getApplication(route.params.applicationId as string)
+    if (fetchedApplication) {
+      application.value = fetchedApplication
       form.value = {
-        ...application
+        ...fetchedApplication
       }
     }
   } catch (error) {

@@ -21,7 +21,13 @@ export const useRecommenderStore = defineStore('recommender', {
     },
 
     async getRecommenders() {
-      return await mockService.getRecommenders()
+      const recommenders = await mockService.getRecommenders()
+      return recommenders
+    },
+
+    async getRecommenderById(recommenderId: string) {
+      const recommenders = await mockService.getRecommenders()
+      return recommenders.find(r => r.recommenderId === recommenderId) || null
     },
 
     async updateRecommender(recommenderId: string, updates: Omit<Recommender, 'recommenderId' | 'created'>) {

@@ -13,8 +13,8 @@ export const useRecommendationStore = defineStore('recommendation', {
       return recommendations.filter(r => r.applicationId === applicationId)
     },
 
-    async getRecommendation(id: string) {
-      return await mockService.getRecommendation(id)
+    async getRecommendation(recommendationId: string) {
+      return await mockService.getRecommendation(recommendationId)
     },
 
     async createRecommendation(recommendation: Omit<Recommendation, 'recommendationId'>) {

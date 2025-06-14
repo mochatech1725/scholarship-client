@@ -62,71 +62,35 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
-import { useRecommendationStore } from 'stores/recommendation.store'
-import type { Recommendation } from 'src/types'
+import { useApplicationStore } from 'src/stores/application.store'
+import type { Recommendation, Application } from 'src/types'
 import { useGetStatusColor } from 'src/composables/useGetStatusColor'
 
 const props = defineProps<{
-  applicationId: string
+  application: Application | null
 }>()
 
 const $q = useQuasar()
-const recommendationStore = useRecommendationStore()
+const applicationStore = useApplicationStore()
 const recommendations = ref<Recommendation[]>([])
+
 const { getStatusColor } = useGetStatusColor()
 
 const recommendationColumns = [
-  {
-    name: 'recommender',
-    label: 'Recommender',
-    field: (row: Recommendation) => {
-      if (!row.recommender) return 'Loading...'
-      return `${row.recommender.firstName} ${row.recommender.lastName} (${row.recommender.emailAddress})`
-    },
-    align: 'left' as const
-  },
-  {
-    name: 'status',
-    label: 'Status',
-    field: 'status',
-    align: 'left' as const
-  },
-  {
-    name: 'dueDate',
-    label: 'Due Date',
-    field: 'dueDate',
-    align: 'left' as const,
-    format: (val: string) => new Date(val).toLocaleDateString()
-  },
-  {
-    name: 'submissionDate',
-    label: 'Submitted',
-    field: 'submissionDate',
-    align: 'left' as const,
-    format: (val: string | null) => val ? new Date(val).toLocaleDateString() : '-'
-  },
-  {
-    name: 'actions',
-    label: 'Actions',
-    field: 'actions',
-    align: 'right' as const
-  }
+  { name: 'recommender', label: 'Recommender', 
+  field: (row: Recommendation) => { 
+    if (!row.recommender) return 'Loading...' 
+    return `${row.recommender.firstName} ${row.recommender.lastName} (${row.recommender.emailAddress})` }, align: 'left' as const },
+  { name: 'status', label: 'Status', field: 'status', align: 'left' as const },
+  { name: 'dueDate', label: 'Due Date', field: 'dueDate', align: 'left' as const, format: (val: string) => new Date(val).toLocaleDateString() },
+  { name: 'submissionDate', label: 'Submitted', field: 'submissionDate', align: 'left' as const, format: (val: string | null) => val ? new Date(val).toLocaleDateString() : '-' },
+  { name: 'actions', label: 'Actions', field: 'actions', align: 'right' as const }
 ]
 
-const loadRecommendations = async () => {
-  if (!props.applicationId) return
-
-  try {
-    recommendations.value = await recommendationStore.getRecommendationsByApplication(props.applicationId)
-  } catch (err) {
-    console.error('Failed to load recommendations:', err)
-    $q.notify({
-      type: 'negative',
-      message: 'Failed to load recommendations'
-    })
-  }
+const loadRecommendations = () => {
+  recommendations.value = props.application?.recommendations || []
 }
 
 const confirmDeleteRecommendation = (recommendation: Recommendation) => {
@@ -146,8 +110,7 @@ const confirmDeleteRecommendation = (recommendation: Recommendation) => {
   }).onOk(() => {
     void (async () => {
       try {
-        await recommendationStore.deleteRecommendation(recommendation.recommendationId)
-        await loadRecommendations()
+        await applicationStore.deleteRecommendation(recommendation.recommendationId)
         $q.notify({
           color: 'positive',
           message: 'Recommendation deleted successfully'
@@ -163,16 +126,8 @@ const confirmDeleteRecommendation = (recommendation: Recommendation) => {
   })
 }
 
-// Watch for changes in applicationId
-watch(() => props.applicationId, (newId) => {
-  if (newId) {
-    void loadRecommendations()
-  }
-})
 
-onMounted(async () => {
-  if (props.applicationId) {
-    await loadRecommendations()
-  }
+onMounted(() => {
+  loadRecommendations()
 })
 </script> 

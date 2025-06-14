@@ -3,7 +3,7 @@
     <div class="row q-col-gutter-md">
       <div class="col-12">
         <q-input
-          v-model="selectedRecommender.firstName"
+          v-model="recommender.firstName"
           label="First Name"
           outlined
           dense
@@ -14,7 +14,7 @@
 
       <div class="col-12">
         <q-input
-          v-model="selectedRecommender.lastName"
+          v-model="recommender.lastName"
           label="Last Name"
           outlined
           dense
@@ -25,7 +25,7 @@
 
       <div class="col-12">
         <q-input
-          v-model="selectedRecommender.emailAddress"
+          v-model="recommender.emailAddress"
           label="Email Address"
           outlined
           dense
@@ -99,14 +99,12 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed, defineEmits, defineProps } from 'vue'
-import { useRoute } from 'vue-router'
-import { useQuasar } from 'quasar'
-import { useRecommenderStore } from 'src/stores/recommender.store'
-import type { Recommender, Recommendation } from 'src/types'
+import type { Recommendation } from 'src/types'
 
-defineProps<{
+const props = defineProps<{
   isEdit: boolean
   loading?: boolean
+  recommendation: Recommendation | null
 }>()
 
 const emit = defineEmits<{
@@ -114,17 +112,8 @@ const emit = defineEmits<{
   (e: 'cancel'): void
 }>()
 
-const route = useRoute()
-const $q = useQuasar()
-const recommenderStore = useRecommenderStore()
-
-const recommendationId = computed(() => {
-  const id = route.params.recommendationId
-  return Array.isArray(id) ? id[0] : id
-})
-
 const form = ref<Omit<Recommendation, 'created'>>({
-  recommendationId: recommendationId.value || '',
+  recommendationId: '',
   applicationId: '',
   studentId: '', // TODO: Get from auth store
   recommenderId: '',
@@ -144,47 +133,49 @@ const form = ref<Omit<Recommendation, 'created'>>({
   submissionDate: null
 })
 
-const recommenders = ref<Recommender[]>([])
-const submissionMethodOptions = ['DirectEmail', 'StudentUpload', 'DirectMail'] as const
-
-const selectedRecommender = ref<Recommender>({
-  recommenderId: '',
-  firstName: '',
-  lastName: '',
-  emailAddress: '',
-  phoneNumber: '',
-  relationship: '',
-  created: new Date().toISOString()
+const recommender = computed(() => {
+  if (props.recommendation?.recommender) {
+    return props.recommendation.recommender
+  }
+  return form.value.recommender
 })
 
-const loadRecommenders = async () => {
-  try {
-    recommenders.value = await recommenderStore.getRecommenders()
-  } catch (err) {
-    console.error('Failed to load recommenders:', err)
-    $q.notify({
-      type: 'negative',
-      message: 'Failed to load recommenders'
-    })
-  }
-}
+const submissionMethodOptions = ['DirectEmail', 'StudentUpload', 'DirectMail'] as const
 
 const onSubmit = () => {
-  form.value.recommender = {
-    recommenderId: selectedRecommender.value.recommenderId,
-    firstName: selectedRecommender.value.firstName,
-    lastName: selectedRecommender.value.lastName,
-    emailAddress: selectedRecommender.value.emailAddress,
-    phoneNumber: selectedRecommender.value.phoneNumber,
-    relationship: selectedRecommender.value.relationship,
-    created: selectedRecommender.value.created
-  }
-  form.value.recommenderId = selectedRecommender.value.recommenderId
+  // form.value.recommender = {
+  //   recommenderId: selectedRecommender.value.recommenderId,
+  //   firstName: selectedRecommender.value.firstName,
+  //   lastName: selectedRecommender.value.lastName,
+  //   emailAddress: selectedRecommender.value.emailAddress,
+  //   phoneNumber: selectedRecommender.value.phoneNumber,
+  //   relationship: selectedRecommender.value.relationship,
+  //   created: selectedRecommender.value.created
+  // }
+  // form.value.recommenderId = selectedRecommender.value.recommenderId
+  
   emit('submit', form.value)
 }
 
-onMounted(async () => {
-  await loadRecommenders()
+const initializeForm = () => {
+  if (props.recommendation) {
+    form.value = {
+      recommendationId: props.recommendation.recommendationId,
+      applicationId: props.recommendation.applicationId,
+      studentId: props.recommendation.studentId,
+      recommenderId: props.recommendation.recommenderId,
+      recommender: props.recommendation.recommender,
+      dueDate: props.recommendation.dueDate,
+      status: props.recommendation.status,
+      submissionMethod: props.recommendation.submissionMethod,
+      requestDate: props.recommendation.requestDate,
+      submissionDate: props.recommendation.submissionDate
+    }
+  }
+}
+
+onMounted(() => {
+  initializeForm()
 })
 </script>
 
