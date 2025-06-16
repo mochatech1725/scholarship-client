@@ -32,8 +32,14 @@
       <q-tab name="recommendations" label="Recommendations" />
     </q-tabs>
 
-    <q-tab-panels v-model="activeTab" animated>
-      <q-tab-panel name="general">
+    <q-tab-panels
+      v-model="activeTab"
+      animated
+      transition-prev="slide-right"
+      transition-next="slide-left"
+      class="bg-transparent"
+    >
+      <q-tab-panel name="general" class="q-pa-none">
         <div class="row q-col-gutter-sm">
           <div class="col-12 col-md-6">
             <q-input
@@ -193,11 +199,11 @@
         </div>
       </q-tab-panel>
 
-      <q-tab-panel name="essays">
+      <q-tab-panel name="essays" class="q-pa-none">
         <Essays :application="application" />
       </q-tab-panel>
 
-      <q-tab-panel name="recommendations">
+      <q-tab-panel name="recommendations" class="q-pa-none">
         <Recommendations :application="application" />
       </q-tab-panel>
     </q-tab-panels>
