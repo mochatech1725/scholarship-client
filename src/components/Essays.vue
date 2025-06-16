@@ -19,7 +19,13 @@
         flat
         bordered
         dense
+        :loading="loading"
       >
+        <template v-slot:body-cell-essayLink="props">
+          <q-td :props="props">
+            {{ props.row.essayLink ? 'View' : 'Not uploaded' }}
+          </q-td>
+        </template>
         <template v-slot:body-cell-actions="props">
           <q-td :props="props" class="q-gutter-sm">
             <q-btn
@@ -78,16 +84,31 @@ const essayStore = useEssayStore()
 const essays = ref<Essay[]>([])
 const showEssayForm = ref(false)
 const editingEssay = ref<Essay | null>(null)
+const loading = ref(false)
 
 const essayColumns = [
   { name: 'theme', label: 'Theme', field: 'theme', sortable: true, align: 'left' as const },
   { name: 'count', label: 'Count', field: 'count', sortable: true, align: 'left' as const },
   { name: 'units', label: 'Units', field: 'units', sortable: true, align: 'left' as const },
+  { name: 'essayLink', label: 'Essay Link', field: 'essayLink', align: 'left' as const },
   { name: 'actions', label: 'Actions', field: 'actions', align: 'right' as const }
 ]
 
-const loadEssays = () => {
-  essays.value = props.application?.essays || []
+const loadEssays = async () => {
+  if (!props.application?.applicationId) return
+  
+  try {
+    loading.value = true
+    essays.value = await essayStore.getEssaysByApplicationId(props.application.applicationId)
+  } catch (err) {
+    console.error('Failed to load essays:', err)
+    $q.notify({
+      color: 'negative',
+      message: 'Failed to load essays'
+    })
+  } finally {
+    loading.value = false
+  }
 }
 
 const editEssay = (essay: Essay) => {
@@ -117,7 +138,7 @@ const handleEssaySubmit = async (formData: Omit<Essay, 'essayId' | 'created'>) =
       })
     }
     closeEssayForm()
-    loadEssays()
+    await loadEssays()
   } catch (err) {
     console.error('Failed to save essay:', err)
     $q.notify({
@@ -150,7 +171,7 @@ const confirmDeleteEssay = (essay: Essay) => {
     void (async () => {
       try {
         await essayStore.deleteEssay(essay.essayId)
-        loadEssays()
+        await loadEssays()
         $q.notify({
           color: 'positive',
           message: 'Essay deleted successfully'
@@ -166,7 +187,7 @@ const confirmDeleteEssay = (essay: Essay) => {
   })
 }
 
-onMounted(() => {
-  void loadEssays()
+onMounted(async () => {
+  await loadEssays()
 })
 </script> 
