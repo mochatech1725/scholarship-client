@@ -18,16 +18,12 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true },
     children: [
       { path: 'applications', component: () => import('pages/ApplicationsPage.vue'), name: 'applicationsList', meta: { requiresAuth: true } },
-      { path: 'application', component: () => import('pages/ApplicationFormPage.vue'), name: 'applicationCreate', meta: { requiresAuth: true } },
-      { path: 'application/:applicationId', component: () => import('pages/ApplicationFormPage.vue'), name: 'applicationEdit', meta: { requiresAuth: true } },
       { path: 'scholarshipSearch', component: () => import('pages/ScholarshipSearchPage.vue'), name: 'scholarshipSearch', meta: { requiresAuth: true } },
       { path: 'profile', component: () => import('pages/ProfilePage.vue'), name:'editProfile', meta: { requiresAuth: true } },
       { path: 'essays', component: () => import('pages/EssaysPage.vue'), name: 'essaysList', meta: { requiresAuth: true } },
       { path: 'essayCreate', component: () => import('pages/EssayPage.vue'), name: 'essayCreate', meta: { requiresAuth: true } },
       { path: 'essay/:essayId', component: () => import('pages/EssayPage.vue'), name: 'essayEdit', meta: { requiresAuth: true } },
       { path: 'recommenders', component: () => import('pages/RecommendersPage.vue'), name: 'recommendersList', meta: { requiresAuth: true } },
-      // { path: 'recommenderCreate', component: () => import('pages/RecommenderPage.vue'), name: 'recommenderCreate', meta: { requiresAuth: true } },
-      // { path: 'recommender/:recommenderId', component: () => import('pages/RecommenderPage.vue'), name: 'recommenderEdit', meta: { requiresAuth: true } },
       { path: 'recommendationCreate', component: () => import('pages/RecommendationPage.vue'), name: 'recommendationCreate', meta: { requiresAuth: true } },
       { path: 'recommendation/:recommendationId', component: () => import('pages/RecommendationPage.vue'), name: 'recommendationEdit', meta: { requiresAuth: true } },
     ]

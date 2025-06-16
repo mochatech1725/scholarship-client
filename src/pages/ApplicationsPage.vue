@@ -6,7 +6,7 @@
         color="primary"
         icon="add"
         label="New Application"
-        @click="showForm = true"
+        @click="handleEdit(null)"
       />
     </div>
 
@@ -15,8 +15,10 @@
         <q-card class="q-pa-md">
           <q-card-section>
             <ApplicationForm 
-              :is-edit="false"
+              :is-edit="!!editingApplication"
+              :application="editingApplication"
               @cancel="handleFormCancel"
+              @submit="handleFormSubmit"
             />
           </q-card-section>
         </q-card>
@@ -53,7 +55,7 @@
                   round
                   color="primary"
                   icon="edit"
-                  :to="{ name: 'applicationEdit', params: { applicationId: props.row.applicationId } }"
+                  @click="handleEdit(props.row)"
                 />
                 <q-btn
                   flat
@@ -133,9 +135,22 @@ const filteredApplications = computed(() => {
 })
 
 const showForm = ref(false)
+const editingApplication = ref<Application | null>(null)
 
 const handleFormCancel = () => {
   showForm.value = false
+  editingApplication.value = null
+}
+
+const handleFormSubmit = async () => {
+  showForm.value = false
+  editingApplication.value = null
+  await loadApplications()
+}
+
+const handleEdit = (application: Application | null) => {
+  editingApplication.value = application
+  showForm.value = true
 }
 
 const loadApplications = async () => {

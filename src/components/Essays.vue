@@ -8,7 +8,7 @@
           color="primary"
           icon="add"
           label="Add Essay"
-          :to="{ name: 'essayCreate', params: { applicationId: props?.application?.applicationId }}"
+          @click="showEssayForm = true"
         />
       </div>
 
@@ -27,7 +27,7 @@
               round
               color="primary"
               icon="edit"
-              :to="{ name: 'essayEdit', params: { essayId: props.row.essayId } }"
+              @click="editEssay(props.row)"
               dense
             />
             <q-btn
@@ -42,6 +42,23 @@
         </template>
       </q-table>
     </q-card-section>
+
+    <q-dialog v-model="showEssayForm" persistent>
+      <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-h6">{{ editingEssay ? 'Edit Essay' : 'Add Essay' }}</div>
+        </q-card-section>
+
+        <q-card-section>
+          <EssayForm
+            :application="application"
+            :essay="editingEssay"
+            @submit="handleEssaySubmit"
+            @cancel="closeEssayForm"
+          />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-card>
 </template>
 
@@ -50,6 +67,7 @@ import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useEssayStore } from 'stores/essay.store'
 import type { Essay, Application } from 'src/types'
+import EssayForm from './EssayForm.vue'
 
 const props = defineProps<{
   application: Application | null
@@ -58,6 +76,8 @@ const props = defineProps<{
 const $q = useQuasar()
 const essayStore = useEssayStore()
 const essays = ref<Essay[]>([])
+const showEssayForm = ref(false)
+const editingEssay = ref<Essay | null>(null)
 
 const essayColumns = [
   { name: 'theme', label: 'Theme', field: 'theme', sortable: true, align: 'left' as const },
@@ -68,6 +88,48 @@ const essayColumns = [
 
 const loadEssays = () => {
   essays.value = props.application?.essays || []
+}
+
+const editEssay = (essay: Essay) => {
+  editingEssay.value = essay
+  showEssayForm.value = true
+}
+
+const handleEssaySubmit = async (formData: Omit<Essay, 'essayId' | 'created'>) => {
+  try {
+    if (editingEssay.value?.essayId) {
+      await essayStore.updateEssay(editingEssay.value.essayId, {
+        ...formData,
+        essayId: editingEssay.value.essayId
+      })
+      $q.notify({
+        color: 'positive',
+        message: 'Essay updated successfully'
+      })
+    } else {
+      await essayStore.createEssay({
+        ...formData,
+        created: new Date().toISOString()
+      })
+      $q.notify({
+        color: 'positive',
+        message: 'Essay created successfully'
+      })
+    }
+    closeEssayForm()
+    loadEssays()
+  } catch (err) {
+    console.error('Failed to save essay:', err)
+    $q.notify({
+      color: 'negative',
+      message: 'Failed to save essay'
+    })
+  }
+}
+
+const closeEssayForm = () => {
+  showEssayForm.value = false
+  editingEssay.value = null
 }
 
 const confirmDeleteEssay = (essay: Essay) => {
@@ -104,7 +166,7 @@ const confirmDeleteEssay = (essay: Essay) => {
   })
 }
 
-onMounted( () => {
+onMounted(() => {
   void loadEssays()
 })
 </script> 

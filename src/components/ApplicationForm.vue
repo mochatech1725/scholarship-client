@@ -175,8 +175,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'stores/application.store'
 import { useScholarshipContextStore } from 'stores/scholarship-context.store'
@@ -185,17 +184,22 @@ import { targetTypeOptions, statusOptions } from 'src/types'
 import Essays from 'components/Essays.vue'
 import Recommendations from 'components/Recommendations.vue'
 
-const route = useRoute()
-const router = useRouter()
 const $q = useQuasar()
 const applicationStore = useApplicationStore()
 const scholarshipContextStore = useScholarshipContextStore()
 const loading = ref(false)
 const isEdit = ref(false)
-const application = ref<Application | null>(null)
+const props = defineProps<{
+  application: Application | null
+}>()
+
+const emit = defineEmits<{
+  (e: 'cancel'): void
+  (e: 'submit'): void
+}>()
 
 const form = ref<Omit<Application, 'created'>>({
-  applicationId: route.params.applicationId as string || crypto.randomUUID(),
+  applicationId: crypto.randomUUID(),
   studentId: '', // TODO: Get from auth store
   scholarshipName: '',
   targetType: 'Merit',
@@ -248,30 +252,48 @@ const rules = {
   ]
 }
 
-const loadApplication = async () => {
-  try {
-    const fetchedApplication = await applicationStore.getApplication(route.params.applicationId as string)
-    if (fetchedApplication) {
-      application.value = fetchedApplication
-      form.value = {
-        ...fetchedApplication
-      }
+// Watch for changes in props.application
+watch(() => props.application, (newApplication) => {
+  if (newApplication) {
+    // Update form with application data, excluding the created field
+    const { ...applicationData } = newApplication
+    form.value = applicationData
+    isEdit.value = false
+    scholarshipContextStore.setCurrentScholarshipName(form.value.scholarshipName)
+  } else {
+    // Reset form for new application
+    form.value = {
+      applicationId: crypto.randomUUID(),
+      studentId: '', // TODO: Get from auth store
+      scholarshipName: '',
+      targetType: 'Merit',
+      company: '',
+      companyWebsite: '',
+      platform: '',
+      applicationLink: '',
+      theme: '',
+      amount: 0,
+      requirements: '',
+      renewable: false,
+      documentInfoLink: '',
+      currentAction: '',
+      status: 'Not Started',
+      submissionDate: '',
+      openDate: '',
+      dueDate: '',
+      essays: [],
+      recommendations: []
     }
-  } catch (error) {
-    console.error('Error loading application:', error)
-    $q.notify({
-      type: 'negative',
-      message: 'Failed to load application'
-    })
+    isEdit.value = false
+    scholarshipContextStore.clearCurrentScholarshipName()
   }
-}
+}, { immediate: true })
 
 const onSubmit = async () => {
   try {
     loading.value = true
     if (isEdit.value) {
-      const id = route.params.applicationId as string
-      await applicationStore.updateApplication(id, form.value)
+      await applicationStore.updateApplication(form.value.applicationId, form.value)
       $q.notify({
         type: 'positive',
         message: 'Application updated successfully'
@@ -287,7 +309,7 @@ const onSubmit = async () => {
         message: 'Application created successfully'
       })
     }
-    await router.push({ name: 'applicationsList' })
+    emit('submit')
   } catch (err) {
     console.error('Failed to save application:', err)
     $q.notify({
@@ -299,10 +321,9 @@ const onSubmit = async () => {
   }
 }
 
-onMounted(async () => {
-  if (route.params.applicationId) {
+onMounted (() => {
+  if (props.application) {
     isEdit.value = true
-    await loadApplication()
     scholarshipContextStore.setCurrentScholarshipName(form.value.scholarshipName)
   }
 })

@@ -50,7 +50,7 @@
         dense
       />
       <q-btn
-        :label="isEdit ? 'Update' : 'Create'"
+        :label="props.essay ? 'Update' : 'Create'"
         type="submit"
         color="primary"
         dense
@@ -61,12 +61,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import type { Essay } from 'src/types'
-import { useEssayStore } from 'src/stores/essay.store'
-import { useRoute } from 'vue-router'
+import type { Essay, Application } from 'src/types'
 
 const props = defineProps<{
-  isEdit?: boolean
+  application?: Application | null
+  essay?: Essay | null
 }>()
 
 const emit = defineEmits<{
@@ -74,36 +73,30 @@ const emit = defineEmits<{
   (e: 'cancel'): void
 }>()
 
-const route = useRoute()
-const essayStore = useEssayStore()
 const form = ref<Omit<Essay, 'essayId' | 'created'>>({
-  applicationId: '',
-  studentId: '',
+  applicationId: props.application?.applicationId || '',
+  studentId: props.application?.studentId || '',
   essayLink: '',
   count: 0,
   units: '',
   theme: ''
 })
 
-const loadEssay = async () => {
-  const essayId = route.params.essayId as string
-  if (!essayId) return
-  
-  const essay = await essayStore.getEssay(essayId)
-  if (essay) {
+const loadEssay = () => {
+  if (props.essay) {
     form.value = {
-      applicationId: essay.applicationId,
-      studentId: essay.studentId,
-      essayLink: essay.essayLink,
-      count: essay.count,
-      units: essay.units,
-      theme: essay.theme
+      applicationId: props.essay.applicationId,
+      studentId: props.essay.studentId,
+      essayLink: props.essay.essayLink,
+      count: props.essay.count,
+      units: props.essay.units,
+      theme: props.essay.theme
     }
   }
 }
 
 onMounted(() => {
-  if (props.isEdit) {
+  if (props.essay) {
     void loadEssay()
   }
 })
