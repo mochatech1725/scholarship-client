@@ -1,4 +1,5 @@
 <template>
+  <ScholarshipBanner :name="scholarshipName" />
   <q-form @submit="onSubmit" class="q-gutter-md">
     <div class="row items-center justify-between q-mb-md">
       <div class="text-h6">{{ isEdit ? 'Edit' : 'Add' }} Application</div>
@@ -185,21 +186,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'stores/application.store'
+// import { useUserStore } from 'stores/user.store'
+// import { useAuthStore } from 'stores/auth.store'
 import { useScholarshipContextStore } from 'stores/scholarship-context.store'
 import type { Application } from 'src/types'
 import { targetTypeOptions, statusOptions } from 'src/types'
 import Essays from 'components/Essays.vue'
 import Recommendations from 'components/Recommendations.vue'
+import ScholarshipBanner from 'components/ScholarshipBanner.vue'
 
 const $q = useQuasar()
 const applicationStore = useApplicationStore()
+// const userStore = useUserStore()
+// const authStore = useAuthStore()
 const scholarshipContextStore = useScholarshipContextStore()
 const loading = ref(false)
-const isEdit = ref(false)
+
 const props = defineProps<{
+  isEdit: boolean
   application: Application | null
 }>()
 
@@ -262,19 +269,15 @@ const rules = {
   ]
 }
 
-// Watch for changes in props.application
-watch(() => props.application, (newApplication) => {
-  if (newApplication) {
-    // Update form with application data, excluding the created field
-    const { ...applicationData } = newApplication
+const initializeForm = () => {
+  if (props.application) {
+    const applicationData = { ...props.application }
     form.value = applicationData
-    isEdit.value = false
-    scholarshipContextStore.setCurrentScholarshipName(form.value.scholarshipName)
   } else {
     // Reset form for new application
     form.value = {
-      applicationId: crypto.randomUUID(),
-      studentId: '', // TODO: Get from auth store
+      applicationId: '',
+      studentId: '',
       scholarshipName: '',
       targetType: 'Merit',
       company: '',
@@ -294,48 +297,65 @@ watch(() => props.application, (newApplication) => {
       essays: [],
       recommendations: []
     }
-    isEdit.value = false
-    scholarshipContextStore.clearCurrentScholarshipName()
+  }
+}
+
+// Watch for changes in props.application
+watch(() => props.application, (newApplication) => {
+  console.log('ApplicationForm application prop changed:', newApplication)
+  if (newApplication) {
+    // Update form with application data, excluding the created field
+    const { ...applicationData } = newApplication
+    form.value = applicationData
   }
 }, { immediate: true })
+
+// Remove scholarship context watcher and cleanup
+watch(() => props.application?.scholarshipName, (newName) => {
+  if (newName) {
+    scholarshipContextStore.setCurrentScholarshipName(newName)
+  }
+}, { immediate: true })
+
+const scholarshipName = computed(() => {
+  return props.application?.scholarshipName || form.value.scholarshipName || ''
+})
 
 const onSubmit = async () => {
   try {
     loading.value = true
-    if (isEdit.value) {
+    if (props.isEdit) {
       await applicationStore.updateApplication(form.value.applicationId, form.value)
       $q.notify({
-        type: 'positive',
+        color: 'positive',
         message: 'Application updated successfully'
       })
     } else {
-      const newApplication: Application = {
+      const newApplication: Omit<Application, 'applicationId'> = {
         ...form.value,
         created: new Date().toISOString()
       }
       await applicationStore.createApplication(newApplication)
       $q.notify({
-        type: 'positive',
+        color: 'positive',
         message: 'Application created successfully'
       })
     }
     emit('submit')
-  } catch (err) {
-    console.error('Failed to save application:', err)
+  } catch (error) {
+    console.error('Error submitting application:', error)
     $q.notify({
-      type: 'negative',
-      message: `Failed to ${isEdit.value ? 'update' : 'create'} application`
+      color: 'negative',
+      message: 'Failed to submit application'
     })
   } finally {
     loading.value = false
   }
 }
 
-onMounted (() => {
-  if (props.application) {
-    isEdit.value = true
-    scholarshipContextStore.setCurrentScholarshipName(form.value.scholarshipName)
-  }
+onMounted(() => {
+  console.log('ApplicationForm mounted with application:', props.application)
+  initializeForm()
 })
 
 onBeforeUnmount(() => {

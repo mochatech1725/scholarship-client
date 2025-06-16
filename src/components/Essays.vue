@@ -57,7 +57,7 @@
 
         <q-card-section>
           <EssayForm
-            :application="application"
+            :application="props.application"
             :essay="editingEssay"
             @submit="handleEssaySubmit"
             @cancel="closeEssayForm"

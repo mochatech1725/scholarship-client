@@ -70,6 +70,7 @@
               :is-edit="!!editingRecommendation"
               :loading="loading"
               :recommendation="editingRecommendation"
+              :application="application"
               @submit="handleSubmit"
               @cancel="closeForm"
             />

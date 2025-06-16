@@ -1,5 +1,25 @@
 <template>
+  <ScholarshipBanner :name="scholarshipName" />
   <q-form @submit="onSubmit" class="q-gutter-md">
+    <div class="row items-center justify-between q-mb-md">
+      <div class="text-h6">{{ isEdit ? 'Edit' : 'Add' }} Recommendation</div>
+      <div>
+        <q-btn
+          label="Cancel"
+          color="grey"
+          flat
+          @click="$emit('cancel')"
+          class="q-mr-sm"
+        />
+        <q-btn
+          label="Save"
+          type="submit"
+          color="primary"
+          :loading="loading"
+        />
+      </div>
+    </div>
+
     <div class="row q-col-gutter-md">
       <div class="col-12 col-md-6">
         <q-input
@@ -71,33 +91,19 @@
         />
       </div>
     </div>
-
-    <div class="row justify-end q-mt-md">
-      <q-btn
-        label="Cancel"
-        color="grey"
-        flat
-        @click="$emit('cancel')"
-        class="q-mr-sm"
-      />
-      <q-btn
-        label="Save"
-        type="submit"
-        color="primary"
-        :loading="loading"
-      />
-    </div>
   </q-form>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, defineEmits, defineProps } from 'vue'
-import type { Recommendation } from 'src/types'
+import { ref, onMounted, computed, defineEmits, defineProps, onBeforeUnmount } from 'vue'
+import type { Recommendation, Application } from 'src/types'
+import ScholarshipBanner from 'components/ScholarshipBanner.vue'
 
 const props = defineProps<{
   isEdit: boolean
   loading?: boolean
   recommendation: Recommendation | null
+  application?: Application | null
 }>()
 
 const emit = defineEmits<{
@@ -133,20 +139,13 @@ const recommender = computed(() => {
   return form.value.recommender
 })
 
+const scholarshipName = computed(() => {
+  return props.application?.scholarshipName || ''
+})
+
 const submissionMethodOptions = ['DirectEmail', 'StudentUpload', 'DirectMail'] as const
 
 const onSubmit = () => {
-  // form.value.recommender = {
-  //   recommenderId: selectedRecommender.value.recommenderId,
-  //   firstName: selectedRecommender.value.firstName,
-  //   lastName: selectedRecommender.value.lastName,
-  //   emailAddress: selectedRecommender.value.emailAddress,
-  //   phoneNumber: selectedRecommender.value.phoneNumber,
-  //   relationship: selectedRecommender.value.relationship,
-  //   created: selectedRecommender.value.created
-  // }
-  // form.value.recommenderId = selectedRecommender.value.recommenderId
-  
   emit('submit', form.value)
 }
 
@@ -169,6 +168,10 @@ const initializeForm = () => {
 
 onMounted(() => {
   initializeForm()
+})
+
+onBeforeUnmount(() => {
+  // No scholarship context logic to clear
 })
 </script>
 

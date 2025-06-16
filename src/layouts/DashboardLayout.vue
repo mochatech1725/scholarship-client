@@ -54,7 +54,6 @@
     </q-header>
 
     <q-page-container>
-      <ScholarshipBanner />
       <router-view v-if="isReady" />
       <div v-else class="flex flex-center" style="height: 100vh">
         <q-spinner-dots color="primary" size="40px" />
@@ -68,7 +67,6 @@ import { ref, onMounted } from 'vue'
 import { useAuthStore } from 'stores/auth.store'
 import { useQuasar } from 'quasar'
 import { useRoute } from 'vue-router'
-import ScholarshipBanner from 'src/components/ScholarshipBanner.vue'
 
 const authStore = useAuthStore()
 const $q = useQuasar()

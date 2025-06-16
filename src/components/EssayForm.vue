@@ -1,5 +1,26 @@
 <template>
+  <ScholarshipBanner :name="scholarshipName" />
   <q-form @submit="onSubmit" class="q-gutter-sm">
+    <div class="row items-center justify-between q-mb-md">
+      <div class="text-h6">{{ props.essay ? 'Edit' : 'Add' }} Essay</div>
+      <div>
+        <q-btn
+          label="Cancel"
+          color="grey"
+          flat
+          class="q-mr-sm"
+          @click="$emit('cancel')"
+          dense
+        />
+        <q-btn
+          :label="props.essay ? 'Update' : 'Create'"
+          type="submit"
+          color="primary"
+          dense
+        />
+      </div>
+    </div>
+
     <div class="row q-col-gutter-sm">
       <div class="col-12 col-md-6">
         <q-input
@@ -39,30 +60,17 @@
         />
       </div>
     </div>
-
-    <div class="row justify-end q-mt-sm">
-      <q-btn
-        label="Cancel"
-        color="grey"
-        flat
-        class="q-mr-sm"
-        @click="$emit('cancel')"
-        dense
-      />
-      <q-btn
-        :label="props.essay ? 'Update' : 'Create'"
-        type="submit"
-        color="primary"
-        dense
-      />
-    </div>
   </q-form>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import type { Essay, Application } from 'src/types'
+import ScholarshipBanner from 'components/ScholarshipBanner.vue'
 
+const scholarshipName = computed(() => {
+  return props.application?.scholarshipName || ''
+})
 const props = defineProps<{
   application?: Application | null
   essay?: Essay | null
