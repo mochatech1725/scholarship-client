@@ -1,6 +1,14 @@
 <template>
   <q-page padding>
-    <div class="text-h5 q-mb-lg">Recommenders</div>
+    <div class="row items-center justify-between q-mb-lg">
+      <div class="text-h5">Recommenders</div>
+      <q-btn
+        color="primary"
+        icon="add"
+        label="Add Recommender"
+        @click="showForm = true"
+      />
+    </div>
 
     <div class="row q-col-gutter-md">
       <div class="col-12">
@@ -21,7 +29,7 @@
                 round
                 color="primary"
                 icon="edit"
-                :to="{ name: 'recommenderEdit', params: { recommenderId: props.row.recommenderId } }"
+                @click="editRecommender(props.row)"
                 dense
                 size="sm"
               />
@@ -40,6 +48,26 @@
       </div>
     </div>
 
+    <!-- Recommender Form Dialog -->
+    <q-dialog v-model="showForm" persistent>
+      <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-h6">{{ editingRecommender ? 'Edit' : 'Add' }} Recommender</div>
+        </q-card-section>
+
+        <q-card-section>
+          <RecommenderForm
+            :is-edit="!!editingRecommender"
+            :recommender="editingRecommender"
+            :loading="loading"
+            :user="user"
+            @submit="handleSubmit"
+            @cancel="closeForm"
+          />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+
     <q-dialog v-model="showDeleteDialog" persistent>
       <q-card>
         <q-card-section class="row items-center">
@@ -57,15 +85,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import type { Recommender } from 'src/types'
 import { useRecommenderStore } from 'src/stores/recommender.store'
+import { useAuthStore } from 'src/stores/auth.store'
+import RecommenderForm from 'src/components/RecommenderForm.vue'
 
 const $q = useQuasar()
 const recommenderStore = useRecommenderStore()
+const authStore = useAuthStore()
 const recommenders = ref<Recommender[]>([])
 const loading = ref(false)
+const showForm = ref(false)
+const editingRecommender = ref<Recommender | null>(null)
+
+const user = computed(() => authStore.user)
 
 const columns = [
   {
@@ -123,18 +158,65 @@ const loadRecommenders = async () => {
   }
 }
 
+const editRecommender = (recommender: Recommender) => {
+  editingRecommender.value = recommender
+  showForm.value = true
+}
+
+const handleSubmit = async (form: Omit<Recommender, 'recommenderId' | 'created'> & { emailAddress: string; phoneNumber: string }) => {
+  try {
+    loading.value = true
+    if (editingRecommender.value) {
+      await recommenderStore.updateRecommender(editingRecommender.value.recommenderId, form)
+      $q.notify({
+        type: 'positive',
+        message: 'Recommender updated successfully'
+      })
+    } else {
+      await recommenderStore.createRecommender(form)
+      $q.notify({
+        type: 'positive',
+        message: 'Recommender created successfully'
+      })
+    }
+    closeForm()
+    await loadRecommenders()
+  } catch (err) {
+    console.error('Failed to save recommender:', err)
+    $q.notify({
+      type: 'negative',
+      message: 'Failed to save recommender'
+    })
+  } finally {
+    loading.value = false
+  }
+}
+
+const closeForm = () => {
+  showForm.value = false
+  editingRecommender.value = null
+}
+
 const confirmDelete = (recommender: Recommender) => {
   recommenderToDelete.value = recommender
   showDeleteDialog.value = true
 }
 
-const deleteRecommender = () => {
-  if (recommenderToDelete.value) {
-    // TODO: Implement actual delete logic
+const deleteRecommender = async () => {
+  if (!recommenderToDelete.value?.recommenderId) return
+
+  try {
+    await recommenderStore.deleteRecommender(recommenderToDelete.value.recommenderId)
     recommenders.value = recommenders.value.filter(r => r.recommenderId !== recommenderToDelete.value?.recommenderId)
     $q.notify({
       type: 'positive',
       message: 'Recommender deleted successfully'
+    })
+  } catch (err) {
+    console.error('Failed to delete recommender:', err)
+    $q.notify({
+      type: 'negative',
+      message: 'Failed to delete recommender'
     })
   }
 }

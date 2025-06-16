@@ -8,7 +8,6 @@
           :rules="rules.firstName"
           outlined
           dense
-          class="max-width-300"
         />
       </div>
 
@@ -19,7 +18,6 @@
           :rules="rules.lastName"
           outlined
           dense
-          class="max-width-300"
         />
       </div>
 
@@ -31,7 +29,6 @@
           outlined
           dense
           type="email"
-          class="max-width-300"
         />
       </div>
 
@@ -42,11 +39,10 @@
           outlined
           dense
           mask="(###) ###-####"
-          class="max-width-300"
         />
       </div>
 
-      <div class="col-12">
+      <div class="col-12 col-md-6">
         <q-select
           v-model="form.relationship"
           :options="relationshipOptions"
@@ -54,12 +50,11 @@
           :rules="rules.relationship"
           outlined
           dense
-          class="max-width-300"
         />
       </div>
     </div>
 
-    <div class="row justify-end q-mt-lg">
+    <div class="row justify-end q-mt-md">
       <q-btn
         label="Cancel"
         color="grey"
@@ -79,12 +74,13 @@
 
 <script setup lang="ts">
 import { ref, defineEmits, defineProps, onMounted } from 'vue'
-import type { Recommender } from 'src/types'
+import type { Recommender, User } from 'src/types'
 
 const props = defineProps<{
   isEdit?: boolean
   recommender: Recommender | null
   loading?: boolean
+  user: User | null
 }>()
 
 const emit = defineEmits<{
@@ -114,11 +110,9 @@ const rules = {
   ],
   emailAddress: [
     (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || 'Please enter a valid email address'
-  ],
-  // phoneNumber: [
-  //   (val: string) => val.replace(/[^0-9]/g, '').length === 10 || 'Please enter a valid 10-digit phone number'
-  // ]
+  ]
 }
+
 const loadData = () => {
   if (props.isEdit && props.recommender) {
     form.value = {
@@ -141,7 +135,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.max-width-300 {
-  max-width: 300px;
+.q-form {
+  max-width: 800px;
+  margin: 0 auto;
 }
 </style> 
