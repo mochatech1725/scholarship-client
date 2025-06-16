@@ -1,5 +1,24 @@
 <template>
   <q-form @submit="onSubmit" class="q-gutter-md">
+    <div class="row items-center justify-between q-mb-md">
+      <div class="text-h6">{{ isEdit ? 'Edit' : 'Add' }} Recommender</div>
+      <div>
+        <q-btn
+          label="Cancel"
+          color="grey"
+          flat
+          @click="$emit('cancel')"
+          class="q-mr-sm"
+        />
+        <q-btn
+          label="Save"
+          type="submit"
+          color="primary"
+          :loading="loading"
+        />
+      </div>
+    </div>
+
     <div class="row q-col-gutter-md">
       <div class="col-12 col-md-6">
         <q-input
@@ -52,22 +71,6 @@
           dense
         />
       </div>
-    </div>
-
-    <div class="row justify-end q-mt-md">
-      <q-btn
-        label="Cancel"
-        color="grey"
-        flat
-        @click="$emit('cancel')"
-        class="q-mr-sm"
-      />
-      <q-btn
-        label="Save"
-        type="submit"
-        color="primary"
-        :loading="loading"
-      />
     </div>
   </q-form>
 </template>

@@ -1,5 +1,23 @@
 <template>
   <q-form @submit="onSubmit" class="q-gutter-md">
+    <div class="row items-center justify-between q-mb-md">
+      <div class="text-h6">{{ isEdit ? 'Edit' : 'Add' }} Application</div>
+      <div>
+        <q-btn
+          label="Cancel"
+          color="grey"
+          flat
+          @click="$emit('cancel')"
+          class="q-mr-sm"
+        />
+        <q-btn
+          type="submit"
+          color="primary"
+          :label="isEdit ? 'Update Application' : 'Create Application'"
+        />
+      </div>
+    </div>
+
     <div class="row q-col-gutter-sm">
       <div class="col-12 col-md-6">
         <q-input
@@ -163,21 +181,6 @@
 
     <!-- Recommendations Section -->
     <Recommendations :application="application" />
-
-    <div class="row justify-end q-mt-md">
-      <q-btn
-        label="Cancel"
-        color="grey"
-        flat
-        @click="$emit('cancel')"
-        class="q-mr-sm"
-      />
-      <q-btn
-        type="submit"
-        color="primary"
-        :label="isEdit ? 'Update Application' : 'Create Application'"
-      />
-    </div>
   </q-form>
 </template>
 
@@ -338,4 +341,11 @@ onMounted (() => {
 onBeforeUnmount(() => {
   scholarshipContextStore.clearCurrentScholarshipName()
 })
-</script> 
+</script>
+
+<style scoped>
+.q-form {
+  max-width: 800px;
+  margin: 0 auto;
+}
+</style> 
