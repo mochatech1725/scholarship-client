@@ -26,8 +26,8 @@ const routes: RouteRecordRaw[] = [
       { path: 'essayCreate', component: () => import('pages/EssayPage.vue'), name: 'essayCreate', meta: { requiresAuth: true } },
       { path: 'essay/:essayId', component: () => import('pages/EssayPage.vue'), name: 'essayEdit', meta: { requiresAuth: true } },
       { path: 'recommenders', component: () => import('pages/RecommendersPage.vue'), name: 'recommendersList', meta: { requiresAuth: true } },
-      { path: 'recommenderCreate', component: () => import('pages/RecommenderPage.vue'), name: 'recommenderCreate', meta: { requiresAuth: true } },
-      { path: 'recommender/:recommenderId', component: () => import('pages/RecommenderPage.vue'), name: 'recommenderEdit', meta: { requiresAuth: true } },
+      // { path: 'recommenderCreate', component: () => import('pages/RecommenderPage.vue'), name: 'recommenderCreate', meta: { requiresAuth: true } },
+      // { path: 'recommender/:recommenderId', component: () => import('pages/RecommenderPage.vue'), name: 'recommenderEdit', meta: { requiresAuth: true } },
       { path: 'recommendationCreate', component: () => import('pages/RecommendationPage.vue'), name: 'recommendationCreate', meta: { requiresAuth: true } },
       { path: 'recommendation/:recommendationId', component: () => import('pages/RecommendationPage.vue'), name: 'recommendationEdit', meta: { requiresAuth: true } },
     ]

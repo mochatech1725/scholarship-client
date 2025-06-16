@@ -8,7 +8,7 @@
           color="primary"
           icon="add"
           label="Add Recommendation"
-          :to="{ name: 'recommendationCreate' }"
+          @click="showForm = true"
         />
       </div>
 
@@ -43,7 +43,7 @@
               round
               color="primary"
               icon="edit"
-              :to="{ name: 'recommendationEdit', params: { recommendationId: props.row.recommendationId } }"
+              @click="editRecommendation(props.row)"
               dense
             />
             <q-btn
@@ -57,6 +57,25 @@
           </q-td>
         </template>
       </q-table>
+
+      <!-- Recommendation Form Dialog -->
+      <q-dialog v-model="showForm" persistent>
+        <q-card style="min-width: 350px">
+          <q-card-section>
+            <div class="text-h6">{{ editingRecommendation ? 'Edit' : 'Add' }} Recommendation</div>
+          </q-card-section>
+
+          <q-card-section>
+            <RecommendationForm
+              :is-edit="!!editingRecommendation"
+              :loading="loading"
+              :recommendation="editingRecommendation"
+              @submit="handleSubmit"
+              @cancel="closeForm"
+            />
+          </q-card-section>
+        </q-card>
+      </q-dialog>
     </q-card-section>
   </q-card>
 </template>
@@ -65,8 +84,10 @@
 import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'src/stores/application.store'
+import { useRecommendationStore } from 'src/stores/recommendation.store'
 import type { Recommendation, Application } from 'src/types'
 import { useGetStatusColor } from 'src/composables/useGetStatusColor'
+import RecommendationForm from 'src/components/RecommendationForm.vue'
 
 const props = defineProps<{
   application: Application | null
@@ -74,7 +95,11 @@ const props = defineProps<{
 
 const $q = useQuasar()
 const applicationStore = useApplicationStore()
+const recommendationStore = useRecommendationStore()
 const recommendations = ref<Recommendation[]>([])
+const showForm = ref(false)
+const loading = ref(false)
+const editingRecommendation = ref<Recommendation | null>(null)
 
 const { getStatusColor } = useGetStatusColor()
 
@@ -91,6 +116,49 @@ const recommendationColumns = [
 
 const loadRecommendations = () => {
   recommendations.value = props.application?.recommendations || []
+}
+
+const editRecommendation = (recommendation: Recommendation) => {
+  editingRecommendation.value = recommendation
+  showForm.value = true
+}
+
+const closeForm = () => {
+  showForm.value = false
+  editingRecommendation.value = null
+}
+
+const handleSubmit = async (form: Omit<Recommendation, 'created'>) => {
+  try {
+    loading.value = true
+    if (editingRecommendation.value) {
+      await recommendationStore.updateRecommendation(editingRecommendation.value.recommendationId, form)
+      $q.notify({
+        type: 'positive',
+        message: 'Recommendation updated successfully'
+      })
+    } else {
+      const newRecommendation: Omit<Recommendation, 'recommendationId'> = {
+        ...form,
+        created: new Date().toISOString()
+      }
+      await recommendationStore.createRecommendation(newRecommendation)
+      $q.notify({
+        type: 'positive',
+        message: 'Recommendation created successfully'
+      })
+    }
+    closeForm()
+    loadRecommendations()
+  } catch (err) {
+    console.error('Failed to save recommendation:', err)
+    $q.notify({
+      type: 'negative',
+      message: 'Failed to save recommendation'
+    })
+  } finally {
+    loading.value = false
+  }
 }
 
 const confirmDeleteRecommendation = (recommendation: Recommendation) => {
@@ -115,6 +183,7 @@ const confirmDeleteRecommendation = (recommendation: Recommendation) => {
           color: 'positive',
           message: 'Recommendation deleted successfully'
         })
+        loadRecommendations()
       } catch (err) {
         console.error('Failed to delete recommendation:', err)
         $q.notify({
@@ -125,7 +194,6 @@ const confirmDeleteRecommendation = (recommendation: Recommendation) => {
     })()
   })
 }
-
 
 onMounted(() => {
   loadRecommendations()

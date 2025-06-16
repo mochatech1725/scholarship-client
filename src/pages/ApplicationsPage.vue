@@ -6,8 +6,21 @@
         color="primary"
         icon="add"
         label="New Application"
-        :to="{ name: 'applicationCreate' }"
+        @click="showForm = true"
       />
+    </div>
+
+    <div v-if="showForm" class="row q-col-gutter-md q-mb-md">
+      <div class="col-12">
+        <q-card class="q-pa-md">
+          <q-card-section>
+            <ApplicationForm 
+              :is-edit="false"
+              @cancel="handleFormCancel"
+            />
+          </q-card-section>
+        </q-card>
+      </div>
     </div>
 
     <div class="row q-col-gutter-md">
@@ -71,6 +84,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import type { QTableColumn } from 'quasar'
 import ApplicationFilters from 'src/components/ApplicationFilters.vue'
+import ApplicationForm from 'src/components/ApplicationForm.vue'
 import type { ApplicationStatus, Application } from 'src/types'
 import { statusOptions } from 'src/types'
 import { useGetStatusColor } from 'src/composables/useGetStatusColor'
@@ -117,6 +131,12 @@ const filteredApplications = computed(() => {
     return true
   })
 })
+
+const showForm = ref(false)
+
+const handleFormCancel = () => {
+  showForm.value = false
+}
 
 const loadApplications = async () => {
   if (!userStore.user) {
