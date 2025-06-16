@@ -68,13 +68,13 @@
     <q-dialog v-model="showForm" persistent>
       <q-card style="min-width: 350px">
         <q-card-section>
-          <div class="text-h6">{{ editingApplication ? 'Edit Application' : 'New Application' }}</div>
+          <div class="text-h6">{{ dialogTitle }}</div>
         </q-card-section>
 
         <q-card-section>
           <ApplicationForm
             :is-edit="!!editingApplication"
-            :application="editingApplication"
+            :application="currentApplication"
             @cancel="handleFormCancel"
             @submit="handleFormSubmit"
           />
@@ -139,6 +139,12 @@ const filteredApplications = computed(() => {
 
 const showForm = ref(false)
 const editingApplication = ref<Application | null>(null)
+
+const dialogTitle = computed(() => {
+  return editingApplication.value ? 'Edit Application' : 'New Application'
+})
+
+const currentApplication = computed(() => editingApplication.value)
 
 const handleFormCancel = () => {
   showForm.value = false

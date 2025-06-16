@@ -68,9 +68,6 @@ import { ref, onMounted, computed } from 'vue'
 import type { Essay, Application } from 'src/types'
 import ScholarshipBanner from 'components/ScholarshipBanner.vue'
 
-const scholarshipName = computed(() => {
-  return props.application?.scholarshipName || ''
-})
 const props = defineProps<{
   application?: Application | null
   essay?: Essay | null
@@ -81,16 +78,25 @@ const emit = defineEmits<{
   (e: 'cancel'): void
 }>()
 
+const scholarshipName = computed(() => {
+  return props.application?.scholarshipName || ''
+})
+
 const form = ref<Omit<Essay, 'essayId' | 'created'>>({
-  applicationId: props.application?.applicationId || '',
-  studentId: props.application?.studentId || '',
+  applicationId: '',
+  studentId: '',
   essayLink: '',
   count: 0,
   units: '',
   theme: ''
 })
 
-const loadEssay = () => {
+const initializeForm = () => {
+  if (props.application) {
+    form.value.applicationId = props.application.applicationId
+    form.value.studentId = props.application.studentId
+  }
+  
   if (props.essay) {
     form.value = {
       applicationId: props.essay.applicationId,
@@ -104,9 +110,7 @@ const loadEssay = () => {
 }
 
 onMounted(() => {
-  if (props.essay) {
-    void loadEssay()
-  }
+  initializeForm()
 })
 
 const onSubmit = () => {

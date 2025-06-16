@@ -186,12 +186,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'stores/application.store'
 // import { useUserStore } from 'stores/user.store'
 // import { useAuthStore } from 'stores/auth.store'
-import { useScholarshipContextStore } from 'stores/scholarship-context.store'
 import type { Application } from 'src/types'
 import { targetTypeOptions, statusOptions } from 'src/types'
 import Essays from 'components/Essays.vue'
@@ -202,7 +201,6 @@ const $q = useQuasar()
 const applicationStore = useApplicationStore()
 // const userStore = useUserStore()
 // const authStore = useAuthStore()
-const scholarshipContextStore = useScholarshipContextStore()
 const loading = ref(false)
 
 const props = defineProps<{
@@ -302,18 +300,10 @@ const initializeForm = () => {
 
 // Watch for changes in props.application
 watch(() => props.application, (newApplication) => {
-  console.log('ApplicationForm application prop changed:', newApplication)
   if (newApplication) {
     // Update form with application data, excluding the created field
     const { ...applicationData } = newApplication
     form.value = applicationData
-  }
-}, { immediate: true })
-
-// Remove scholarship context watcher and cleanup
-watch(() => props.application?.scholarshipName, (newName) => {
-  if (newName) {
-    scholarshipContextStore.setCurrentScholarshipName(newName)
   }
 }, { immediate: true })
 
@@ -354,13 +344,9 @@ const onSubmit = async () => {
 }
 
 onMounted(() => {
-  console.log('ApplicationForm mounted with application:', props.application)
   initializeForm()
 })
 
-onBeforeUnmount(() => {
-  scholarshipContextStore.clearCurrentScholarshipName()
-})
 </script>
 
 <style scoped>

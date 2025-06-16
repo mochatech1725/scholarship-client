@@ -57,7 +57,7 @@
 
         <q-card-section>
           <EssayForm
-            :application="props.application"
+            :application="application"
             :essay="editingEssay"
             @submit="handleEssaySubmit"
             @cancel="closeEssayForm"
@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useEssayStore } from 'stores/essay.store'
 import type { Essay, Application } from 'src/types'
@@ -85,6 +85,8 @@ const essays = ref<Essay[]>([])
 const showEssayForm = ref(false)
 const editingEssay = ref<Essay | null>(null)
 const loading = ref(false)
+
+const application = computed(() => props.application)
 
 const essayColumns = [
   { name: 'theme', label: 'Theme', field: 'theme', sortable: true, align: 'left' as const },
