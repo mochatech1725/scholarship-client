@@ -10,21 +10,6 @@
       />
     </div>
 
-    <div v-if="showForm" class="row q-col-gutter-md q-mb-md">
-      <div class="col-12">
-        <q-card class="q-pa-md">
-          <q-card-section>
-            <ApplicationForm 
-              :is-edit="!!editingApplication"
-              :application="editingApplication"
-              @cancel="handleFormCancel"
-              @submit="handleFormSubmit"
-            />
-          </q-card-section>
-        </q-card>
-      </div>
-    </div>
-
     <div class="row q-col-gutter-md">
       <!-- Applications List -->
       <div class="col">
@@ -78,6 +63,24 @@
         />
       </div>
     </div>
+
+    <!-- Application Form Dialog -->
+    <q-dialog v-model="showForm" persistent>
+      <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-h6">{{ editingApplication ? 'Edit Application' : 'New Application' }}</div>
+        </q-card-section>
+
+        <q-card-section>
+          <ApplicationForm
+            :is-edit="!!editingApplication"
+            :application="editingApplication"
+            @cancel="handleFormCancel"
+            @submit="handleFormSubmit"
+          />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -187,7 +190,22 @@ const confirmDelete = (application: Application) => {
     cancel: true,
     persistent: true
   }).onOk(() => {
-    void applicationStore.deleteApplication(application.applicationId)
+    void (async () => {
+      try {
+        await applicationStore.deleteApplication(application.applicationId)
+        $q.notify({
+          color: 'positive',
+          message: 'Application deleted successfully'
+        })
+        await loadApplications()
+      } catch (error) {
+        console.error('Failed to delete application:', error)
+        $q.notify({
+          color: 'negative',
+          message: 'Failed to delete application'
+        })
+      }
+    })()
   })
 }
 
