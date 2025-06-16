@@ -1,85 +1,78 @@
 <template>
   <q-form @submit="onSubmit" class="q-gutter-md">
     <div class="row q-col-gutter-md">
-      <div class="col-12">
+      <div class="col-12 col-md-6">
         <q-input
           v-model="recommender.firstName"
           label="First Name"
           outlined
           dense
           readonly
-          class="max-width-300"
         />
       </div>
 
-      <div class="col-12">
+      <div class="col-12 col-md-6">
         <q-input
           v-model="recommender.lastName"
           label="Last Name"
           outlined
           dense
           readonly
-          class="max-width-300"
         />
       </div>
 
-      <div class="col-12">
+      <div class="col-12 col-md-6">
         <q-input
           v-model="recommender.emailAddress"
           label="Email Address"
           outlined
           dense
           readonly
-          class="max-width-300"
         />
       </div>
 
-      <div class="col-12">
+      <div class="col-12 col-md-6">
         <q-input
           v-model="form.dueDate"
           label="Due Date"
           type="date"
           outlined
           dense
-          class="max-width-300"
         />
       </div>
 
-      <div class="col-12">
+      <div class="col-12 col-md-6">
         <q-select
           v-model="form.submissionMethod"
           :options="submissionMethodOptions"
           label="Submission Method"
           outlined
           dense
-          class="max-width-300"
         />
       </div>
 
-      <div class="col-12">
+      <div class="col-12 col-md-6">
         <q-input
           v-model="form.requestDate"
           label="Request Date"
           type="date"
           outlined
           dense
-          class="max-width-300"
         />
       </div>
 
-      <div class="col-12">
+      <div class="col-12 col-md-6">
         <q-input
           v-model="form.submissionDate"
           label="Submission Date"
           type="date"
           outlined
           dense
-          class="max-width-300"
         />
       </div>
     </div>
 
-    <div class="row justify-end q-mt-lg">
+    <div class="row justify-end q-mt-md">
       <q-btn
         label="Cancel"
         color="grey"
@@ -180,7 +173,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.max-width-300 {
-  max-width: 300px;
+.q-form {
+  max-width: 800px;
+  margin: 0 auto;
 }
 </style> 

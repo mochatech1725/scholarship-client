@@ -166,6 +166,13 @@
 
     <div class="row justify-end q-mt-md">
       <q-btn
+        label="Cancel"
+        color="grey"
+        flat
+        @click="$emit('cancel')"
+        class="q-mr-sm"
+      />
+      <q-btn
         type="submit"
         color="primary"
         :label="isEdit ? 'Update Application' : 'Create Application'"
