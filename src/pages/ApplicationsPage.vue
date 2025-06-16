@@ -66,7 +66,7 @@
 
     <!-- Application Form Dialog -->
     <q-dialog v-model="showForm" persistent>
-      <q-card style="min-width: 350px">
+      <q-card style="min-width: 800px; max-width: 90vw">
         <q-card-section>
           <div class="text-h6">{{ dialogTitle }}</div>
         </q-card-section>
