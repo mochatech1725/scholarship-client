@@ -1,5 +1,6 @@
 export interface Essay {
   essayId: string
+  _id?: string
   applicationId: string
   studentId: string
   essayLink: string
@@ -11,6 +12,7 @@ export interface Essay {
 
 export interface Recommender {
   recommenderId: string
+  _id?: string
   firstName: string
   lastName: string
   relationship: string
@@ -21,6 +23,7 @@ export interface Recommender {
 
 export interface Recommendation {
   recommendationId: string
+  _id?: string
   recommender: Recommender
   applicationId: string
   studentId: string
@@ -35,6 +38,7 @@ export interface Recommendation {
 
 export interface Application {
   applicationId: string
+  _id?: string
   studentId: string
   scholarshipName: string
   targetType: 'Merit' | 'Need' | 'Both'
@@ -56,8 +60,6 @@ export interface Application {
   essays: Essay[]
   recommendations: Recommendation[]
 }
-
-
 
 export type EducationLevel = typeof educationLevelOptions[number]
 export type TargetType = typeof targetTypeOptions[number]

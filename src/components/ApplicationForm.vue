@@ -56,7 +56,6 @@
               v-model="form.targetType"
               :options="targetTypeOptions"
               label="Target Type"
-              :rules="rules.targetType"
               outlined
               dense
             />
@@ -76,7 +75,6 @@
             <q-input
               v-model="form.companyWebsite"
               label="Company Website"
-              :rules="rules.companyWebsite"
               outlined
               dense
             />
@@ -95,7 +93,6 @@
             <q-input
               v-model="form.applicationLink"
               label="Application Link"
-              :rules="rules.applicationLink"
               outlined
               dense
             />
@@ -106,7 +103,6 @@
               v-model.number="form.amount"
               label="Amount"
               type="number"
-              :rules="rules.amount"
               outlined
               dense
             />
@@ -160,7 +156,6 @@
               v-model="form.status"
               :options="statusOptions"
               label="Status"
-              :rules="rules.status"
               outlined
               dense
             />
@@ -191,7 +186,6 @@
               v-model="form.dueDate"
               label="Due Date"
               type="date"
-              :rules="rules.dueDate"
               outlined
               dense
             />
@@ -214,6 +208,7 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'stores/application.store'
+import { ObjectId } from 'bson'
 // import { useUserStore } from 'stores/user.store'
 // import { useAuthStore } from 'stores/auth.store'
 import type { Application } from 'src/types'
@@ -239,8 +234,11 @@ const emit = defineEmits<{
   (e: 'submit'): void
 }>()
 
+// Generate MongoDB ObjectId for immediate use
+const tempId = new ObjectId().toString()
+
 const form = ref<Omit<Application, 'created'>>({
-  applicationId: crypto.randomUUID(),
+  applicationId: tempId, // MongoDB ObjectId as string
   studentId: '', // TODO: Get from auth store
   scholarshipName: '',
   targetType: 'Merit',
@@ -266,31 +264,10 @@ const rules = {
   scholarshipName: [
     (val: string) => !!val || 'Scholarship name is required'
   ],
-  targetType: [
-    (val: string) => !!val || 'Target type is required',
-    (val: string) => ['Merit', 'Need', 'Both'].includes(val) || 'Target type must be Merit, Need, or Both'
-  ],
+
   company: [
     (val: string) => !!val || 'Company name is required'
   ],
-  companyWebsite: [
-    (val: string) => !!val || 'Company website is required',
-    (val: string) => /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(val) || 'Please enter a valid website URL'
-  ],
-  applicationLink: [
-    (val: string) => !!val || 'Application link is required',
-    (val: string) => /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(val) || 'Please enter a valid URL'
-  ],
-  amount: [
-    (val: number) => !isNaN(val) || 'Amount must be a number',
-    (val: number) => val >= 0 || 'Amount must be a positive number'
-  ],
-  status: [
-    (val: string) => !!val || 'Status is required'
-  ],
-  dueDate: [
-    (val: string) => !!val || 'Due date is required'
-  ]
 }
 
 const initializeForm = () => {
@@ -298,9 +275,9 @@ const initializeForm = () => {
     const applicationData = { ...props.application }
     form.value = applicationData
   } else {
-    // Reset form for new application
+    // Reset form for new application with new ObjectId
     form.value = {
-      applicationId: '',
+      applicationId: new ObjectId().toString(),
       studentId: '',
       scholarshipName: '',
       targetType: 'Merit',
@@ -337,6 +314,13 @@ const scholarshipName = computed(() => {
   return props.application?.scholarshipName || form.value.scholarshipName || ''
 })
 
+// Utility function to omit a property from an object
+function omitKey<T extends object, K extends keyof T>(obj: T, key: K): Omit<T, K> {
+  const clone = { ...obj };
+  delete clone[key];
+  return clone;
+}
+
 const onSubmit = async () => {
   try {
     loading.value = true
@@ -347,11 +331,17 @@ const onSubmit = async () => {
         message: 'Application updated successfully'
       })
     } else {
+      // For new applications, let the server handle ID generation
+      const applicationData = omitKey(form.value, 'applicationId');
       const newApplication: Omit<Application, 'applicationId'> = {
-        ...form.value,
+        ...applicationData,
         created: new Date().toISOString()
-      }
-      await applicationStore.createApplication(newApplication)
+      };
+      await applicationStore.createApplication(newApplication);
+      
+      // If you need to update child objects with the server-generated ID,
+      // you would do it here. For now, we'll assume the store handles this.
+      
       $q.notify({
         color: 'positive',
         message: 'Application created successfully'
