@@ -208,9 +208,9 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'stores/application.store'
+import { useEssayStore } from 'stores/essay.store'
+import { useRecommendationStore } from 'stores/recommendation.store'
 import { ObjectId } from 'bson'
-// import { useUserStore } from 'stores/user.store'
-// import { useAuthStore } from 'stores/auth.store'
 import type { Application } from 'src/types'
 import { targetTypeOptions, statusOptions } from 'src/types'
 import Essays from 'components/Essays.vue'
@@ -219,6 +219,8 @@ import ScholarshipBanner from 'components/ScholarshipBanner.vue'
 
 const $q = useQuasar()
 const applicationStore = useApplicationStore()
+const essayStore = useEssayStore()
+const recommendationStore = useRecommendationStore()
 // const userStore = useUserStore()
 // const authStore = useAuthStore()
 const loading = ref(false)
@@ -234,14 +236,12 @@ const emit = defineEmits<{
   (e: 'submit'): void
 }>()
 
-// Generate MongoDB ObjectId for immediate use
-const tempId = new ObjectId().toString()
-
-const form = ref<Omit<Application, 'created'>>({
-  applicationId: tempId, // MongoDB ObjectId as string
+// Single source of truth for default form data
+const getDefaultFormData = (): Omit<Application, 'created'> => ({
+  applicationId: new ObjectId().toString(),
   studentId: '', // TODO: Get from auth store
   scholarshipName: '',
-  targetType: 'Merit',
+  targetType: 'Both',
   company: '',
   companyWebsite: '',
   platform: '',
@@ -260,6 +260,8 @@ const form = ref<Omit<Application, 'created'>>({
   recommendations: []
 })
 
+const form = ref<Omit<Application, 'created'>>(getDefaultFormData())
+
 const rules = {
   scholarshipName: [
     (val: string) => !!val || 'Scholarship name is required'
@@ -276,28 +278,7 @@ const initializeForm = () => {
     form.value = applicationData
   } else {
     // Reset form for new application with new ObjectId
-    form.value = {
-      applicationId: new ObjectId().toString(),
-      studentId: '',
-      scholarshipName: '',
-      targetType: 'Merit',
-      company: '',
-      companyWebsite: '',
-      platform: '',
-      applicationLink: '',
-      theme: '',
-      amount: 0,
-      requirements: '',
-      renewable: false,
-      documentInfoLink: '',
-      currentAction: '',
-      status: 'Not Started',
-      submissionDate: '',
-      openDate: '',
-      dueDate: '',
-      essays: [],
-      recommendations: []
-    }
+    form.value = getDefaultFormData()
   }
 }
 
@@ -337,10 +318,24 @@ const onSubmit = async () => {
         ...applicationData,
         created: new Date().toISOString()
       };
-      await applicationStore.createApplication(newApplication);
       
-      // If you need to update child objects with the server-generated ID,
-      // you would do it here. For now, we'll assume the store handles this.
+      // Create the application first
+      const savedApplication = await applicationStore.createApplication(newApplication);
+      
+      if (form.value.essays.length > 0) {
+        for (const essay of form.value.essays) {
+          essay.applicationId = savedApplication.applicationId;
+          await essayStore.updateEssay(essay.essayId, essay);
+        }
+      }
+      
+      if (form.value.recommendations.length > 0) {
+        // Create each recommendation with the updated applicationId
+        for (const recommendation of form.value.recommendations) {
+          recommendation.applicationId = savedApplication.applicationId;
+          await recommendationStore.updateRecommendation(recommendation.recommendationId, recommendation);
+        }
+      }
       
       $q.notify({
         color: 'positive',

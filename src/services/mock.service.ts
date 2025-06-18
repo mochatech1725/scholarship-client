@@ -115,7 +115,6 @@ class MockService {
     await new Promise(resolve => setTimeout(resolve, 100))
     const newApp = {
       ...application,
-      applicationId: Math.random().toString(36).substr(2, 9)
     } as Application
     return newApp
   }
