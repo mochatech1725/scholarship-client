@@ -72,6 +72,13 @@
       "count": 500,
       "units": "words",
       "theme": "Leadership Experience"
+    },
+    {
+      "_id": "essay-2",
+      "essayLink": "https://docs.google.com/document/d/essay2",
+      "count": 1000,
+      "units": "characters",
+      "theme": "Personal Statement"
     }
   ]
 } 
