@@ -28,157 +28,161 @@
           header-class="text-primary"
           default-opened
         >
-          <div class="row q-col-gutter-sm">
-            <div class="col-12 col-md-6">
-              <q-input
-                v-model="form.scholarshipName"
-                label="Scholarship Name"
-                :rules="rules.scholarshipName"
-                outlined
-                dense
-              />
-            </div>
+          <q-card class="q-pa-md" style="background-color: white;">
+            <q-card-section>
+              <div class="row q-col-gutter-sm">
+                <div class="col-12 col-md-6">
+                  <q-input
+                    v-model="form.scholarshipName"
+                    label="Scholarship Name"
+                    :rules="rules.scholarshipName"
+                    outlined
+                    dense
+                  />
+                </div>
 
-            <div class="col-12 col-md-6">
-              <q-select
-                v-model="form.targetType"
-                :options="targetTypeOptions"
-                label="Target Type"
-                outlined
-                dense
-              />
-            </div>
+                <div class="col-12 col-md-6">
+                  <q-select
+                    v-model="form.targetType"
+                    :options="targetTypeOptions"
+                    label="Target Type"
+                    outlined
+                    dense
+                  />
+                </div>
 
-            <div class="col-12 col-md-6">
-              <q-input
-                v-model="form.company"
-                label="Company"
-                :rules="rules.company"
-                outlined
-                dense
-              />
-            </div>
+                <div class="col-12 col-md-6">
+                  <q-input
+                    v-model="form.company"
+                    label="Company"
+                    :rules="rules.company"
+                    outlined
+                    dense
+                  />
+                </div>
 
-            <div class="col-12 col-md-6">
-              <q-input
-                v-model="form.companyWebsite"
-                label="Company Website"
-                outlined
-                dense
-              />
-            </div>
+                <div class="col-12 col-md-6">
+                  <q-input
+                    v-model="form.companyWebsite"
+                    label="Company Website"
+                    outlined
+                    dense
+                  />
+                </div>
 
-            <div class="col-12 col-md-6">
-              <q-input
-                v-model="form.platform"
-                label="Platform"
-                outlined
-                dense
-              />
-            </div>
+                <div class="col-12 col-md-6">
+                  <q-input
+                    v-model="form.platform"
+                    label="Platform"
+                    outlined
+                    dense
+                  />
+                </div>
 
-            <div class="col-12 col-md-6">
-              <q-input
-                v-model="form.applicationLink"
-                label="Application Link"
-                outlined
-                dense
-              />
-            </div>
+                <div class="col-12 col-md-6">
+                  <q-input
+                    v-model="form.applicationLink"
+                    label="Application Link"
+                    outlined
+                    dense
+                  />
+                </div>
 
-            <div class="col-12 col-md-6">
-              <q-input
-                v-model.number="form.amount"
-                label="Amount"
-                type="number"
-                outlined
-                dense
-              />
-            </div>
+                <div class="col-12 col-md-6">
+                  <q-input
+                    v-model.number="form.amount"
+                    label="Amount"
+                    type="number"
+                    outlined
+                    dense
+                  />
+                </div>
 
-            <div class="col-12 col-md-6">
-              <q-checkbox
-                v-model="form.renewable"
-                label="Renewable"
-              />
-            </div>
+                <div class="col-12 col-md-6">
+                  <q-checkbox
+                    v-model="form.renewable"
+                    label="Renewable"
+                  />
+                </div>
 
-            <div class="col-12 col-md-6">
-              <q-input
-                v-model="form.theme"
-                label="Theme"
-                outlined
-                dense
-              />
-            </div>
-            
-            <div class="col-12 col-md-6">
-              <q-input
-                v-model="form.requirements"
-                label="Requirements"
-                outlined
-                dense
-              />
-            </div>
+                <div class="col-12 col-md-6">
+                  <q-input
+                    v-model="form.theme"
+                    label="Theme"
+                    outlined
+                    dense
+                  />
+                </div>
+                
+                <div class="col-12 col-md-6">
+                  <q-input
+                    v-model="form.requirements"
+                    label="Requirements"
+                    outlined
+                    dense
+                  />
+                </div>
 
-            <div class="col-12 col-md-6">
-              <q-input
-                v-model="form.documentInfoLink"
-                label="Document Info Link"
-                outlined
-                dense
-              />
-            </div>
+                <div class="col-12 col-md-6">
+                  <q-input
+                    v-model="form.documentInfoLink"
+                    label="Document Info Link"
+                    outlined
+                    dense
+                  />
+                </div>
 
-            <div class="col-12 col-md-6">
-              <q-input
-                v-model="form.currentAction"
-                label="Current Action"
-                outlined
-                dense
-              />
-            </div>
+                <div class="col-12 col-md-6">
+                  <q-input
+                    v-model="form.currentAction"
+                    label="Current Action"
+                    outlined
+                    dense
+                  />
+                </div>
 
-            <div class="col-12 col-md-6">
-              <q-select
-                v-model="form.status"
-                :options="statusOptions"
-                label="Status"
-                outlined
-                dense
-              />
-            </div>
+                <div class="col-12 col-md-6">
+                  <q-select
+                    v-model="form.status"
+                    :options="statusOptions"
+                    label="Status"
+                    outlined
+                    dense
+                  />
+                </div>
 
-            <div class="col-12 col-md-6">
-              <q-input
-                v-model="form.submissionDate"
-                label="Submission Date"
-                type="date"
-                outlined
-                dense
-              />
-            </div>
+                <div class="col-12 col-md-6">
+                  <q-input
+                    v-model="form.submissionDate"
+                    label="Submission Date"
+                    type="date"
+                    outlined
+                    dense
+                  />
+                </div>
 
-            <div class="col-12 col-md-6">
-              <q-input
-                v-model="form.openDate"
-                label="Open Date"
-                type="date"
-                outlined
-                dense
-              />
-            </div>
+                <div class="col-12 col-md-6">
+                  <q-input
+                    v-model="form.openDate"
+                    label="Open Date"
+                    type="date"
+                    outlined
+                    dense
+                  />
+                </div>
 
-            <div class="col-12 col-md-6">
-              <q-input
-                v-model="form.dueDate"
-                label="Due Date"
-                type="date"
-                outlined
-                dense
-              />
-            </div>
-          </div>
+                <div class="col-12 col-md-6">
+                  <q-input
+                    v-model="form.dueDate"
+                    label="Due Date"
+                    type="date"
+                    outlined
+                    dense
+                  />
+                </div>
+              </div>
+            </q-card-section>
+          </q-card>
         </q-expansion-item>
 
         <!-- Essays Section -->
