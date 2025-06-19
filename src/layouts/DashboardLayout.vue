@@ -4,7 +4,7 @@
       <q-toolbar class="q-px-md">
         <!-- Logo and Title -->
         <div class="header-brand">
-          <q-icon name="school" size="32px" color="white" class="q-mr-md" />
+          <q-icon name="monetization_on" size="32px" color="white" class="q-mr-md" />
           <q-toolbar-title class="text-white text-weight-bold header-title">
             Scholarship Tracker
           </q-toolbar-title>
