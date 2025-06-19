@@ -20,10 +20,10 @@ const props = defineProps<{
 
 <style scoped>
 .scholarship-banner {
-  background: linear-gradient(135deg, #492b7c 0%, #301551 100%);
+  background: #6B46C1; /* Lightened version of the original purple */
   border-radius: 12px;
   margin-bottom: 24px;
-  box-shadow: 0 4px 20px rgba(73, 43, 124, 0.15);
+  box-shadow: 0 4px 20px rgba(107, 70, 193, 0.15);
   position: relative;
   overflow: hidden;
 }
