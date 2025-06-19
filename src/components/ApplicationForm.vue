@@ -109,6 +109,15 @@
 
                 <div class="col-12 col-md-6">
                   <q-input
+                    v-model="form.renewableTerms"
+                    label="Renewable Terms"
+                    outlined
+                    dense
+                  />
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <q-input
                     v-model="form.theme"
                     label="Theme"
                     outlined
@@ -250,6 +259,7 @@ const getDefaultFormData = (): Application => ({
   amount: 0,
   requirements: '',
   renewable: false,
+  renewableTerms: '',
   documentInfoLink: '',
   currentAction: '',
   status: 'Not Started' as const,

@@ -48,6 +48,7 @@ export interface Application {
   amount: number
   requirements: string
   renewable: boolean
+  renewableTerms?: string
   documentInfoLink: string
   currentAction: string
   status: ApplicationStatus
