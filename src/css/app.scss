@@ -42,6 +42,87 @@ body {
   font-weight: 700 !important;
 }
 
+// Enhanced Tab Styling
+.q-tabs {
+  // Make the indicator more prominent
+  .q-tabs__indicator {
+    height: 3px !important;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  // Enhanced active tab styling
+  .q-tab--active {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    font-weight: 600 !important;
+    border-radius: 8px 8px 0 0;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    
+    // Add a subtle glow effect
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+      border-radius: 8px 8px 0 0;
+      pointer-events: none;
+    }
+    
+    // Enhanced text styling for active tabs
+    .q-tab__label {
+      font-weight: 600 !important;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    // Enhanced icon styling for active tabs
+    .q-tab__icon {
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+    }
+  }
+  
+  // Hover effects for inactive tabs
+  .q-tab:not(.q-tab--active):hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.2s ease;
+  }
+}
+
+// Specific styling for navigation tabs (header tabs)
+.q-header .q-tabs {
+  .q-tab--active {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 2px;
+      background-color: var(--q-accent);
+      border-radius: 1px;
+    }
+  }
+}
+
+// Specific styling for form tabs
+.q-form .q-tabs {
+  .q-tab--active {
+    background-color: rgba(73, 43, 124, 0.1) !important;
+    color: var(--q-primary) !important;
+    
+    .q-tab__label {
+      color: var(--q-primary) !important;
+    }
+  }
+}
+
 // Table styles
 .q-table {
   thead tr th {
