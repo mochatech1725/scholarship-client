@@ -27,9 +27,9 @@
 
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-6">
+              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">First Name</div>
               <q-input
                 v-model="recommender.firstName"
-                label="First Name"
                 outlined
                 dense
                 readonly
@@ -37,9 +37,9 @@
             </div>
 
             <div class="col-12 col-md-6">
+              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Last Name</div>
               <q-input
                 v-model="recommender.lastName"
-                label="Last Name"
                 outlined
                 dense
                 readonly
@@ -47,9 +47,9 @@
             </div>
 
             <div class="col-12 col-md-6">
+              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Email Address</div>
               <q-input
                 v-model="recommender.emailAddress"
-                label="Email Address"
                 outlined
                 dense
                 readonly
@@ -57,9 +57,9 @@
             </div>
 
             <div class="col-12 col-md-6">
+              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Due Date</div>
               <q-input
                 v-model="form.dueDate"
-                label="Due Date"
                 type="date"
                 outlined
                 dense
@@ -67,19 +67,19 @@
             </div>
 
             <div class="col-12 col-md-6">
+              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Submission Method</div>
               <q-select
                 v-model="form.submissionMethod"
                 :options="submissionMethodOptions"
-                label="Submission Method"
                 outlined
                 dense
               />
             </div>
 
             <div class="col-12 col-md-6">
+              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Request Date</div>
               <q-input
                 v-model="form.requestDate"
-                label="Request Date"
                 type="date"
                 outlined
                 dense
@@ -87,9 +87,9 @@
             </div>
 
             <div class="col-12 col-md-6">
+              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Submission Date</div>
               <q-input
                 v-model="form.submissionDate"
-                label="Submission Date"
                 type="date"
                 outlined
                 dense

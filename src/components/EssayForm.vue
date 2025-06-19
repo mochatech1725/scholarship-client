@@ -26,36 +26,36 @@
 
           <div class="row q-col-gutter-sm">
             <div class="col-12 col-md-6">
+              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Theme</div>
               <q-input
                 v-model="form.theme"
-                label="Theme"
                 :rules="[val => !!val || 'Theme is required']"
                 outlined
                 dense
               />
             </div>
             <div class="col-12 col-md-6">
+              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Units</div>
               <q-input
                 v-model="form.units"
-                label="Units"
                 :rules="[val => !!val || 'Units is required']"
                 outlined
                 dense
               />
             </div>
             <div class="col-12">
+              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Essay Link</div>
               <q-input
                 v-model="form.essayLink"
-                label="Essay Link"
                 :rules="[val => !!val || 'Essay link is required']"
                 outlined
                 dense
               />
             </div>
             <div class="col-12">
+              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Count</div>
               <q-input
                 v-model.number="form.count"
-                label="Count"
                 type="number"
                 :rules="[val => !!val || 'Count is required']"
                 outlined

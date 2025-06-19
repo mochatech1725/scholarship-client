@@ -23,9 +23,9 @@
 
     <div class="row q-col-gutter-md">
       <div class="col-12 col-md-6">
+        <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">First Name</div>
         <q-input
           v-model="form.firstName"
-          label="First Name"
           :rules="rules.firstName"
           outlined
           dense
@@ -33,9 +33,9 @@
       </div>
 
       <div class="col-12 col-md-6">
+        <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Last Name</div>
         <q-input
           v-model="form.lastName"
-          label="Last Name"
           :rules="rules.lastName"
           outlined
           dense
@@ -43,9 +43,9 @@
       </div>
 
       <div class="col-12 col-md-6">
+        <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Email Address</div>
         <q-input
           v-model="form.emailAddress"
-          label="Email Address"
           :rules="rules.emailAddress"
           outlined
           dense
@@ -54,9 +54,9 @@
       </div>
 
       <div class="col-12 col-md-6">
+        <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Phone Number</div>
         <q-input
           v-model="form.phoneNumber"
-          label="Phone Number"
           outlined
           dense
           mask="(###) ###-####"
@@ -64,10 +64,10 @@
       </div>
 
       <div class="col-12 col-md-6">
+        <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Relationship</div>
         <q-select
           v-model="form.relationship"
           :options="relationshipOptions"
-          label="Relationship"
           :rules="rules.relationship"
           outlined
           dense
