@@ -30,30 +30,27 @@
             :class="{ 'text-primary': $route.name === 'scholarshipSearch' }"
             label="Search"
           />
+          <q-btn
+            flat
+            :to="{ name: 'editProfile' }"
+            :class="{ 'text-primary': $route.name === 'editProfile' }"
+            label="Profile"
+          />
         </div>
 
         <!-- User Menu and Mobile Menu -->
         <q-space />
         
-        <!-- User Dropdown -->
-        <q-btn-dropdown
+        <!-- Logout Button -->
+        <q-btn
           v-if="authStore.isAuthenticated"
           flat
-          :label="authStore.user?.firstName"
-          icon="person"
+          round
+          icon="logout"
+          @click="onLogout"
           class="q-mr-sm"
-        >
-          <q-list>
-            <q-item clickable v-close-popup :to="{ name: 'editProfile' }">
-              <q-item-section>Profile</q-item-section>
-            </q-item>
-            <q-item clickable v-close-popup @click="onLogout">
-              <q-item-section>
-                <q-item-label>Logout</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-btn-dropdown>
+          color="white"
+        />
 
         <!-- Mobile Menu Button -->
         <q-btn
@@ -105,18 +102,19 @@
               <q-item-section>Search</q-item-section>
             </q-item>
             
-            <q-separator class="q-my-md" />
-            
             <q-item
               clickable
               :to="{ name: 'editProfile' }"
               @click="mobileMenu = false"
+              :class="{ 'text-primary': $route.name === 'editProfile' }"
             >
               <q-item-section avatar>
                 <q-icon name="person" />
               </q-item-section>
               <q-item-section>Profile</q-item-section>
             </q-item>
+            
+            <q-separator class="q-my-md" />
             
             <q-item clickable @click="onLogout">
               <q-item-section avatar>

@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
     <div class="row justify-between items-center q-mb-md">
-      <h4 class="q-mb-none">User Profile</h4>
+      <div class="text-h5 q-mb-none">User Profile</div>
       <q-btn
         v-if="!isEdit"
         label="Edit"
@@ -27,15 +27,15 @@
               <div class="q-mt-sm">
                 <div class="row q-col-gutter-sm">
                   <div class="col-12">
-                    <div class="text-subtitle2">First Name</div>
+                    <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">First Name</div>
                     <div>{{ userStore.user?.firstName }}</div>
                   </div>
                   <div class="col-12">
-                    <div class="text-subtitle2">Last Name</div>
+                    <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Last Name</div>
                     <div>{{ userStore.user?.lastName }}</div>
                   </div>
                   <div class="col-12">
-                    <div class="text-subtitle2">Email</div>
+                    <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Email</div>
                     <div>{{ userStore.user?.emailAddress }}</div>
                   </div>
                 </div>
@@ -51,19 +51,19 @@
               <div class="q-mt-sm">
                 <div class="row q-col-gutter-sm">
                   <div class="col-12">
-                    <div class="text-subtitle2">Education Level</div>
+                    <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Education Level</div>
                     <div>{{ userStore.user?.profile.userPreferences.searchPreferences.educationLevel }}</div>
                   </div>
                   <div class="col-12">
-                    <div class="text-subtitle2">Target Types</div>
+                    <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Target Types</div>
                     <div>{{ userStore.user?.profile.userPreferences.searchPreferences.targetTypes.join(', ') }}</div>
                   </div>
                   <div class="col-12">
-                    <div class="text-subtitle2">Areas of Interest</div>
+                    <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Areas of Interest</div>
                     <div>{{ userStore.user?.profile.userPreferences.searchPreferences.areas.join(', ') }}</div>
                   </div>
                   <div class="col-12">
-                    <div class="text-subtitle2">Minimum Amount</div>
+                    <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Minimum Amount</div>
                     <div>${{ userStore.user?.profile.userPreferences.searchPreferences.minAmount }}</div>
                   </div>
                 </div>
