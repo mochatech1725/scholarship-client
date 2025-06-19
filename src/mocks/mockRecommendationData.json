@@ -2,7 +2,6 @@
   "recommendations": [
     {
       "_id": "rec-1",
-      "applicationId": "app-1",
       "status": "Pending",
       "requestDate": "2024-03-01",
       "dueDate": "2024-04-01",
@@ -11,7 +10,6 @@
     },
     {
       "_id": "rec-2",
-      "applicationId": "app-1",
       "status": "Submitted",
       "requestDate": "2024-03-01",
       "dueDate": "2024-04-01",

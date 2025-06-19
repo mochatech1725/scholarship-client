@@ -24,7 +24,7 @@
         "firstName": "John",
         "lastName": "Smith",
         "emailAddress": "john.smith@school.edu",
-        "phoneNumber": "555-0123",
+        "phoneNumber": "555-0123"
       },
       "status": "Pending",
       "requestDate": "2024-03-01",
