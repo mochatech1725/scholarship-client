@@ -1,39 +1,39 @@
 <template>
-  <q-form @submit="onSubmit" class="q-gutter-sm">
+  <q-form @submit="onSubmit" class="q-gutter-md">
     <div class="row q-col-gutter-sm">
       <div class="col-12 col-md-6">
+        <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Education Level</div>
         <q-select
           v-model="form.userPreferences.searchPreferences.educationLevel"
           :options="educationLevelOptions"
-          label="Education Level"
           outlined
           dense
         />
       </div>
       <div class="col-12 col-md-6">
+        <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Target Types</div>
         <q-select
           v-model="form.userPreferences.searchPreferences.targetTypes"
           :options="targetTypeOptions"
-          label="Target Types"
           multiple
           outlined
           dense
         />
       </div>
       <div class="col-12 col-md-6">
+        <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Areas of Interest</div>
         <q-select
           v-model="form.userPreferences.searchPreferences.areas"
           :options="areaOptions"
-          label="Areas of Interest"
           multiple
           outlined
           dense
         />
       </div>
       <div class="col-12 col-md-6">
+        <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Minimum Amount</div>
         <q-input
           v-model.number="form.userPreferences.searchPreferences.minAmount"
-          label="Minimum Amount"
           type="number"
           outlined
           dense
@@ -41,7 +41,7 @@
       </div>
     </div>
 
-    <div class="row justify-end q-mt-sm">
+    <div class="row justify-end q-mt-md">
       <q-btn
         label="Cancel"
         color="grey"
