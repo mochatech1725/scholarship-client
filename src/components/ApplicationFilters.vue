@@ -6,38 +6,44 @@
         <q-btn
           flat
           round
-          :icon="isExpanded ? 'chevron_left' : 'chevron_right'"
+          :icon="isExpanded ? 'expand_less' : 'expand_more'"
           @click="isExpanded = !isExpanded"
         />
       </div>
 
       <q-slide-transition>
         <div v-show="isExpanded" class="filter-content">
-          <div class="q-gutter-y-md">
-            <q-select
-              v-model="localFilters.status"
-              :options="statusOptions"
-              label="Status"
-              clearable
-              outlined
-              dense
-            />
+          <div class="row q-col-gutter-md">
+            <div class="col-12 col-md-3">
+              <q-select
+                v-model="localFilters.status"
+                :options="statusOptions"
+                label="Status"
+                clearable
+                outlined
+                dense
+              />
+            </div>
 
-            <q-input
-              v-model="localFilters.company"
-              label="Company Name"
-              clearable
-              outlined
-              dense
-            />
+            <div class="col-12 col-md-3">
+              <q-input
+                v-model="localFilters.company"
+                label="Company Name"
+                clearable
+                outlined
+                dense
+              />
+            </div>
 
-            <q-input
-              v-model="localFilters.dueDate"
-              label="Due Date"
-              type="date"
-              outlined
-              dense
-            />
+            <div class="col-12 col-md-3">
+              <q-input
+                v-model="localFilters.dueDate"
+                label="Due Date"
+                type="date"
+                outlined
+                dense
+              />
+            </div>
           </div>
         </div>
       </q-slide-transition>
@@ -76,17 +82,11 @@ watch(() => props.filters, (newValue) => {
 
 <style scoped>
 .application-filters {
-  width: 300px;
-  position: sticky;
-  top: 20px;
-  transition: width 0.3s ease;
-}
-
-.application-filters:not(.expanded) {
-  width: 120px;
+  width: 100%;
+  margin-bottom: 16px;
 }
 
 .filter-content {
-  min-width: 280px;
+  min-width: 100%;
 }
 </style> 

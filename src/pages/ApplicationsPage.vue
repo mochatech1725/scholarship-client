@@ -10,59 +10,53 @@
       />
     </div>
 
-    <div class="row q-col-gutter-md">
-      <!-- Applications List -->
-      <div class="col">
-        <q-card>
-          <q-table
-            :rows="filteredApplications"
-            :columns="columns"
-            row-key="id"
-            :loading="loading"
-            v-model:pagination="pagination"
-          >
-            <template v-slot:body-cell-status="props">
-              <q-td :props="props">
-                <q-chip
-                  :color="getStatusColor(props.value)"
-                  text-color="white"
-                  dense
-                >
-                  {{ props.value }}
-                </q-chip>
-              </q-td>
-            </template>
+    <!-- Filters Section -->
+    <ApplicationFilters
+      v-model:filters="filters"
+      :status-options="applicationStatusOptions"
+    />
 
-            <template v-slot:body-cell-actions="props">
-              <q-td :props="props" class="q-gutter-sm">
-                <q-btn
-                  flat
-                  round
-                  color="primary"
-                  icon="edit"
-                  @click="handleEdit(props.row)"
-                />
-                <q-btn
-                  flat
-                  round
-                  color="negative"
-                  icon="delete"
-                  @click="confirmDelete(props.row)"
-                />
-              </q-td>
-            </template>
-          </q-table>
-        </q-card>
-      </div>
+    <!-- Applications List -->
+    <q-card>
+      <q-table
+        :rows="filteredApplications"
+        :columns="columns"
+        row-key="id"
+        :loading="loading"
+        v-model:pagination="pagination"
+      >
+        <template v-slot:body-cell-status="props">
+          <q-td :props="props">
+            <q-chip
+              :color="getStatusColor(props.value)"
+              text-color="white"
+              dense
+            >
+              {{ props.value }}
+            </q-chip>
+          </q-td>
+        </template>
 
-      <!-- Filters Sidebar -->
-      <div class="col-auto">
-        <ApplicationFilters
-          v-model:filters="filters"
-          :status-options="applicationStatusOptions"
-        />
-      </div>
-    </div>
+        <template v-slot:body-cell-actions="props">
+          <q-td :props="props" class="q-gutter-sm">
+            <q-btn
+              flat
+              round
+              color="primary"
+              icon="edit"
+              @click="handleEdit(props.row)"
+            />
+            <q-btn
+              flat
+              round
+              color="negative"
+              icon="delete"
+              @click="confirmDelete(props.row)"
+            />
+          </q-td>
+        </template>
+      </q-table>
+    </q-card>
 
     <!-- Application Form Dialog -->
     <q-dialog v-model="showForm" persistent>
