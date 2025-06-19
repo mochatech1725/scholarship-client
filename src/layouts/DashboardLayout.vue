@@ -3,12 +3,15 @@
     <q-header elevated class="text-white">
       <q-toolbar class="q-px-md">
         <!-- Logo and Title -->
-        <div class="row items-center">
-          <q-icon name="school" size="28px" color="white" class="q-mr-sm" />
-          <q-toolbar-title class="text-white text-weight-bold">
+        <div class="header-brand">
+          <q-icon name="school" size="32px" color="white" class="q-mr-md" />
+          <q-toolbar-title class="text-white text-weight-bold header-title">
             Scholarship Tracker
           </q-toolbar-title>
         </div>
+
+        <!-- Spacer to push navigation to the right -->
+        <q-space />
 
         <!-- Desktop Navigation -->
         <div class="desktop-nav q-gutter-md">

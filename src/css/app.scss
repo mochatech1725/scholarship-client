@@ -467,12 +467,43 @@ body {
   padding-right: 24px !important;
 }
 
+// Header brand styling
+.header-brand {
+  display: flex !important;
+  align-items: center !important;
+  min-width: 280px !important;
+  padding-right: 32px !important;
+}
+
+.header-title {
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  position: relative !important;
+}
+
+.header-title::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: -4px !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%) !important;
+  border-radius: 1px !important;
+}
+
 // Desktop navigation
 .desktop-nav {
   display: flex !important;
-  margin-left: auto !important;
-  margin-right: 24px !important;
   align-items: center !important;
+  margin-left: 32px !important;
+  margin-right: 32px !important;
 }
 
 .desktop-nav .q-btn {
@@ -556,6 +587,15 @@ body {
   
   .mobile-menu-btn {
     display: flex !important;
+  }
+  
+  .header-brand {
+    min-width: auto !important;
+    padding-right: 16px !important;
+  }
+  
+  .header-title {
+    font-size: 1.25rem !important;
   }
   
   .q-toolbar-title {
