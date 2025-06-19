@@ -208,8 +208,6 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'stores/application.store'
-import { useEssayStore } from 'stores/essay.store'
-import { useRecommendationStore } from 'stores/recommendation.store'
 import { ObjectId } from 'bson'
 import type { Application } from 'src/types'
 import { targetTypeOptions, statusOptions } from 'src/types'
@@ -219,10 +217,6 @@ import ScholarshipBanner from 'components/ScholarshipBanner.vue'
 
 const $q = useQuasar()
 const applicationStore = useApplicationStore()
-const essayStore = useEssayStore()
-const recommendationStore = useRecommendationStore()
-// const userStore = useUserStore()
-// const authStore = useAuthStore()
 const loading = ref(false)
 const activeTab = ref('general')
 
@@ -315,28 +309,12 @@ const onSubmit = async () => {
       // For new applications, let the server handle ID generation
       const applicationData = omitKey(form.value, 'applicationId');
       const newApplication: Omit<Application, 'applicationId'> = {
-        ...applicationData,
-        created: new Date().toISOString()
+        ...applicationData
       };
       
       // Create the application first
-      const savedApplication = await applicationStore.createApplication(newApplication);
-      
-      if (form.value.essays.length > 0) {
-        for (const essay of form.value.essays) {
-          essay.applicationId = savedApplication.applicationId;
-          await essayStore.updateEssay(essay.essayId, essay);
-        }
-      }
-      
-      if (form.value.recommendations.length > 0) {
-        // Create each recommendation with the updated applicationId
-        for (const recommendation of form.value.recommendations) {
-          recommendation.applicationId = savedApplication.applicationId;
-          await recommendationStore.updateRecommendation(recommendation.recommendationId, recommendation);
-        }
-      }
-      
+      await applicationStore.createApplication(newApplication);
+ 
       $q.notify({
         color: 'positive',
         message: 'Application created successfully'

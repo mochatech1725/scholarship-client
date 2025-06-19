@@ -95,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, defineEmits, defineProps, onBeforeUnmount } from 'vue'
+import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
 import type { Recommendation, Application } from 'src/types'
 import ScholarshipBanner from 'components/ScholarshipBanner.vue'
 
@@ -107,28 +107,22 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'submit', form: Omit<Recommendation, 'created'>): void
+  (e: 'submit', form: Recommendation): void
   (e: 'cancel'): void
 }>()
 
-const form = ref<Omit<Recommendation, 'created'>>({
-  recommendationId: '',
-  applicationId: '',
-  studentId: '', // TODO: Get from auth store
-  recommenderId: '',
+const form = ref<Recommendation>({
   recommender: {
-    recommenderId: '',
     firstName: '',
     lastName: '',
     emailAddress: '',
     phoneNumber: '',
-    relationship: '',
-    created: new Date().toISOString()
+    relationship: ''
   },
   dueDate: '',
   status: 'Pending',
   submissionMethod: 'DirectEmail',
-  requestDate: new Date().toISOString(),
+  requestDate: '',
   submissionDate: null
 })
 
@@ -152,10 +146,6 @@ const onSubmit = () => {
 const initializeForm = () => {
   if (props.recommendation) {
     form.value = {
-      recommendationId: props.recommendation.recommendationId,
-      applicationId: props.recommendation.applicationId,
-      studentId: props.recommendation.studentId,
-      recommenderId: props.recommendation.recommenderId,
       recommender: props.recommendation.recommender,
       dueDate: props.recommendation.dueDate,
       status: props.recommendation.status,

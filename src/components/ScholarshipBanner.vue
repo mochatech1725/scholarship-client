@@ -7,12 +7,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
-
 const props = defineProps<{
   name: string
 }>()
-
 </script>
 
 <style scoped>

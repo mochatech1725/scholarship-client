@@ -76,7 +76,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits, defineProps, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import type { Recommender, User } from 'src/types'
 
 const props = defineProps<{
@@ -87,13 +87,13 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'submit', form: Omit<Recommender, 'recommenderId' | 'created'> & { emailAddress: string; phoneNumber: string }): void
+  (e: 'submit', form: Omit<Recommender, '_id' | 'created'> & { emailAddress: string; phoneNumber: string }): void
   (e: 'cancel'): void
 }>()
 
 const relationshipOptions = ['Teacher', 'Counselor', 'Employer', 'Friend', 'Other']
 
-const form = ref<Omit<Recommender, 'recommenderId' | 'created'> & { emailAddress: string; phoneNumber: string }>({
+const form = ref<Omit<Recommender, '_id' | 'created'> & { emailAddress: string; phoneNumber: string }>({
   firstName: '',
   lastName: '',
   relationship: '',

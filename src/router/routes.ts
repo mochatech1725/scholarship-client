@@ -22,8 +22,7 @@ const routes: RouteRecordRaw[] = [
       { path: 'profile', component: () => import('pages/ProfilePage.vue'), name:'editProfile', meta: { requiresAuth: true } },
       { path: 'essays', component: () => import('pages/EssaysPage.vue'), name: 'essaysList', meta: { requiresAuth: true } },
       { path: 'recommenders', component: () => import('pages/RecommendersPage.vue'), name: 'recommendersList', meta: { requiresAuth: true } },
-      { path: 'recommendationCreate', component: () => import('pages/RecommendationPage.vue'), name: 'recommendationCreate', meta: { requiresAuth: true } },
-      { path: 'recommendation/:recommendationId', component: () => import('pages/RecommendationPage.vue'), name: 'recommendationEdit', meta: { requiresAuth: true } },
+      { path: 'recommendations', component: () => import('pages/RecommendationsPage.vue'), name: 'recommendationsList', meta: { requiresAuth: true } },
     ]
   },
   {

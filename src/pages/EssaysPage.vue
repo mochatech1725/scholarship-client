@@ -13,7 +13,7 @@
     <q-table
       :rows="essays"
       :columns="columns"
-      row-key="essayId"
+      row-key="_id"
       :loading="loading"
     >
       <template v-slot:body-cell-actions="props">
@@ -76,7 +76,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useQuasar } from 'quasar'
-import { useEssayStore } from 'src/stores/essay.store'
+import { useApplicationStore } from 'src/stores/application.store'
 import type { Essay, Application } from 'src/types'
 import EssayForm from 'src/components/EssayForm.vue'
 
@@ -85,7 +85,7 @@ const props = defineProps<{
 }>()
 
 const $q = useQuasar()
-const essayStore = useEssayStore()
+const applicationStore = useApplicationStore()
 const loading = ref(false)
 const essays = ref<Essay[]>([])
 const showDeleteDialog = ref(false)
@@ -119,10 +119,19 @@ const confirmDelete = (essay: Essay) => {
 }
 
 const handleDelete = async () => {
-  if (!selectedEssay.value?.essayId) return
+  if (!selectedEssay.value?._id) return
 
   try {
-    await essayStore.deleteEssay(selectedEssay.value.essayId)
+    // Since essays are nested in applications, we need to update the application
+    // Remove the essay from the application's essays array
+    const updatedEssays = props.application.essays.filter(essay => essay._id !== selectedEssay.value?._id)
+    const updatedApplication = {
+      ...props.application,
+      essays: updatedEssays
+    }
+    
+    await applicationStore.updateApplication(props.application.applicationId, updatedApplication)
+    
     $q.notify({
       type: 'positive',
       message: 'Essay deleted successfully'

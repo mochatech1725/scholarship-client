@@ -15,7 +15,7 @@
         <q-table
           :rows="recommenders"
           :columns="columns"
-          row-key="recommenderId"
+          row-key="_id"
           flat
           bordered
           dense
@@ -163,11 +163,11 @@ const editRecommender = (recommender: Recommender) => {
   showForm.value = true
 }
 
-const handleSubmit = async (form: Omit<Recommender, 'recommenderId' | 'created'> & { emailAddress: string; phoneNumber: string }) => {
+const handleSubmit = async (form: Omit<Recommender, '_id' | 'created'> & { emailAddress: string; phoneNumber: string }) => {
   try {
     loading.value = true
-    if (editingRecommender.value) {
-      await recommenderStore.updateRecommender(editingRecommender.value.recommenderId, form)
+    if (editingRecommender.value && editingRecommender.value._id) {
+      await recommenderStore.updateRecommender(editingRecommender.value._id, form)
       $q.notify({
         type: 'positive',
         message: 'Recommender updated successfully'
@@ -203,11 +203,11 @@ const confirmDelete = (recommender: Recommender) => {
 }
 
 const deleteRecommender = async () => {
-  if (!recommenderToDelete.value?.recommenderId) return
+  if (!recommenderToDelete.value?._id) return
 
   try {
-    await recommenderStore.deleteRecommender(recommenderToDelete.value.recommenderId)
-    recommenders.value = recommenders.value.filter(r => r.recommenderId !== recommenderToDelete.value?.recommenderId)
+    await recommenderStore.deleteRecommender(recommenderToDelete.value._id)
+    recommenders.value = recommenders.value.filter(r => r._id !== recommenderToDelete.value?._id)
     $q.notify({
       type: 'positive',
       message: 'Recommender deleted successfully'

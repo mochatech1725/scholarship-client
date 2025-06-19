@@ -74,7 +74,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'submit', form: Omit<Essay, 'essayId' | 'created'>): void
+  (e: 'submit', form: Essay): void
   (e: 'cancel'): void
 }>()
 
@@ -82,29 +82,22 @@ const scholarshipName = computed(() => {
   return props.application?.scholarshipName || ''
 })
 
-const form = ref<Omit<Essay, 'essayId' | 'created'>>({
-  applicationId: '',
-  studentId: '',
+const form = ref<Essay>({
   essayLink: '',
   count: 0,
   units: '',
-  theme: ''
+  theme: '',
+  created: new Date().toISOString()
 })
 
 const initializeForm = () => {
-  if (props.application) {
-    form.value.applicationId = props.application.applicationId
-    form.value.studentId = props.application.studentId
-  }
-  
   if (props.essay) {
     form.value = {
-      applicationId: props.essay.applicationId,
-      studentId: props.essay.studentId,
       essayLink: props.essay.essayLink,
       count: props.essay.count,
       units: props.essay.units,
-      theme: props.essay.theme
+      theme: props.essay.theme,
+      created: props.essay.created
     }
   }
 }

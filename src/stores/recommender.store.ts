@@ -8,12 +8,12 @@ export const useRecommenderStore = defineStore('recommender', {
   }),
 
   actions: {
-    async createRecommender(recommender: Omit<Recommender, 'recommenderId' | 'created'>) {
+    async createRecommender(recommender: Omit<Recommender, '_id' | 'created'>) {
       // TODO: Implement API call
       await new Promise(resolve => setTimeout(resolve, 100)) // Simulate API delay
       const newRecommender: Recommender = {
         ...recommender,
-        recommenderId: crypto.randomUUID(),
+        _id: crypto.randomUUID(),
         created: new Date().toISOString()
       }
       this.recommenders.push(newRecommender)
@@ -27,20 +27,20 @@ export const useRecommenderStore = defineStore('recommender', {
 
     async getRecommenderById(recommenderId: string) {
       const recommenders = await mockService.getRecommenders()
-      return recommenders.find(r => r.recommenderId === recommenderId) || null
+      return recommenders.find(r => r._id === recommenderId) || null
     },
 
-    async updateRecommender(recommenderId: string, updates: Omit<Recommender, 'recommenderId' | 'created'>) {
+    async updateRecommender(recommenderId: string, updates: Omit<Recommender, '_id' | 'created'>) {
       // TODO: Implement API call
       await new Promise(resolve => setTimeout(resolve, 100)) // Simulate API delay
-      const index = this.recommenders.findIndex(r => r.recommenderId === recommenderId)
+      const index = this.recommenders.findIndex(r => r._id === recommenderId)
       if (index !== -1) {
         const existingRecommender = this.recommenders[index]
         if (existingRecommender) {
           const updatedRecommender: Recommender = {
             ...updates,
-            recommenderId: existingRecommender.recommenderId || crypto.randomUUID(),
-            created: existingRecommender.created
+            _id: existingRecommender._id || crypto.randomUUID(),
+            created: existingRecommender.created || new Date().toISOString()
           }
           this.recommenders[index] = updatedRecommender
         }
@@ -50,7 +50,7 @@ export const useRecommenderStore = defineStore('recommender', {
     async deleteRecommender(recommenderId: string) {
       // TODO: Implement API call
       await new Promise(resolve => setTimeout(resolve, 100)) // Simulate API delay
-      const index = this.recommenders.findIndex(r => r.recommenderId === recommenderId)
+      const index = this.recommenders.findIndex(r => r._id === recommenderId)
       if (index !== -1) {
         this.recommenders.splice(index, 1)
       }

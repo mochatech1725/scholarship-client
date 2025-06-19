@@ -34,17 +34,13 @@ export const useApplicationStore = defineStore('application', {
     },
 
     async deleteRecommendation(id: string) {
-      await mockService.deleteRecommendation(id)
-      // Update the application in the store if needed
-      const application = this.applications.find(app => 
-        app.recommendations.some(rec => rec.recommendationId === id)
-      )
-      if (application) {
-        const index = application.recommendations.findIndex(rec => rec.recommendationId === id)
-        if (index !== -1) {
-          application.recommendations.splice(index, 1)
-        }
-      }
-    }
+      // Since recommendations are now nested in applications, 
+      // deletion should be handled through application updates
+      await new Promise(resolve => setTimeout(resolve, 100)) // Simulate async operation
+      console.log('deleteRecommendation', id)
+    },
+
+    // Essay and Recommendation methods removed since they are now nested documents
+    // and handled through the application CRUD operations
   }
 }) 

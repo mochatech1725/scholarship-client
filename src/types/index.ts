@@ -1,8 +1,5 @@
 export interface Essay {
-  essayId: string
   _id?: string
-  applicationId: string
-  studentId: string
   essayLink: string
   count: number
   units: string
@@ -11,34 +8,28 @@ export interface Essay {
 }
 
 export interface Recommender {
-  recommenderId: string
   _id?: string
   firstName: string
   lastName: string
   relationship: string
   emailAddress: string
   phoneNumber: string
-  created: string
+  created?: string
 }
 
 export interface Recommendation {
-  recommendationId: string
   _id?: string
   recommender: Recommender
-  applicationId: string
-  studentId: string
-  recommenderId: string
-  dueDate: string
   status: RecommendationStatus
   submissionMethod: 'DirectEmail' | 'StudentUpload' | 'DirectMail'
   requestDate: string
+  dueDate: string
   submissionDate: string | null
-  created: string
 }
 
 export interface Application {
-  applicationId: string
   _id?: string
+  applicationId: string
   studentId: string
   scholarshipName: string
   targetType: 'Merit' | 'Need' | 'Both'
@@ -53,12 +44,11 @@ export interface Application {
   documentInfoLink: string
   currentAction: string
   status: ApplicationStatus
+  essays: Essay[]
+  recommendations: Recommendation[]
   submissionDate: string
   openDate: string
   dueDate: string
-  created: string
-  essays: Essay[]
-  recommendations: Recommendation[]
 }
 
 export type EducationLevel = typeof educationLevelOptions[number]

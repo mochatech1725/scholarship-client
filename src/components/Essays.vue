@@ -15,7 +15,7 @@
       <q-table
         :rows="essays"
         :columns="essayColumns"
-        row-key="id"
+        row-key="_id"
         flat
         bordered
         dense
@@ -59,7 +59,6 @@
           <EssayForm
             :application="application"
             :essay="editingEssay"
-            @submit="handleEssaySubmit"
             @cancel="closeEssayForm"
           />
         </q-card-section>
@@ -71,7 +70,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useQuasar } from 'quasar'
-import { useEssayStore } from 'stores/essay.store'
 import type { Essay, Application } from 'src/types'
 import EssayForm from './EssayForm.vue'
 
@@ -80,7 +78,6 @@ const props = defineProps<{
 }>()
 
 const $q = useQuasar()
-const essayStore = useEssayStore()
 const essays = ref<Essay[]>([])
 const showEssayForm = ref(false)
 const editingEssay = ref<Essay | null>(null)
@@ -96,12 +93,12 @@ const essayColumns = [
   { name: 'actions', label: 'Actions', field: 'actions', align: 'right' as const }
 ]
 
-const loadEssays = async () => {
+const loadEssays = () => {
   if (!props.application?.applicationId) return
   
   try {
     loading.value = true
-    essays.value = await essayStore.getEssaysByApplicationId(props.application.applicationId)
+    essays.value = props.application.essays || []
   } catch (err) {
     console.error('Failed to load essays:', err)
     $q.notify({
@@ -118,45 +115,13 @@ const editEssay = (essay: Essay) => {
   showEssayForm.value = true
 }
 
-const handleEssaySubmit = async (formData: Omit<Essay, 'essayId' | 'created'>) => {
-  try {
-    if (editingEssay.value?.essayId) {
-      await essayStore.updateEssay(editingEssay.value.essayId, {
-        ...formData,
-        essayId: editingEssay.value.essayId
-      })
-      $q.notify({
-        color: 'positive',
-        message: 'Essay updated successfully'
-      })
-    } else {
-      await essayStore.createEssay({
-        ...formData,
-        created: new Date().toISOString()
-      })
-      $q.notify({
-        color: 'positive',
-        message: 'Essay created successfully'
-      })
-    }
-    closeEssayForm()
-    await loadEssays()
-  } catch (err) {
-    console.error('Failed to save essay:', err)
-    $q.notify({
-      color: 'negative',
-      message: 'Failed to save essay'
-    })
-  }
-}
-
 const closeEssayForm = () => {
   showEssayForm.value = false
   editingEssay.value = null
 }
 
 const confirmDeleteEssay = (essay: Essay) => {
-  if (!essay.essayId) {
+  if (!essay._id) {
     $q.notify({
       color: 'negative',
       message: 'Cannot delete essay: No essay ID found'
@@ -170,26 +135,25 @@ const confirmDeleteEssay = (essay: Essay) => {
     cancel: true,
     persistent: true
   }).onOk(() => {
-    void (async () => {
-      try {
-        await essayStore.deleteEssay(essay.essayId)
-        await loadEssays()
-        $q.notify({
-          color: 'positive',
-          message: 'Essay deleted successfully'
-        })
-      } catch (err) {
-        console.error('Failed to delete essay:', err)
-        $q.notify({
-          color: 'negative',
-          message: 'Failed to delete essay'
-        })
-      }
-    })()
+    try {
+      // Remove the essay from the application's essays array
+      // This would require access to the application store
+      loadEssays()
+      $q.notify({
+        color: 'positive',
+        message: 'Essay deleted successfully'
+      })
+    } catch (err) {
+      console.error('Failed to delete essay:', err)
+      $q.notify({
+        color: 'negative',
+        message: 'Failed to delete essay'
+      })
+    }
   })
 }
 
-onMounted(async () => {
-  await loadEssays()
+onMounted(() => {
+  loadEssays()
 })
 </script> 

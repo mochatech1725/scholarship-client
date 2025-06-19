@@ -20,12 +20,11 @@
   "created": "2024-01-01T00:00:00.000Z",
   "recommendations": [
     {
-      "recommendationId": "rec-1",
+      "_id": "rec-1",
       "applicationId": "app-1",
       "studentId": "auth0|6844d51eecdb753254ed6d53",
-      "recommenderId": "rec-1",
       "recommender": {
-        "recommenderId": "rec-1",
+        "_id": "rec-1",
         "firstName": "John",
         "lastName": "Smith",
         "emailAddress": "john.smith@school.edu",
@@ -41,12 +40,11 @@
       "created": "2024-01-01T00:00:00.000Z"
     },
     {
-      "recommendationId": "rec-2",
+      "_id": "rec-2",
       "applicationId": "app-1",
       "studentId": "auth0|6844d51eecdb753254ed6d53",
-      "recommenderId": "rec-2",
       "recommender": {
-        "recommenderId": "rec-2",
+        "_id": "rec-2",
         "firstName": "Sarah",
         "lastName": "Johnson",
         "emailAddress": "sarah.johnson@company.com",
@@ -62,12 +60,11 @@
       "created": "2024-01-01T00:00:00.000Z"
     },
     {
-      "recommendationId": "rec-3",
+      "_id": "rec-3",
       "applicationId": "app-1",
       "studentId": "auth0|6844d51eecdb753254ed6d53",
-      "recommenderId": "rec-3",
       "recommender": {
-        "recommenderId": "rec-3",
+        "_id": "rec-3",
         "firstName": "Michael",
         "lastName": "Brown",
         "emailAddress": "michael.brown@school.edu",
