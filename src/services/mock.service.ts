@@ -92,7 +92,7 @@ class MockService {
     
     // Ensure all required fields are present
     const updatedRecommender: Recommender = {
-      _id: existingRec._id!,
+      _id: existingRec._id,
       firstName: recommender.firstName ?? existingRec.firstName,
       lastName: recommender.lastName ?? existingRec.lastName,
       relationship: recommender.relationship ?? existingRec.relationship,
