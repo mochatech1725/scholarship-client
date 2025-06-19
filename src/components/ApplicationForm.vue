@@ -40,6 +40,7 @@
                     :rules="rules.scholarshipName"
                     outlined
                     dense
+                    hide-bottom-space
                   />
                 </div>
 
@@ -60,6 +61,7 @@
                     :rules="rules.company"
                     outlined
                     dense
+                    hide-bottom-space
                   />
                 </div>
 
