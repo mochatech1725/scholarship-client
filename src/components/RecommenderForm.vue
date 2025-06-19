@@ -29,6 +29,8 @@
           :rules="rules.firstName"
           outlined
           dense
+          hide-bottom-space
+
         />
       </div>
 
@@ -39,6 +41,8 @@
           :rules="rules.lastName"
           outlined
           dense
+          hide-bottom-space
+
         />
       </div>
 
@@ -50,6 +54,8 @@
           outlined
           dense
           type="email"
+          hide-bottom-space
+
         />
       </div>
 
@@ -60,6 +66,8 @@
           outlined
           dense
           mask="(###) ###-####"
+          hide-bottom-space
+
         />
       </div>
 
@@ -71,6 +79,8 @@
           :rules="rules.relationship"
           outlined
           dense
+          hide-bottom-space
+
         />
       </div>
     </div>
