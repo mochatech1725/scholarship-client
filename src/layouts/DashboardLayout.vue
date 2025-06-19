@@ -1,16 +1,47 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-toolbar-title>
-          Scholarship Application Tracker
-        </q-toolbar-title>
+    <q-header elevated class="text-white">
+      <q-toolbar class="q-px-md">
+        <!-- Logo and Title -->
+        <div class="row items-center">
+          <q-icon name="school" size="28px" color="white" class="q-mr-sm" />
+          <q-toolbar-title class="text-white text-weight-bold">
+            Scholarship Tracker
+          </q-toolbar-title>
+        </div>
 
+        <!-- Desktop Navigation -->
+        <div class="desktop-nav q-gutter-md">
+          <q-btn
+            flat
+            :to="{ name: 'applicationsList' }"
+            :class="{ 'text-primary': $route.name === 'applicationsList' }"
+            label="Applications"
+          />
+          <q-btn
+            flat
+            :to="{ name: 'recommendersList' }"
+            :class="{ 'text-primary': $route.name === 'recommendersList' }"
+            label="Recommenders"
+          />
+          <q-btn
+            flat
+            :to="{ name: 'scholarshipSearch' }"
+            :class="{ 'text-primary': $route.name === 'scholarshipSearch' }"
+            label="Search"
+          />
+        </div>
+
+        <!-- User Menu and Mobile Menu -->
+        <q-space />
+        
+        <!-- User Dropdown -->
         <q-btn-dropdown
           v-if="authStore.isAuthenticated"
           flat
           :label="authStore.user?.firstName"
           icon="person"
+          class="q-mr-sm"
         >
           <q-list>
             <q-item clickable v-close-popup :to="{ name: 'editProfile' }">
@@ -23,36 +54,79 @@
             </q-item>
           </q-list>
         </q-btn-dropdown>
+
+        <!-- Mobile Menu Button -->
+        <q-btn
+          flat
+          round
+          icon="menu"
+          @click="mobileMenu = !mobileMenu"
+          class="mobile-menu-btn"
+        />
       </q-toolbar>
 
-      <q-tabs
-        v-model="activeTab"
-        class="bg-primary text-white"
-        align="left"
-        narrow-indicator
-        mobile-arrows
-        dense
-      >
-        <q-route-tab
-          :to="{ name: 'applicationsList' }"
-          name="applications"
-          icon="description"
-          label="Applications"
-        />
-        <q-route-tab
-          :to="{ name: 'recommendersList' }"
-          name="recommenders"
-          icon="assignment"
-          label="Recommenders"
-        />
-
-        <q-route-tab
-          :to="{ name: 'scholarshipSearch' }"
-          name="scholarshipSearch"
-          icon="search"
-          label="Scholarship Search"
-        />
-      </q-tabs>
+      <!-- Mobile Navigation Drawer -->
+      <q-slide-transition>
+        <div v-show="mobileMenu" class="mobile-nav bg-white">
+          <q-list class="q-pa-md">
+            <q-item
+              clickable
+              :to="{ name: 'applicationsList' }"
+              @click="mobileMenu = false"
+              :class="{ 'text-primary': $route.name === 'applicationsList' }"
+            >
+              <q-item-section avatar>
+                <q-icon name="description" />
+              </q-item-section>
+              <q-item-section>Applications</q-item-section>
+            </q-item>
+            
+            <q-item
+              clickable
+              :to="{ name: 'recommendersList' }"
+              @click="mobileMenu = false"
+              :class="{ 'text-primary': $route.name === 'recommendersList' }"
+            >
+              <q-item-section avatar>
+                <q-icon name="assignment" />
+              </q-item-section>
+              <q-item-section>Recommenders</q-item-section>
+            </q-item>
+            
+            <q-item
+              clickable
+              :to="{ name: 'scholarshipSearch' }"
+              @click="mobileMenu = false"
+              :class="{ 'text-primary': $route.name === 'scholarshipSearch' }"
+            >
+              <q-item-section avatar>
+                <q-icon name="search" />
+              </q-item-section>
+              <q-item-section>Search</q-item-section>
+            </q-item>
+            
+            <q-separator class="q-my-md" />
+            
+            <q-item
+              clickable
+              :to="{ name: 'editProfile' }"
+              @click="mobileMenu = false"
+            >
+              <q-item-section avatar>
+                <q-icon name="person" />
+              </q-item-section>
+              <q-item-section>Profile</q-item-section>
+            </q-item>
+            
+            <q-item clickable @click="onLogout">
+              <q-item-section avatar>
+                <q-icon name="logout" />
+              </q-item-section>
+              <q-item-section>Logout</q-item-section>
+            </q-item>
+          </q-list>
+        </div>
+      </q-slide-transition>
     </q-header>
 
     <q-page-container>
@@ -74,7 +148,7 @@ const authStore = useAuthStore()
 const $q = useQuasar()
 const route = useRoute()
 const isReady = ref(false)
-const activeTab = ref('applications')
+const mobileMenu = ref(false)
 
 onMounted(async () => {
   try {
@@ -83,11 +157,11 @@ onMounted(async () => {
 
     // Set active tab based on current route
     if (route.path.includes('/applications')) {
-      activeTab.value = 'applications'
+      mobileMenu.value = false
     } else if (route.path.includes('/scholarship')) {
-      activeTab.value = 'scholarshipSearch'
+      mobileMenu.value = false
     } else if (route.path.includes('/recommenders')) {
-      activeTab.value = 'recommenders'
+      mobileMenu.value = false
     } 
   } catch (err) {
     console.error('Failed to initialize auth store:', err)

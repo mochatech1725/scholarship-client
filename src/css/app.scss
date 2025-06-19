@@ -452,3 +452,113 @@ body {
     }
   }
 }
+
+// Toggl-inspired header styling
+.q-header {
+  background: linear-gradient(135deg, #492b7c 0%, #301551 100%) !important;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  color: white !important;
+}
+
+.q-toolbar {
+  min-height: 64px !important;
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+
+// Desktop navigation
+.desktop-nav {
+  display: flex !important;
+  margin-left: auto !important;
+  margin-right: 24px !important;
+  align-items: center !important;
+}
+
+.desktop-nav .q-btn {
+  color: rgba(255, 255, 255, 0.8) !important;
+  border-radius: 6px !important;
+  margin: 0 2px !important;
+  padding: 8px 16px !important;
+  transition: all 0.2s ease !important;
+  position: relative !important;
+}
+
+.desktop-nav .q-btn:not(:last-child)::after {
+  content: '|' !important;
+  position: absolute !important;
+  right: -8px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-weight: 400 !important;
+  font-size: 1.1rem !important;
+}
+
+.desktop-nav .q-btn:hover {
+  color: white !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.desktop-nav .q-btn.text-primary {
+  color: white !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+// Mobile menu button
+.mobile-menu-btn {
+  display: none !important;
+  color: white !important;
+}
+
+// Mobile navigation
+.mobile-nav {
+  background: linear-gradient(135deg, #492b7c 0%, #301551 100%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  color: white !important;
+}
+
+.mobile-nav .q-item {
+  color: rgba(255, 255, 255, 0.8) !important;
+  border-radius: 8px !important;
+  margin: 4px 8px !important;
+  padding: 12px 16px !important;
+  transition: all 0.2s ease !important;
+  position: relative !important;
+}
+
+.mobile-nav .q-item:not(:last-child)::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: -2px !important;
+  left: 16px !important;
+  right: 16px !important;
+  height: 1px !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+}
+
+.mobile-nav .q-item:hover {
+  color: white !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.mobile-nav .q-item.text-primary {
+  color: white !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+// Responsive header
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none !important;
+  }
+  
+  .mobile-menu-btn {
+    display: flex !important;
+  }
+  
+  .q-toolbar-title {
+    font-size: 1.25rem !important;
+  }
+}
