@@ -196,3 +196,33 @@ body {
   font-weight: 600 !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
 }
+
+// Make form components more compact
+.q-field--dense .q-field__control {
+  min-height: 36px !important;
+  height: 36px !important;
+}
+
+.q-field--dense .q-field__control-container {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.q-field--dense .q-field__native {
+  min-height: 36px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.q-field--dense .q-field__marginal {
+  height: 36px !important;
+}
+
+// Make checkboxes more compact
+.q-checkbox {
+  min-height: 32px !important;
+}
+
+.q-checkbox .q-checkbox__inner {
+  min-height: 32px !important;
+}

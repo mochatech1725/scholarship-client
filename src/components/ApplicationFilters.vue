@@ -15,10 +15,10 @@
         <div v-show="isExpanded" class="filter-content">
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-3">
+              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Status</div>
               <q-select
                 v-model="localFilters.status"
                 :options="statusOptions"
-                label="Status"
                 clearable
                 outlined
                 dense
@@ -26,9 +26,9 @@
             </div>
 
             <div class="col-12 col-md-3">
+              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Company Name</div>
               <q-input
                 v-model="localFilters.company"
-                label="Company Name"
                 clearable
                 outlined
                 dense
@@ -36,9 +36,9 @@
             </div>
 
             <div class="col-12 col-md-3">
+              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Due Date</div>
               <q-input
                 v-model="localFilters.dueDate"
-                label="Due Date"
                 type="date"
                 outlined
                 dense

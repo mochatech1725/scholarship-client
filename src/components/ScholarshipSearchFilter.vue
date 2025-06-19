@@ -4,35 +4,38 @@
   <q-card class="q-pa-sm">
     <q-card-section class="q-pa-sm">
       <div class="row items-center q-gutter-x-md">
-        <q-input
-          v-model="searchQuery"
-          label="Search"
-          clearable
-          dense
-          class="col-6"
-        >
-          <template v-slot:append>
-            <q-icon name="search" />
-          </template>
-        </q-input>
+        <div class="col-6">
+          <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Search</div>
+          <q-input
+            v-model="searchQuery"
+            clearable
+            dense
+          >
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+        </div>
 
-        <q-select
-          v-model="filters.theme"
-          :options="themeOptions"
-          label="Theme"
-          clearable
-          dense
-          class="col-2"
-        />
+        <div class="col-2">
+          <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Theme</div>
+          <q-select
+            v-model="filters.theme"
+            :options="themeOptions"
+            clearable
+            dense
+          />
+        </div>
 
-        <q-select
-          v-model="filters.targetType"
-          :options="targetTypeOptions"
-          label="Target Type"
-          clearable
-          dense
-          class="col-2"
-        />
+        <div class="col-2">
+          <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Target Type</div>
+          <q-select
+            v-model="filters.targetType"
+            :options="targetTypeOptions"
+            clearable
+            dense
+          />
+        </div>
       </div>
     </q-card-section>
   </q-card>
