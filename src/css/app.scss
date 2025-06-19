@@ -265,6 +265,24 @@ body {
   border-color: var(--q-primary) !important;
 }
 
+// Make input and select text more bold
+.q-field__native {
+  font-weight: 500 !important;
+}
+
+.q-field__input {
+  font-weight: 500 !important;
+}
+
+// Make selected options in q-select more bold
+.q-item {
+  font-weight: 500 !important;
+}
+
+.q-item--active {
+  font-weight: 600 !important;
+}
+
 // Add subtle color to q-cards and panels
 .q-card {
   background: linear-gradient(135deg, #FAF9FF 0%, #F5F3FF 100%) !important;
