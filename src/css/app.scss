@@ -329,3 +329,126 @@ body {
   background: linear-gradient(135deg, #FFFFFF 0%, #FAF9FF 100%) !important;
   border: 1px solid rgba(107, 70, 193, 0.15) !important;
 }
+
+// Mobile responsive improvements
+@media (max-width: 768px) {
+  // Make tabs more mobile-friendly
+  .q-tabs {
+    .q-tab {
+      min-width: auto !important;
+      padding: 8px 12px !important;
+      
+      .q-tab__label {
+        font-size: 0.75rem !important;
+      }
+      
+      .q-tab__icon {
+        font-size: 18px !important;
+      }
+    }
+  }
+  
+  // Make tables responsive with horizontal scroll
+  .q-table {
+    overflow-x: auto !important;
+    
+    .q-table__container {
+      min-width: 600px !important; // Ensure minimum width for content
+    }
+    
+    thead tr th {
+      padding: 8px 6px !important;
+      font-size: 0.75rem !important;
+      white-space: nowrap !important;
+    }
+    
+    tbody tr td {
+      padding: 8px 6px !important;
+      font-size: 0.875rem !important;
+      white-space: nowrap !important;
+    }
+  }
+  
+  // Improve form responsiveness
+  .q-form {
+    .row {
+      margin: 0 !important;
+    }
+    
+    .col-12 {
+      padding: 0 8px !important;
+    }
+  }
+  
+  // Make cards more mobile-friendly
+  .q-card {
+    margin: 8px !important;
+    
+    .q-card-section {
+      padding: 12px !important;
+    }
+  }
+  
+  // Improve dialog responsiveness
+  .q-dialog {
+    .q-card {
+      margin: 16px !important;
+      max-width: calc(100vw - 32px) !important;
+      min-width: auto !important;
+    }
+  }
+  
+  // Make buttons more touch-friendly
+  .q-btn {
+    min-height: 44px !important; // Touch target size
+    
+    &.q-btn--round {
+      min-width: 44px !important;
+      min-height: 44px !important;
+    }
+  }
+  
+  // Improve text sizing for mobile
+  .text-h5, .text-h6 {
+    font-size: 1.25rem !important;
+  }
+  
+  // Make form labels more readable on mobile
+  .text-caption[style*="color: var(--q-primary)"] {
+    font-size: 0.8rem !important;
+    letter-spacing: 0.3px !important;
+  }
+}
+
+// Extra small screens
+@media (max-width: 480px) {
+  .q-table {
+    .q-table__container {
+      min-width: 500px !important;
+    }
+    
+    thead tr th {
+      padding: 6px 4px !important;
+      font-size: 0.7rem !important;
+    }
+    
+    tbody tr td {
+      padding: 6px 4px !important;
+      font-size: 0.8rem !important;
+    }
+  }
+  
+  .q-tabs {
+    .q-tab {
+      padding: 6px 8px !important;
+      
+      .q-tab__label {
+        font-size: 0.7rem !important;
+      }
+      
+      .q-tab__icon {
+        font-size: 16px !important;
+      }
+    }
+  }
+}

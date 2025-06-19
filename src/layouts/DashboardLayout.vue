@@ -30,6 +30,8 @@
         class="bg-primary text-white"
         align="left"
         narrow-indicator
+        mobile-arrows
+        dense
       >
         <q-route-tab
           :to="{ name: 'applicationsList' }"
