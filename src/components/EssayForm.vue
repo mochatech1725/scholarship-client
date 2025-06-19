@@ -31,6 +31,8 @@
               :rules="[val => !!val || 'Theme is required']"
               outlined
               dense
+              hide-bottom-space
+
             />
           </div>
           <div class="col-12 col-md-6">
@@ -40,6 +42,8 @@
               :rules="[val => !!val || 'Units is required']"
               outlined
               dense
+              hide-bottom-space
+
             />
           </div>
           <div class="col-12">
@@ -49,6 +53,8 @@
               :rules="[val => !!val || 'Essay link is required']"
               outlined
               dense
+              hide-bottom-space
+
             />
           </div>
           <div class="col-12">
@@ -59,6 +65,8 @@
               :rules="[val => !!val || 'Count is required']"
               outlined
               dense
+              hide-bottom-space
+
             />
           </div>
         </div>
