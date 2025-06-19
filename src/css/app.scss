@@ -145,4 +145,6 @@ body {
 // Make input labels match primary color
 .q-field__label {
   color: var(--q-primary) !important;
+  font-weight: 600 !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
 }
