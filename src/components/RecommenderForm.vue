@@ -5,16 +5,18 @@
       <div>
         <q-btn
           label="Cancel"
-          color="grey"
-          flat
+          color="grey-7"
+          outline
           @click="$emit('cancel')"
           class="q-mr-sm"
+          size="md"
         />
         <q-btn
           label="Save"
           type="submit"
           color="primary"
           :loading="loading"
+          size="md"
         />
       </div>
     </div>

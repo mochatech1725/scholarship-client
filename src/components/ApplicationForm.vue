@@ -8,15 +8,17 @@
           <div>
             <q-btn
               label="Cancel"
-              color="grey"
-              flat
+              color="grey-7"
+              outline
               @click="$emit('cancel')"
               class="q-mr-sm"
+              size="md"
             />
             <q-btn
               type="submit"
               color="primary"
               :label="isEdit ? 'Update Application' : 'Create Application'"
+              size="md"
             />
           </div>
         </div>

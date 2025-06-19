@@ -9,17 +9,17 @@
             <div>
               <q-btn
                 label="Cancel"
-                color="grey"
-                flat
-                class="q-mr-sm"
+                color="grey-7"
+                outline
                 @click="$emit('cancel')"
-                dense
+                class="q-mr-sm"
+                size="md"
               />
               <q-btn
                 :label="props.essay ? 'Update' : 'Create'"
                 type="submit"
                 color="primary"
-                dense
+                size="md"
               />
             </div>
           </div>
