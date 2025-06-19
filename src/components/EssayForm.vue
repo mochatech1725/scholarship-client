@@ -1,9 +1,9 @@
 <template>
   <div style="background-color: #f5f3fa; padding: 16px;">
-    <q-card class="q-pa-md" style="background-color: white;">
+    <q-card class="q-pa-md" style="background-color: #f5f3fa;">
       <q-card-section>
         <ScholarshipBanner :name="scholarshipName" />
-        <q-form @submit="onSubmit" class="q-gutter-sm">
+        <q-form @submit="onSubmit" class="q-gutter-md">
           <div class="row items-center justify-between q-mb-md">
             <div class="text-h6">{{ props.essay ? 'Edit' : 'Add' }} Essay</div>
             <div>
