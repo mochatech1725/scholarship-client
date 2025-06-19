@@ -6,8 +6,7 @@
       "lastName": "Smith",
       "emailAddress": "john.smith@school.edu",
       "phoneNumber": "555-0123",
-      "relationship": "Academic Advisor",
-      "created": "2024-01-01T00:00:00.000Z"
+      "relationship": "Academic Advisor"
     },
     {
       "_id": "rec-2",
@@ -15,8 +14,7 @@
       "lastName": "Johnson",
       "emailAddress": "sarah.johnson@company.com",
       "phoneNumber": "555-0124",
-      "relationship": "Work Supervisor",
-      "created": "2024-01-01T00:00:00.000Z"
+      "relationship": "Work Supervisor"
     },
     {
       "_id": "rec-3",
@@ -24,8 +22,7 @@
       "lastName": "Brown",
       "emailAddress": "michael.brown@school.edu",
       "phoneNumber": "555-0125",
-      "relationship": "Research Advisor",
-      "created": "2024-01-01T00:00:00.000Z"
+      "relationship": "Research Advisor"
     }
   ]
 } 

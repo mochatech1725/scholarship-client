@@ -231,11 +231,11 @@ const emit = defineEmits<{
 }>()
 
 // Single source of truth for default form data
-const getDefaultFormData = (): Omit<Application, 'created'> => ({
+const getDefaultFormData = (): Application => ({
   applicationId: new ObjectId().toString(),
   studentId: '', // TODO: Get from auth store
   scholarshipName: '',
-  targetType: 'Both',
+  targetType: 'Both' as const,
   company: '',
   companyWebsite: '',
   platform: '',
@@ -246,7 +246,7 @@ const getDefaultFormData = (): Omit<Application, 'created'> => ({
   renewable: false,
   documentInfoLink: '',
   currentAction: '',
-  status: 'Not Started',
+  status: 'Not Started' as const,
   submissionDate: '',
   openDate: '',
   dueDate: '',
@@ -254,7 +254,7 @@ const getDefaultFormData = (): Omit<Application, 'created'> => ({
   recommendations: []
 })
 
-const form = ref<Omit<Application, 'created'>>(getDefaultFormData())
+const form = ref<Application>(getDefaultFormData())
 
 const rules = {
   scholarshipName: [

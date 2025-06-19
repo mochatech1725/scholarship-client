@@ -86,8 +86,7 @@ const form = ref<Essay>({
   essayLink: '',
   count: 0,
   units: '',
-  theme: '',
-  created: new Date().toISOString()
+  theme: ''
 })
 
 const initializeForm = () => {
@@ -96,8 +95,7 @@ const initializeForm = () => {
       essayLink: props.essay.essayLink,
       count: props.essay.count,
       units: props.essay.units,
-      theme: props.essay.theme,
-      created: props.essay.created
+      theme: props.essay.theme
     }
   }
 }

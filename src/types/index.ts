@@ -4,7 +4,6 @@ export interface Essay {
   count: number
   units: string
   theme: string
-  created: string
 }
 
 export interface Recommender {
@@ -14,7 +13,6 @@ export interface Recommender {
   relationship: string
   emailAddress: string
   phoneNumber: string
-  created?: string
 }
 
 export interface Recommendation {
@@ -26,6 +24,15 @@ export interface Recommendation {
   dueDate: string
   submissionDate: string | null
 }
+
+export interface User {
+  userId: string
+  firstName: string
+  lastName: string
+  emailAddress: string
+  phoneNumber: string
+  profile: Profile
+} 
 
 export interface Application {
   _id?: string
@@ -138,15 +145,5 @@ export interface Scholarship {
   requirements: string
   url: string
   isActive: boolean
-  createdAt: string
-  updatedAt: string
 }
 
-export interface User {
-  userId: string
-  firstName: string
-  lastName: string
-  emailAddress: string
-  phoneNumber: string
-  profile: Profile
-} 

@@ -10,9 +10,7 @@
     "url": "https://leadershipfoundation.org/future-leaders",
     "targetType": "Merit",
     "theme": "Leadership",
-    "isActive": true,
-    "createdAt": "2024-01-01",
-    "updatedAt": "2024-01-01"
+    "isActive": true
   },
   {
     "scholarshipId": "4",
@@ -25,9 +23,7 @@
     "url": "https://servicefoundation.org/community-award",
     "targetType": "Merit",
     "theme": "Community Service",
-    "isActive": true,
-    "createdAt": "2024-01-01",
-    "updatedAt": "2024-01-01"
+    "isActive": true
   },
   {
     "scholarshipId": "1",
@@ -40,9 +36,7 @@
     "url": "https://techfoundation.org/scholarships/stem-excellence",
     "targetType": "Merit",
     "theme": "STEM",
-    "isActive": true,
-    "createdAt": "2024-01-01",
-    "updatedAt": "2024-01-01"
+    "isActive": true
   },
   {
     "scholarshipId": "2",
@@ -55,8 +49,6 @@
     "url": "https://creativearts.org/achievement-award",
     "targetType": "Merit",
     "theme": "Arts",
-    "isActive": true,
-    "createdAt": "2024-01-01",
-    "updatedAt": "2024-01-01"
+    "isActive": true
   }
 ] 

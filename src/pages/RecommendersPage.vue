@@ -102,6 +102,9 @@ const editingRecommender = ref<Recommender | null>(null)
 
 const user = computed(() => authStore.user)
 
+// Type for form data (excludes optional _id field)
+type RecommenderFormData = Omit<Recommender, '_id'>
+
 const columns = [
   {
     name: 'name',
@@ -163,7 +166,7 @@ const editRecommender = (recommender: Recommender) => {
   showForm.value = true
 }
 
-const handleSubmit = async (form: Omit<Recommender, '_id' | 'created'> & { emailAddress: string; phoneNumber: string }) => {
+const handleSubmit = async (form: RecommenderFormData) => {
   try {
     loading.value = true
     if (editingRecommender.value && editingRecommender.value._id) {

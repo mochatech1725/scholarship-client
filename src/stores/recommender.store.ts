@@ -8,13 +8,11 @@ export const useRecommenderStore = defineStore('recommender', {
   }),
 
   actions: {
-    async createRecommender(recommender: Omit<Recommender, '_id' | 'created'>) {
+    async createRecommender(recommender: Omit<Recommender, '_id'>) {
       // TODO: Implement API call
       await new Promise(resolve => setTimeout(resolve, 100)) // Simulate API delay
       const newRecommender: Recommender = {
         ...recommender,
-        _id: crypto.randomUUID(),
-        created: new Date().toISOString()
       }
       this.recommenders.push(newRecommender)
       return newRecommender
@@ -30,7 +28,7 @@ export const useRecommenderStore = defineStore('recommender', {
       return recommenders.find(r => r._id === recommenderId) || null
     },
 
-    async updateRecommender(recommenderId: string, updates: Omit<Recommender, '_id' | 'created'>) {
+    async updateRecommender(recommenderId: string, updates: Omit<Recommender, '_id'>) {
       // TODO: Implement API call
       await new Promise(resolve => setTimeout(resolve, 100)) // Simulate API delay
       const index = this.recommenders.findIndex(r => r._id === recommenderId)
@@ -38,9 +36,7 @@ export const useRecommenderStore = defineStore('recommender', {
         const existingRecommender = this.recommenders[index]
         if (existingRecommender) {
           const updatedRecommender: Recommender = {
-            ...updates,
-            _id: existingRecommender._id || crypto.randomUUID(),
-            created: existingRecommender.created || new Date().toISOString()
+            ...updates
           }
           this.recommenders[index] = updatedRecommender
         }

@@ -89,10 +89,18 @@ class MockService {
     await new Promise(resolve => setTimeout(resolve, 100))
     const existingRec = recommenderData.recommenders.find(rec => rec._id === id)
     if (!existingRec) throw new Error('Recommender not found')
-    return {
-      ...existingRec,
-      ...recommender
+    
+    // Ensure all required fields are present
+    const updatedRecommender: Recommender = {
+      _id: existingRec._id!,
+      firstName: recommender.firstName ?? existingRec.firstName,
+      lastName: recommender.lastName ?? existingRec.lastName,
+      relationship: recommender.relationship ?? existingRec.relationship,
+      emailAddress: recommender.emailAddress ?? existingRec.emailAddress,
+      phoneNumber: recommender.phoneNumber ?? existingRec.phoneNumber
     }
+    
+    return updatedRecommender
   }
 
   async deleteRecommender(id: string): Promise<void> {

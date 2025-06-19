@@ -117,7 +117,7 @@ const loadRecommendations = () => {
   recommendations.value = props.application?.recommendations || []
 }
 
-const createApplicationUpdateObject = (recommendations: Recommendation[]): Omit<Application, 'created'> => {
+const createApplicationUpdateObject = (recommendations: Recommendation[]): Application => {
   if (!props.application) {
     throw new Error('Application is required')
   }

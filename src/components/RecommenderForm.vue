@@ -87,13 +87,13 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'submit', form: Omit<Recommender, '_id' | 'created'> & { emailAddress: string; phoneNumber: string }): void
+  (e: 'submit', form: Omit<Recommender, '_id'> & { emailAddress: string; phoneNumber: string }): void
   (e: 'cancel'): void
 }>()
 
 const relationshipOptions = ['Teacher', 'Counselor', 'Employer', 'Friend', 'Other']
 
-const form = ref<Omit<Recommender, '_id' | 'created'> & { emailAddress: string; phoneNumber: string }>({
+const form = ref<Omit<Recommender, '_id'> & { emailAddress: string; phoneNumber: string }>({
   firstName: '',
   lastName: '',
   relationship: '',

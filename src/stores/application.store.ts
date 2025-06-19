@@ -16,7 +16,7 @@ export const useApplicationStore = defineStore('application', {
       return await mockService.createApplication(application)
     },
 
-    async updateApplication(id: string, application: Omit<Application, 'created'>) {
+    async updateApplication(id: string, application: Application) {
       return await mockService.updateApplication(id, application)
     },
 
