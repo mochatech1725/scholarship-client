@@ -151,6 +151,25 @@ body {
     background: linear-gradient(135deg, #f0edf8 0%, #e8e4f4 100%) !important;
     transition: background 0.2s ease !important;
   }
+  
+  // Alternating row colors
+  tbody tr:nth-child(odd) {
+    background-color: #e8eaf4 !important;
+  }
+  
+  tbody tr:nth-child(even) {
+    background-color: #d8dce8 !important;
+    color: #333 !important;
+  }
+  
+  tbody tr:nth-child(odd):hover {
+    background-color: #f0f2f8 !important;
+  }
+  
+  tbody tr:nth-child(even):hover {
+    background-color: #e0e4f0 !important;
+    color: #333 !important;
+  }
 }
 
 // Make sure expansion item headers are also blue
