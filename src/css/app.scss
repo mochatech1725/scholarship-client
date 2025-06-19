@@ -168,21 +168,30 @@ body {
   
   // Alternating row colors
   tbody tr:nth-child(odd) {
-    background-color: var(--q-background) !important;
+    background-color: #FFFFFF !important;
   }
   
   tbody tr:nth-child(even) {
-    background-color: var(--q-background-secondary) !important;
+    background-color: #F0EDFF !important; /* More contrast - light purple */
     color: var(--q-text-primary) !important;
   }
   
   tbody tr:nth-child(odd):hover {
-    background-color: #F3F4F6 !important;
+    background-color: #F8F7FF !important; /* Light purple hover */
   }
   
   tbody tr:nth-child(even):hover {
-    background-color: #E5E7EB !important;
+    background-color: #E8E4FF !important; /* Darker purple hover */
     color: var(--q-text-primary) !important;
+  }
+  
+  // Add subtle borders between rows for even more contrast
+  tbody tr {
+    border-bottom: 1px solid rgba(107, 70, 193, 0.08) !important;
+  }
+  
+  tbody tr:hover {
+    border-bottom: 1px solid rgba(107, 70, 193, 0.15) !important;
   }
 }
 
