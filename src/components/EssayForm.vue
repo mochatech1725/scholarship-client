@@ -1,72 +1,70 @@
 <template>
-  <div style="background-color: #f5f3fa; padding: 16px;">
-    <q-card class="q-pa-md" style="background-color: #f5f3fa;">
-      <q-card-section>
-        <ScholarshipBanner :name="scholarshipName" />
-        <q-form @submit="onSubmit" class="q-gutter-md">
-          <div class="row items-center justify-between q-mb-md">
-            <div class="text-h6">{{ props.essay ? 'Edit' : 'Add' }} Essay</div>
-            <div>
-              <q-btn
-                label="Cancel"
-                color="grey-7"
-                outline
-                @click="$emit('cancel')"
-                class="q-mr-sm"
-                size="md"
-              />
-              <q-btn
-                :label="props.essay ? 'Update' : 'Create'"
-                type="submit"
-                color="primary"
-                size="md"
-              />
-            </div>
+  <q-card class="q-pa-md" style="background-color: #f5f3fa;">
+    <q-card-section>
+      <ScholarshipBanner :name="scholarshipName" />
+      <q-form @submit="onSubmit" class="q-gutter-md">
+        <div class="row items-center justify-between q-mb-md">
+          <div class="text-h6">{{ props.essay ? 'Edit' : 'Add' }} Essay</div>
+          <div>
+            <q-btn
+              label="Cancel"
+              color="grey-7"
+              outline
+              @click="$emit('cancel')"
+              class="q-mr-sm"
+              size="md"
+            />
+            <q-btn
+              :label="props.essay ? 'Update' : 'Create'"
+              type="submit"
+              color="primary"
+              size="md"
+            />
           </div>
+        </div>
 
-          <div class="row q-col-gutter-sm">
-            <div class="col-12 col-md-6">
-              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Theme</div>
-              <q-input
-                v-model="form.theme"
-                :rules="[val => !!val || 'Theme is required']"
-                outlined
-                dense
-              />
-            </div>
-            <div class="col-12 col-md-6">
-              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Units</div>
-              <q-input
-                v-model="form.units"
-                :rules="[val => !!val || 'Units is required']"
-                outlined
-                dense
-              />
-            </div>
-            <div class="col-12">
-              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Essay Link</div>
-              <q-input
-                v-model="form.essayLink"
-                :rules="[val => !!val || 'Essay link is required']"
-                outlined
-                dense
-              />
-            </div>
-            <div class="col-12">
-              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Count</div>
-              <q-input
-                v-model.number="form.count"
-                type="number"
-                :rules="[val => !!val || 'Count is required']"
-                outlined
-                dense
-              />
-            </div>
+        <div class="row q-col-gutter-sm">
+          <div class="col-12 col-md-6">
+            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Theme</div>
+            <q-input
+              v-model="form.theme"
+              :rules="[val => !!val || 'Theme is required']"
+              outlined
+              dense
+            />
           </div>
-        </q-form>
-      </q-card-section>
-    </q-card>
-  </div>
+          <div class="col-12 col-md-6">
+            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Units</div>
+            <q-input
+              v-model="form.units"
+              :rules="[val => !!val || 'Units is required']"
+              outlined
+              dense
+            />
+          </div>
+          <div class="col-12">
+            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Essay Link</div>
+            <q-input
+              v-model="form.essayLink"
+              :rules="[val => !!val || 'Essay link is required']"
+              outlined
+              dense
+            />
+          </div>
+          <div class="col-12">
+            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Count</div>
+            <q-input
+              v-model.number="form.count"
+              type="number"
+              :rules="[val => !!val || 'Count is required']"
+              outlined
+              dense
+            />
+          </div>
+        </div>
+      </q-form>
+    </q-card-section>
+  </q-card>
 </template>
 
 <script setup lang="ts">

@@ -1,105 +1,103 @@
 <template>
-  <div style="background-color: #f5f3fa; padding: 16px;">
-    <q-card class="q-pa-md" style="background-color: white;">
-      <q-card-section>
-        <ScholarshipBanner :name="scholarshipName" />
-        <q-form @submit="onSubmit" class="q-gutter-md">
-          <div class="row items-center justify-between q-mb-md">
-            <div class="text-h6">{{ isEdit ? 'Edit' : 'Add' }} Recommendation</div>
-            <div>
-              <q-btn
-                label="Cancel"
-                color="grey-7"
-                outline
-                @click="$emit('cancel')"
-                class="q-mr-sm"
-                size="md"
-              />
-              <q-btn
-                label="Save"
-                type="submit"
-                color="primary"
-                :loading="loading"
-                size="md"
-              />
-            </div>
+  <q-card class="q-pa-md" style="background-color: white;">
+    <q-card-section>
+      <ScholarshipBanner :name="scholarshipName" />
+      <q-form @submit="onSubmit" class="q-gutter-md">
+        <div class="row items-center justify-between q-mb-md">
+          <div class="text-h6">{{ isEdit ? 'Edit' : 'Add' }} Recommendation</div>
+          <div>
+            <q-btn
+              label="Cancel"
+              color="grey-7"
+              outline
+              @click="$emit('cancel')"
+              class="q-mr-sm"
+              size="md"
+            />
+            <q-btn
+              label="Save"
+              type="submit"
+              color="primary"
+              :loading="loading"
+              size="md"
+            />
+          </div>
+        </div>
+
+        <div class="row q-col-gutter-md">
+          <div class="col-12 col-md-6">
+            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">First Name</div>
+            <q-input
+              v-model="recommender.firstName"
+              outlined
+              dense
+              readonly
+            />
           </div>
 
-          <div class="row q-col-gutter-md">
-            <div class="col-12 col-md-6">
-              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">First Name</div>
-              <q-input
-                v-model="recommender.firstName"
-                outlined
-                dense
-                readonly
-              />
-            </div>
-
-            <div class="col-12 col-md-6">
-              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Last Name</div>
-              <q-input
-                v-model="recommender.lastName"
-                outlined
-                dense
-                readonly
-              />
-            </div>
-
-            <div class="col-12 col-md-6">
-              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Email Address</div>
-              <q-input
-                v-model="recommender.emailAddress"
-                outlined
-                dense
-                readonly
-              />
-            </div>
-
-            <div class="col-12 col-md-6">
-              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Due Date</div>
-              <q-input
-                v-model="form.dueDate"
-                type="date"
-                outlined
-                dense
-              />
-            </div>
-
-            <div class="col-12 col-md-6">
-              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Submission Method</div>
-              <q-select
-                v-model="form.submissionMethod"
-                :options="submissionMethodOptions"
-                outlined
-                dense
-              />
-            </div>
-
-            <div class="col-12 col-md-6">
-              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Request Date</div>
-              <q-input
-                v-model="form.requestDate"
-                type="date"
-                outlined
-                dense
-              />
-            </div>
-
-            <div class="col-12 col-md-6">
-              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Submission Date</div>
-              <q-input
-                v-model="form.submissionDate"
-                type="date"
-                outlined
-                dense
-              />
-            </div>
+          <div class="col-12 col-md-6">
+            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Last Name</div>
+            <q-input
+              v-model="recommender.lastName"
+              outlined
+              dense
+              readonly
+            />
           </div>
-        </q-form>
-      </q-card-section>
-    </q-card>
-  </div>
+
+          <div class="col-12 col-md-6">
+            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Email Address</div>
+            <q-input
+              v-model="recommender.emailAddress"
+              outlined
+              dense
+              readonly
+            />
+          </div>
+
+          <div class="col-12 col-md-6">
+            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Due Date</div>
+            <q-input
+              v-model="form.dueDate"
+              type="date"
+              outlined
+              dense
+            />
+          </div>
+
+          <div class="col-12 col-md-6">
+            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Submission Method</div>
+            <q-select
+              v-model="form.submissionMethod"
+              :options="submissionMethodOptions"
+              outlined
+              dense
+            />
+          </div>
+
+          <div class="col-12 col-md-6">
+            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Request Date</div>
+            <q-input
+              v-model="form.requestDate"
+              type="date"
+              outlined
+              dense
+            />
+          </div>
+
+          <div class="col-12 col-md-6">
+            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Submission Date</div>
+            <q-input
+              v-model="form.submissionDate"
+              type="date"
+              outlined
+              dense
+            />
+          </div>
+        </div>
+      </q-form>
+    </q-card-section>
+  </q-card>
 </template>
 
 <script setup lang="ts">
