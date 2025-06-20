@@ -23,6 +23,36 @@ export const useUserStore = defineStore('user', {
       }
     },
 
+    loadUserFromBackend(userData: { id?: string; auth0Id?: string; firstName: string; lastName: string; emailAddress: string; phoneNumber: string; profile?: User['profile'] }) {
+      try {
+        // Transform backend user data to match frontend User type
+        const user: User = {
+          userId: userData.id || userData.auth0Id || '',
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          emailAddress: userData.emailAddress,
+          phoneNumber: userData.phoneNumber,
+          profile: userData.profile || {
+            userId: userData.id || userData.auth0Id || '',
+            userPreferences: {
+              searchPreferences: {
+                educationLevel: 'High School Senior',
+                targetTypes: ['Merit'],
+                areas: ['STEM'],
+                minAmount: 0
+              }
+            }
+          }
+        }
+        
+        this.user = user
+        return user
+      } catch (error) {
+        console.error('Failed to load user from backend:', error)
+        throw error
+      }
+    },
+
     async updateProfile(profile: User['profile']) {
       try {
         const updatedUser = await mockService.updateProfile(profile)
@@ -32,6 +62,10 @@ export const useUserStore = defineStore('user', {
         console.error('Failed to update profile:', error)
         throw error
       }
+    },
+
+    clearUser() {
+      this.user = null
     }
   }
 }) 

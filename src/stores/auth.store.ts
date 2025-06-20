@@ -5,6 +5,9 @@ import { waitForAuth0Initialization } from 'src/boot/auth0'
 import type { User } from 'src/types'
 import { useUserStore } from 'src/stores/user.store'
 
+// Import the API service
+import { apiService } from 'src/services/api.service'
+
 export type AuthStore = ReturnType<typeof useAuthStore>
 
 export const useAuthStore = defineStore('auth', () => {
@@ -26,11 +29,9 @@ export const useAuthStore = defineStore('auth', () => {
       await waitForAuth0Initialization(auth0)
       isInitialized.value = true
       
-      // If user is authenticated, set user data from Auth0
+      // If user is authenticated, load user data from backend
       if (auth0?.isAuthenticated?.value && auth0.user.value) {
-        const auth0User = auth0.user.value
-        await userStore.loadUser(auth0User.sub || '')
-        user.value = userStore.user
+        await loadUserFromBackend()
       }
     } catch (err) {
       console.error('Failed to initialize auth:', err)
@@ -43,16 +44,35 @@ export const useAuthStore = defineStore('auth', () => {
       await waitForAuth0Initialization(auth0)
       isInitialized.value = true
       
-      // After successful authentication, set user data from Auth0
+      // After successful authentication, load user data from backend
       if (auth0?.isAuthenticated?.value && auth0.user.value) {
-        const auth0User = auth0.user.value
-        await userStore.loadUser(auth0User.sub || '')
-        user.value = userStore.user
+        await loadUserFromBackend()
       }
       return true
     } catch (err) {
       console.error('Failed to handle callback:', err)
       return false
+    }
+  }
+
+  const loadUserFromBackend = async () => {
+    try {
+      // Call backend API to get/create user profile
+      const response = await apiService.getProfile()
+      
+      // Update user store with backend data
+      userStore.loadUserFromBackend(response.user)
+      user.value = userStore.user
+      
+      console.log('User loaded from backend:', response.user)
+    } catch (err) {
+      console.error('Failed to load user from backend:', err)
+      // Fallback to Auth0 user data if backend fails
+      const auth0User = auth0.user.value
+      if (auth0User) {
+        await userStore.loadUser(auth0User.sub || '')
+        user.value = userStore.user
+      }
     }
   }
 
@@ -81,6 +101,7 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       isInitialized.value = false
       user.value = null
+      userStore.clearUser()
       await auth0.logout({
         logoutParams: {
           returnTo: window.location.origin
@@ -102,6 +123,13 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  // Method to refresh user data from backend
+  const refreshUser = async () => {
+    if (auth0?.isAuthenticated?.value) {
+      await loadUserFromBackend()
+    }
+  }
+
   return {
     isInitialized,
     isLoggingIn,
@@ -111,6 +139,7 @@ export const useAuthStore = defineStore('auth', () => {
     handleCallback,
     login,
     logout,
-    getToken
+    getToken,
+    refreshUser
   }
 }) 
