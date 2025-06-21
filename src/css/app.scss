@@ -196,32 +196,32 @@ body {
     @extend .table-header;
   }
   
-  // Alternating row colors
+  // Alternating row colors - light sage green theme
   tbody tr:nth-child(odd) {
     background-color: #FFFFFF !important;
   }
   
   tbody tr:nth-child(even) {
-    background-color: #F0EDFF !important; /* More contrast - light purple */
+    background-color: #def1de !important; /* Darker sage green */
     color: var(--q-text-primary) !important;
   }
   
   tbody tr:nth-child(odd):hover {
-    background-color: #F8F7FF !important; /* Light purple hover */
+    background-color: #F5FAF5 !important; /* Lighter sage hover */
   }
   
   tbody tr:nth-child(even):hover {
-    background-color: #E8E4FF !important; /* Darker purple hover */
+    background-color: #E8F2E8 !important; /* Even darker sage hover */
     color: var(--q-text-primary) !important;
   }
   
   // Add subtle borders between rows for even more contrast
   tbody tr {
-    border-bottom: 1px solid rgba(107, 70, 193, 0.08) !important;
+    border-bottom: 1px solid rgba(34, 197, 94, 0.08) !important; /* Sage green border */
   }
   
   tbody tr:hover {
-    border-bottom: 1px solid rgba(107, 70, 193, 0.15) !important;
+    border-bottom: 1px solid rgba(34, 197, 94, 0.15) !important; /* Darker sage green border on hover */
   }
   
   // Make table cell text more prominent
