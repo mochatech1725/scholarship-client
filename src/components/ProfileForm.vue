@@ -74,7 +74,6 @@ const props = defineProps<{ isEdit?: boolean; profile?: Profile | null }>()
 const emit = defineEmits<{ (e: 'submit', profile: Profile): void; (e: 'cancel'): void }>()
 
 const form = ref<Profile>({
-  userId: '',
   userPreferences: {
     searchPreferences: {
       educationLevel: 'College Freshman',

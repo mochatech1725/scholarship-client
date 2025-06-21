@@ -10,9 +10,14 @@ declare module 'vue' {
 }
 
 // Debug environment variables
-console.log('API Base URL:', import.meta.env.API_BASE_URL)
+console.log('API Base URL:', import.meta.env.VITE_API_URL)
 
-const api = axios.create({ baseURL: import.meta.env.API_BASE_URL});
+const api = axios.create({ 
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
 
 export default defineBoot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
@@ -35,6 +40,27 @@ export default defineBoot(({ app }) => {
     }
     return config;
   });
+
+  // Add response interceptor for better error handling
+  api.interceptors.response.use(
+    (response) => {
+      console.log('API response:', {
+        status: response.status,
+        statusText: response.statusText,
+        data: response.data
+      });
+      return response;
+    },
+    (error) => {
+      console.error('API request failed:', {
+        url: error.config?.url,
+        method: error.config?.method,
+        status: error.response?.status,
+        message: error.message
+      });
+      return Promise.reject(new Error(error.message || 'API request failed'));
+    }
+  );
 });
 
 export { api };

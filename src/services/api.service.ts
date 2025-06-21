@@ -1,7 +1,7 @@
 import { useAuthStore } from 'src/stores/auth.store'
 import type { Profile, Scholarship } from 'src/types'
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+import { api } from 'src/boot/axios'
+import type { AxiosRequestConfig } from 'axios'
 
 class ApiService {
   private async getAuthHeaders() {
@@ -9,28 +9,45 @@ class ApiService {
     const token = await authStore.getToken()
     
     return {
-      'Content-Type': 'application/json',
       ...(token && { Authorization: `Bearer ${token}` })
     }
   }
 
-  private async makeRequest(endpoint: string, options: RequestInit = {}) {
-    const headers = await this.getAuthHeaders()
-    
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      ...options,
-      headers: {
-        ...headers,
-        ...options.headers
-      }
-    })
+  private async makeRequest(endpoint: string, options: AxiosRequestConfig = {}) {
+    try {
+      const headers = await this.getAuthHeaders()
+      const url = endpoint
+      
+      console.log('Making API request:', {
+        url,
+        method: options.method || 'GET',
+        headers: headers,
+        hasToken: !!headers.Authorization
+      })
+      
+      const response = await api({
+        url,
+        method: options.method || 'GET',
+        headers: {
+          ...headers,
+          ...options.headers,
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        },
+        data: options.data,
+        ...options
+      })
 
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: 'Network error' }))
-      throw new Error(error.message || `HTTP ${response.status}`)
+      console.log('API response data:', response.data)
+      return response.data
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      console.error('API request failed:', {
+        endpoint,
+        error: errorMessage
+      })
+      throw error
     }
-
-    return response.json()
   }
 
   // Auth endpoints
@@ -53,7 +70,7 @@ class ApiService {
   async updateProfile(profile: Profile) {
     return this.makeRequest('/api/users/profile', {
       method: 'PUT',
-      body: JSON.stringify(profile)
+      data: profile
     })
   }
 
@@ -69,14 +86,14 @@ class ApiService {
   async createScholarship(scholarship: Scholarship) {
     return this.makeRequest('/api/scholarships', {
       method: 'POST',
-      body: JSON.stringify(scholarship)
+      data: scholarship
     })
   }
 
   async updateScholarship(id: string, scholarship: Scholarship) {
     return this.makeRequest(`/api/scholarships/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(scholarship)
+      data: scholarship
     })
   }
 

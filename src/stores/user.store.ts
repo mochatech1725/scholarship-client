@@ -13,7 +13,6 @@ export const useUserStore = defineStore('user', {
         const user = await mockService.getUser()
         if (userId) {
           user.userId = userId
-          user.profile.userId = userId
         }
         this.user = user
         return user
@@ -33,7 +32,6 @@ export const useUserStore = defineStore('user', {
           emailAddress: userData.emailAddress,
           phoneNumber: userData.phoneNumber,
           profile: userData.profile || {
-            userId: userData.id || userData.auth0Id || '',
             userPreferences: {
               searchPreferences: {
                 educationLevel: 'High School Senior',

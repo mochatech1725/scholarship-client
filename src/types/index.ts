@@ -25,6 +25,10 @@ export interface Recommendation {
   submissionDate: string | null
 }
 
+export interface Profile {
+  userPreferences: UserPreferences
+}
+
 export interface User {
   _id?: string
   userId: string
@@ -75,10 +79,7 @@ export interface SearchPreferences {
   minAmount: number
 }
 
-export interface Profile {
-  userId: string
-  userPreferences: UserPreferences
-}
+
 
 export const educationLevelOptions = [
   'High School Senior',

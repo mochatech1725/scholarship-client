@@ -115,13 +115,12 @@ class MockService {
   async getProfile(): Promise<Profile> {
     await new Promise(resolve => setTimeout(resolve, 100))
     return {
-      userId: mockUserData.profile.userId,
       userPreferences: {
         searchPreferences: {
-          educationLevel: castEducationLevel(mockUserData.preferences.educationLevel),
-          targetTypes: castTargetTypes(mockUserData.preferences.targetTypes),
-          areas: castAreas(mockUserData.preferences.areas),
-          minAmount: mockUserData.preferences.minAmount
+          educationLevel: castEducationLevel(mockUserData.profile.preferences.educationLevel),
+          targetTypes: castTargetTypes(mockUserData.profile.preferences.targetTypes),
+          areas: castAreas(mockUserData.profile.preferences.areas),
+          minAmount: mockUserData.profile.preferences.minAmount
         }
       }
     }
@@ -130,11 +129,11 @@ class MockService {
   async updateProfile(profile: Profile): Promise<User> {
     await new Promise(resolve => setTimeout(resolve, 100))
     return {
-      userId: mockUserData.profile.userId,
-      firstName: mockUserData.profile.firstName,
-      lastName: mockUserData.profile.lastName,
-      emailAddress: mockUserData.profile.emailAddress,
-      phoneNumber: mockUserData.profile.phoneNumber,
+      userId: mockUserData.userId,
+      firstName: mockUserData.firstName,
+      lastName: mockUserData.lastName,
+      emailAddress: mockUserData.emailAddress,
+      phoneNumber: mockUserData.phoneNumber,
       profile
     }
   }
@@ -142,19 +141,18 @@ class MockService {
   async getUser(): Promise<User> {
     await new Promise(resolve => setTimeout(resolve, 100))
     return {
-      userId: mockUserData.profile.userId,
-      firstName: mockUserData.profile.firstName,
-      lastName: mockUserData.profile.lastName,
-      emailAddress: mockUserData.profile.emailAddress,
-      phoneNumber: mockUserData.profile.phoneNumber,
+      userId: mockUserData.userId,
+      firstName: mockUserData.firstName,
+      lastName: mockUserData.lastName,
+      emailAddress: mockUserData.emailAddress,
+      phoneNumber: mockUserData.phoneNumber,
       profile: {
-        userId: mockUserData.profile.userId,
         userPreferences: {
           searchPreferences: {
-            educationLevel: castEducationLevel(mockUserData.preferences.educationLevel),
-            targetTypes: castTargetTypes(mockUserData.preferences.targetTypes),
-            areas: castAreas(mockUserData.preferences.areas),
-            minAmount: mockUserData.preferences.minAmount
+            educationLevel: castEducationLevel(mockUserData.profile.preferences.educationLevel),
+            targetTypes: castTargetTypes(mockUserData.profile.preferences.targetTypes),
+            areas: castAreas(mockUserData.profile.preferences.areas),
+            minAmount: mockUserData.profile.preferences.minAmount
           }
         }
       }
