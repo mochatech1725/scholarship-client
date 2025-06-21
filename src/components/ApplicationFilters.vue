@@ -38,9 +38,20 @@
             </div>
 
             <div class="col-12 col-md-3">
-              <div class="form-label">Due Date</div>
+              <div class="form-label">Due Date From</div>
               <q-input
-                v-model="localFilters.dueDate"
+                v-model="localFilters.dueDateFrom"
+                type="date"
+                flat
+                dense
+                class="q-mb-md"
+              />
+            </div>
+
+            <div class="col-12 col-md-3">
+              <div class="form-label">Due Date To</div>
+              <q-input
+                v-model="localFilters.dueDateTo"
                 type="date"
                 flat
                 dense
@@ -63,7 +74,8 @@ const props = defineProps<{
   filters: {
     status: string | null
     company: string
-    dueDate: string | null
+    dueDateFrom: string | null
+    dueDateTo: string | null
   }
   statusOptions: string[]
 }>()

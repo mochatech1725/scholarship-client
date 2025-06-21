@@ -102,7 +102,8 @@ const { applications } = storeToRefs(applicationStore)
 const filters = ref({
   status: null as ApplicationStatus | null,
   company: '',
-  dueDate: null
+  dueDateFrom: null as string | null,
+  dueDateTo: null as string | null
 })
 
 const applicationStatusOptions = [...statusOptions]
@@ -126,7 +127,17 @@ const filteredApplications = computed(() => {
   return applications.value.filter(app => {
     if (filters.value.status && app.status !== filters.value.status) return false
     if (filters.value.company && !app.company.toLowerCase().includes(filters.value.company.toLowerCase())) return false
-    if (filters.value.dueDate && app.dueDate !== filters.value.dueDate) return false
+    
+    // Date range filtering
+    if (filters.value.dueDateFrom || filters.value.dueDateTo) {
+      const appDueDate = new Date(app.dueDate)
+      const fromDate = filters.value.dueDateFrom ? new Date(filters.value.dueDateFrom) : null
+      const toDate = filters.value.dueDateTo ? new Date(filters.value.dueDateTo) : null
+      
+      if (fromDate && appDueDate < fromDate) return false
+      if (toDate && appDueDate > toDate) return false
+    }
+    
     return true
   })
 })
