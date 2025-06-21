@@ -1,5 +1,5 @@
 <template>
-  <q-card class="q-pa-md" style="background-color: #f5f3fa;">
+  <q-card class="q-pa-md" style="background-color: white;">
     <q-card-section>
       <ScholarshipBanner :name="scholarshipName" />
       <q-form @submit="onSubmit" class="q-gutter-md">
@@ -32,73 +32,80 @@
         >
           <q-card class="q-pa-md" style="background-color: white;">
             <q-card-section>
-              <div class="row q-col-gutter-sm">
+              <div class="row q-col-gutter-md">
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Scholarship Name</div>
+                  <div class="form-label">Scholarship Name</div>
                   <q-input
                     v-model="form.scholarshipName"
                     :rules="rules.scholarshipName"
-                    outlined
+                    flat
                     dense
                     hide-bottom-space
+                    class="q-mb-md"
                   />
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Target Type</div>
+                  <div class="form-label">Target Type</div>
                   <q-select
                     v-model="form.targetType"
                     :options="targetTypeOptions"
-                    outlined
+                    flat
                     dense
+                    class="q-mb-md"
                   />
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Company</div>
+                  <div class="form-label">Company</div>
                   <q-input
                     v-model="form.company"
                     :rules="rules.company"
-                    outlined
+                    flat
                     dense
                     hide-bottom-space
+                    class="q-mb-md"
                   />
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Company Website</div>
+                  <div class="form-label">Company Website</div>
                   <q-input
                     v-model="form.companyWebsite"
-                    outlined
+                    flat
                     dense
+                    class="q-mb-md"
                   />
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Platform</div>
+                  <div class="form-label">Platform</div>
                   <q-input
                     v-model="form.platform"
-                    outlined
+                    flat
                     dense
+                    class="q-mb-md"
                   />
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Application Link</div>
+                  <div class="form-label">Application Link</div>
                   <q-input
                     v-model="form.applicationLink"
-                    outlined
+                    flat
                     dense
+                    class="q-mb-md"
                   />
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Amount</div>
+                  <div class="form-label">Amount</div>
                   <q-input
                     v-model.number="form.amount"
                     type="number"
-                    outlined
+                    flat
                     dense
+                    class="q-mb-md"
                   />
                 </div>
 
@@ -106,91 +113,101 @@
                   <q-checkbox
                     v-model="form.renewable"
                     label="Renewable"
+                    class="q-mb-md"
                   />
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Renewable Terms</div>
+                  <div class="form-label">Renewable Terms</div>
                   <q-input
                     v-model="form.renewableTerms"
-                    outlined
+                    flat
                     dense
+                    class="q-mb-md"
                   />
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Theme</div>
+                  <div class="form-label">Theme</div>
                   <q-input
                     v-model="form.theme"
-                    outlined
+                    flat
                     dense
+                    class="q-mb-md"
                   />
                 </div>
                 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Requirements</div>
+                  <div class="form-label">Requirements</div>
                   <q-input
                     v-model="form.requirements"
-                    outlined
+                    flat
                     dense
+                    class="q-mb-md"
                   />
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Document Info Link</div>
+                  <div class="form-label">Document Info Link</div>
                   <q-input
                     v-model="form.documentInfoLink"
-                    outlined
+                    flat
                     dense
+                    class="q-mb-md"
                   />
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Current Action</div>
+                  <div class="form-label">Current Action</div>
                   <q-input
                     v-model="form.currentAction"
-                    outlined
+                    flat
                     dense
+                    class="q-mb-md"
                   />
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Status</div>
+                  <div class="form-label">Status</div>
                   <q-select
                     v-model="form.status"
                     :options="statusOptions"
-                    outlined
+                    flat
                     dense
+                    class="q-mb-md"
                   />
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Submission Date</div>
+                  <div class="form-label">Submission Date</div>
                   <q-input
                     v-model="form.submissionDate"
                     type="date"
-                    outlined
+                    flat
                     dense
+                    class="q-mb-md"
                   />
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Open Date</div>
+                  <div class="form-label">Open Date</div>
                   <q-input
                     v-model="form.openDate"
                     type="date"
-                    outlined
+                    flat
                     dense
+                    class="q-mb-md"
                   />
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Due Date</div>
+                  <div class="form-label">Due Date</div>
                   <q-input
                     v-model="form.dueDate"
                     type="date"
-                    outlined
+                    flat
                     dense
+                    class="q-mb-md"
                   />
                 </div>
               </div>

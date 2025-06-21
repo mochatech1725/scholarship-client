@@ -1,5 +1,5 @@
 <template>
-  <q-card class="q-pa-md" style="background-color: #f5f3fa;">
+  <q-card class="q-pa-md" style="background-color: white;">
     <q-card-section>
       <ScholarshipBanner :name="scholarshipName" />
       <q-form @submit="onSubmit" class="q-gutter-md">
@@ -23,50 +23,50 @@
           </div>
         </div>
 
-        <div class="row q-col-gutter-sm">
+        <div class="row q-col-gutter-md">
           <div class="col-12 col-md-6">
-            <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Theme</div>
+            <div class="form-label">Theme</div>
             <q-input
               v-model="form.theme"
               :rules="[val => !!val || 'Theme is required']"
-              outlined
+              flat
               dense
               hide-bottom-space
-
+              class="q-mb-md"
             />
           </div>
           <div class="col-12 col-md-6">
-            <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Units</div>
+            <div class="form-label">Units</div>
             <q-input
               v-model="form.units"
               :rules="[val => !!val || 'Units is required']"
-              outlined
+              flat
               dense
               hide-bottom-space
-
+              class="q-mb-md"
             />
           </div>
           <div class="col-12">
-            <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Essay Link</div>
+            <div class="form-label">Essay Link</div>
             <q-input
               v-model="form.essayLink"
               :rules="[val => !!val || 'Essay link is required']"
-              outlined
+              flat
               dense
               hide-bottom-space
-
+              class="q-mb-md"
             />
           </div>
           <div class="col-12">
-            <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Count</div>
+            <div class="form-label">Count</div>
             <q-input
               v-model.number="form.count"
               type="number"
               :rules="[val => !!val || 'Count is required']"
-              outlined
+              flat
               dense
               hide-bottom-space
-
+              class="q-mb-md"
             />
           </div>
         </div>

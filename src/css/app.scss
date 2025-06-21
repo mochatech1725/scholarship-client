@@ -32,6 +32,53 @@
   // Border colors
   --q-border: #E5E7EB; 
   --q-border-focus: #7C3AED; 
+  
+  // Table header styling
+  --table-header-color: var(--q-label-color);
+  --table-header-weight: 400;
+  --table-header-size: 0.875rem;
+  --table-header-family: inherit;
+  --table-header-letter-spacing: normal;
+  --table-header-padding: 16px 12px;
+  --table-header-border: 2px solid var(--q-primary);
+  --table-header-bg: linear-gradient(135deg, var(--q-background-secondary) 0%, var(--q-background-tertiary) 100%);
+  --table-header-hover-bg: linear-gradient(135deg, var(--q-background-tertiary) 0%, #E0E7FF 100%);
+}
+
+// Reusable form label class
+.form-label {
+  color: var(--q-label-color);
+  font-weight: 400;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+// Reusable table header class
+.table-header {
+  color: var(--table-header-color) !important;
+  font-weight: var(--table-header-weight) !important;
+  font-size: var(--table-header-size) !important;
+  letter-spacing: var(--table-header-letter-spacing) !important;
+  font-family: var(--table-header-family) !important;
+  background: var(--table-header-bg) !important;
+  border-bottom: var(--table-header-border) !important;
+  padding: var(--table-header-padding) !important;
+  position: relative !important;
+}
+
+.table-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(124, 58, 237, 0.2) 50%, transparent 100%);
+}
+
+.table-header:hover {
+  background: var(--table-header-hover-bg) !important;
+  transition: background 0.2s ease !important;
 }
 
 // Improve text rendering
@@ -146,31 +193,7 @@ body {
 // Table styles
 .q-table {
   thead tr th {
-    color: var(--q-label-color) !important;
-    font-weight: 700 !important;
-    font-size: 0.875rem !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
-    font-family: 'Abril Fatface', 'Georgia', 'Times New Roman', serif !important;
-    background: linear-gradient(135deg, var(--q-background-secondary) 0%, var(--q-background-tertiary) 100%) !important;
-    border-bottom: 2px solid var(--q-primary) !important;
-    padding: 16px 12px !important;
-    position: relative !important;
-  }
-  
-  thead tr th::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(124, 58, 237, 0.2) 50%, transparent 100%);
-  }
-  
-  thead tr th:hover {
-    background: linear-gradient(135deg, var(--q-background-tertiary) 0%, #E0E7FF 100%) !important;
-    transition: background 0.2s ease !important;
+    @extend .table-header;
   }
   
   // Alternating row colors

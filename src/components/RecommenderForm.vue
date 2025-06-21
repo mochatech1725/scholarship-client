@@ -23,64 +23,64 @@
 
     <div class="row q-col-gutter-md">
       <div class="col-12 col-md-6">
-        <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">First Name</div>
+        <div class="form-label">First Name</div>
         <q-input
           v-model="form.firstName"
           :rules="rules.firstName"
-          outlined
+          flat
           dense
           hide-bottom-space
-
+          class="q-mb-md"
         />
       </div>
 
       <div class="col-12 col-md-6">
-        <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Last Name</div>
+        <div class="form-label">Last Name</div>
         <q-input
           v-model="form.lastName"
           :rules="rules.lastName"
-          outlined
+          flat
           dense
           hide-bottom-space
-
+          class="q-mb-md"
         />
       </div>
 
       <div class="col-12 col-md-6">
-        <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Email Address</div>
+        <div class="form-label">Email Address</div>
         <q-input
           v-model="form.emailAddress"
           :rules="rules.emailAddress"
-          outlined
+          flat
           dense
           type="email"
           hide-bottom-space
-
+          class="q-mb-md"
         />
       </div>
 
       <div class="col-12 col-md-6">
-        <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Phone Number</div>
+        <div class="form-label">Phone Number</div>
         <q-input
           v-model="form.phoneNumber"
-          outlined
+          flat
           dense
           mask="(###) ###-####"
           hide-bottom-space
-
+          class="q-mb-md"
         />
       </div>
 
       <div class="col-12 col-md-6">
-        <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Relationship</div>
+        <div class="form-label">Relationship</div>
         <q-select
           v-model="form.relationship"
           :options="relationshipOptions"
           :rules="rules.relationship"
-          outlined
+          flat
           dense
           hide-bottom-space
-
+          class="q-mb-md"
         />
       </div>
     </div>

@@ -1,15 +1,17 @@
 <template>
   <div class="text-h6 q-mb-md">Search Filter</div>
 
-  <q-card class="q-pa-sm">
+  <q-card class="q-pa-sm" style="background-color: white;">
     <q-card-section class="q-pa-sm">
       <div class="row items-center q-gutter-x-md">
         <div class="col-6">
-          <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Search</div>
+          <div class="form-label">Search</div>
           <q-input
             v-model="searchQuery"
             clearable
             dense
+            flat
+            class="q-mb-md"
           >
             <template v-slot:append>
               <q-icon name="search" />
@@ -18,22 +20,26 @@
         </div>
 
         <div class="col-2">
-          <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Theme</div>
+          <div class="form-label">Theme</div>
           <q-select
             v-model="filters.theme"
             :options="themeOptions"
             clearable
             dense
+            flat
+            class="q-mb-md"
           />
         </div>
 
         <div class="col-2">
-          <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Target Type</div>
+          <div class="form-label">Target Type</div>
           <q-select
             v-model="filters.targetType"
             :options="targetTypeOptions"
             clearable
             dense
+            flat
+            class="q-mb-md"
           />
         </div>
       </div>

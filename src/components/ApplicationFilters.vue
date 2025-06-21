@@ -1,6 +1,6 @@
 <template>
   <div class="application-filters" :class="{ expanded: isExpanded }">
-    <q-card class="q-pa-md">
+    <q-card class="q-pa-md" style="background-color: white;">
       <div class="row items-center justify-between q-mb-md">
         <div class="text-h6">Filters</div>
         <q-btn
@@ -15,33 +15,36 @@
         <div v-show="isExpanded" class="filter-content">
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-3">
-              <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Status</div>
+              <div class="form-label">Status</div>
               <q-select
                 v-model="localFilters.status"
                 :options="statusOptions"
                 clearable
-                outlined
+                flat
                 dense
+                class="q-mb-md"
               />
             </div>
 
             <div class="col-12 col-md-3">
-              <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Company Name</div>
+              <div class="form-label">Company Name</div>
               <q-input
                 v-model="localFilters.company"
                 clearable
-                outlined
+                flat
                 dense
+                class="q-mb-md"
               />
             </div>
 
             <div class="col-12 col-md-3">
-              <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Due Date</div>
+              <div class="form-label">Due Date</div>
               <q-input
                 v-model="localFilters.dueDate"
                 type="date"
-                outlined
+                flat
                 dense
+                class="q-mb-md"
               />
             </div>
           </div>

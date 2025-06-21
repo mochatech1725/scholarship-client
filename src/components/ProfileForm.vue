@@ -1,44 +1,48 @@
 <template>
-  <q-card class="q-pa-md profile-form-card">
+  <q-card class="q-pa-md profile-form-card" style="background-color: white;">
     <q-card-section>
       <q-form @submit="onSubmit" class="q-gutter-md">
-        <div class="row q-col-gutter-sm">
+        <div class="row q-col-gutter-md">
           <div class="col-12 col-md-6">
-            <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Education Level</div>
+            <div class="form-label">Education Level</div>
             <q-select
               v-model="form.userPreferences.searchPreferences.educationLevel"
               :options="educationLevelOptions"
-              outlined
+              flat
               dense
+              class="q-mb-md"
             />
           </div>
           <div class="col-12 col-md-6">
-            <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Target Types</div>
+            <div class="form-label">Target Types</div>
             <q-select
               v-model="form.userPreferences.searchPreferences.targetTypes"
               :options="targetTypeOptions"
               multiple
-              outlined
+              flat
               dense
+              class="q-mb-md"
             />
           </div>
           <div class="col-12 col-md-6">
-            <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Areas of Interest</div>
+            <div class="form-label">Areas of Interest</div>
             <q-select
               v-model="form.userPreferences.searchPreferences.areas"
               :options="areaOptions"
               multiple
-              outlined
+              flat
               dense
+              class="q-mb-md"
             />
           </div>
           <div class="col-12 col-md-6">
-            <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Minimum Amount</div>
+            <div class="form-label">Minimum Amount</div>
             <q-input
               v-model.number="form.userPreferences.searchPreferences.minAmount"
               type="number"
-              outlined
+              flat
               dense
+              class="q-mb-md"
             />
           </div>
         </div>
