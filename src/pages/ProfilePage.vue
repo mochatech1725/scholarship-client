@@ -19,9 +19,9 @@
       @cancel="handleCancel"
     />
     <div v-else>
-      <div class="row q-col-gutter-md">
-        <div class="col-12 col-md-6">
-          <q-card flat bordered>
+      <div class="row q-col-gutter-md profile-cards-container">
+        <div class="col-12">
+          <q-card>
             <q-card-section>
               <div class="text-h6">Personal Information</div>
               <div class="q-mt-sm">
@@ -44,8 +44,8 @@
           </q-card>
         </div>
 
-        <div class="col-12 col-md-6">
-          <q-card flat bordered>
+        <div class="col-12">
+          <q-card>
             <q-card-section>
               <div class="text-h6">Search Preferences</div>
               <div class="q-mt-sm">
@@ -124,4 +124,11 @@ onMounted(async () => {
     })
   }
 })
-</script> 
+</script>
+
+<style scoped>
+.profile-cards-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+</style> 
