@@ -76,7 +76,6 @@
         <q-select
           v-model="form.relationship"
           :options="relationshipOptions"
-          :rules="rules.relationship"
           flat
           dense
           hide-bottom-space
@@ -119,9 +118,6 @@ const rules = {
   ],
   lastName: [
     (val: string) => !!val || 'Last name is required'
-  ],
-  relationship: [
-    (val: string) => !!val || 'Relationship is required'
   ],
   emailAddress: [
     (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || 'Please enter a valid email address'
