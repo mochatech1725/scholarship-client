@@ -1,3 +1,8 @@
+export interface Auth0User {
+  sub: string
+  emailAddress: string
+}
+
 export interface Essay {
   _id?: string
   essayLink: string
@@ -39,6 +44,8 @@ export interface User {
   profile: Profile
 } 
 
+
+
 export interface Application {
   _id?: string
   applicationId: string
@@ -64,6 +71,11 @@ export interface Application {
   dueDate: string
 }
 
+export interface RegisterData {
+  _id?: string
+  emailAddress: string
+}
+
 export type EducationLevel = typeof educationLevelOptions[number]
 export type TargetType = typeof targetTypeOptions[number]
 export type Area = typeof areaOptions[number]
@@ -78,8 +90,6 @@ export interface SearchPreferences {
   areas: Area[]
   minAmount: number
 }
-
-
 
 export const educationLevelOptions = [
   'High School Senior',

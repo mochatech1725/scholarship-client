@@ -151,26 +151,19 @@ const route = useRoute()
 const isReady = ref(false)
 const mobileMenu = ref(false)
 
-onMounted(async () => {
-  try {
-    await authStore.initialize()
-    isReady.value = true
+onMounted(() => {
+  // Auth initialization is now handled by the router guard
+  // No need to call initialize() here
+  isReady.value = true
 
-    // Set active tab based on current route
-    if (route.path.includes('/applications')) {
-      mobileMenu.value = false
-    } else if (route.path.includes('/scholarship')) {
-      mobileMenu.value = false
-    } else if (route.path.includes('/recommenders')) {
-      mobileMenu.value = false
-    } 
-  } catch (err) {
-    console.error('Failed to initialize auth store:', err)
-    $q.notify({
-      color: 'negative',
-      message: 'Failed to initialize application'
-    })
-  }
+  // Set active tab based on current route
+  if (route.path.includes('/applications')) {
+    mobileMenu.value = false
+  } else if (route.path.includes('/scholarship')) {
+    mobileMenu.value = false
+  } else if (route.path.includes('/recommenders')) {
+    mobileMenu.value = false
+  } 
 })
 
 const onLogout = async () => {

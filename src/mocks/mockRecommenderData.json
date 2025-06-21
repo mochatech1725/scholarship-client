@@ -1,7 +1,7 @@
 {
   "recommenders": [
     {
-      "_id": "rec-1",
+      "_id": "recommender-1",
       "firstName": "John",
       "lastName": "Smith",
       "emailAddress": "john.smith@school.edu",
@@ -9,7 +9,7 @@
       "relationship": "Academic Advisor"
     },
     {
-      "_id": "rec-2",
+      "_id": "recommender-2",
       "firstName": "Sarah",
       "lastName": "Johnson",
       "emailAddress": "sarah.johnson@company.com",
@@ -17,7 +17,7 @@
       "relationship": "Work Supervisor"
     },
     {
-      "_id": "rec-3",
+      "_id": "recommender-3",
       "firstName": "Michael",
       "lastName": "Brown",
       "emailAddress": "michael.brown@school.edu",

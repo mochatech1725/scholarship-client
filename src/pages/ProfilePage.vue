@@ -16,12 +16,10 @@ import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import ProfileForm from 'src/components/ProfileForm.vue'
 import { useUserStore } from 'src/stores/user.store'
-import { useAuthStore } from 'src/stores/auth.store'
 import type { Profile } from 'src/types'
 
 const $q = useQuasar()
 const userStore = useUserStore()
-const authStore = useAuthStore()
 const isEdit = ref(false)
 
 const handleSubmit = async (profile: Profile) => {
@@ -47,9 +45,6 @@ const handleCancel = () => {
 
 onMounted(async () => {
   try {
-    if (!authStore.isInitialized) {
-      await authStore.initialize()
-    }
     await userStore.loadUser()
   } catch (error) {
     console.error('Failed to load user:', error)

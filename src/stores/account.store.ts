@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { User } from 'src/types'
+import type { User, Auth0User } from 'src/types'
 import { useUserStore } from 'src/stores/user.store'
 import { apiService } from 'src/services/api.service'
 
@@ -20,6 +20,29 @@ export const useAccountStore = defineStore('account', () => {
       return userData
     } catch (err) {
       console.error('Failed to authenticate user:', err)
+      throw err
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  const register = async (auth0User: Auth0User) => {
+    try {
+      isLoading.value = true
+      // Call backend API to register new user
+      const registerData = {
+        userId: auth0User.sub,
+        emailAddress: auth0User.emailAddress,
+      }
+      
+      const response = await apiService.register(registerData)
+      
+      const registeredUser = userStore.setUser(response.user)
+      
+      console.log('User registered and loaded from server:', registeredUser)
+      return registeredUser
+    } catch (err) {
+      console.error('Failed to register user:', err)
       throw err
     } finally {
       isLoading.value = false
@@ -57,10 +80,26 @@ export const useAccountStore = defineStore('account', () => {
     }
   }
 
+  const logout = async () => {
+    try {
+      isLoading.value = true
+      // Call backend API to logout
+      await apiService.logout()
+      console.log('User logged out from server')
+    } catch (err) {
+      console.error('Failed to logout from server:', err)
+      // Don't throw here - we still want to clear local state even if server logout fails
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   return {
     isLoading,
     authenticate,
+    register,
     getUserProfile,
-    updateProfile
+    updateProfile,
+    logout
   }
 }) 

@@ -1,5 +1,5 @@
 import { useAuthStore } from 'src/stores/auth.store'
-import type { Profile, Scholarship } from 'src/types'
+import type { Profile, Scholarship, RegisterData } from 'src/types'
 import { api } from 'src/boot/axios'
 import type { AxiosRequestConfig } from 'axios'
 
@@ -55,11 +55,24 @@ class ApiService {
     return this.makeRequest('/api/auth/login')
   }
 
+  async register(userData: RegisterData) {
+    return this.makeRequest('/api/auth/register', {
+      method: 'POST',
+      data: userData
+    })
+  }
+
+  async logout() {
+    return this.makeRequest('/api/auth/logout', {
+      method: 'POST'
+    })
+  }
+
   // User endpoints
   // todo: this isn't right
   async getUser(userId?: string) {
     if (userId) {
-      return this.makeRequest(`/api/users/${userId}`)
+      return this.makeRequest(`/api/users/getById/${userId}`)
     }
     return this.makeRequest('/api/auth/login')
   }
@@ -74,29 +87,29 @@ class ApiService {
 
   // Scholarship endpoints
   async getScholarships() {
-    return this.makeRequest('/api/scholarships')
+    return this.makeRequest('/api/scholarships/getAll')
   }
 
-  async getScholarship(id: string) {
-    return this.makeRequest(`/api/scholarships/${id}`)
+  async getById(id: string) {
+    return this.makeRequest(`/api/scholarships/getById${id}`)
   }
 
   async createScholarship(scholarship: Scholarship) {
-    return this.makeRequest('/api/scholarships', {
+    return this.makeRequest('/api/scholarships/create', {
       method: 'POST',
       data: scholarship
     })
   }
 
   async updateScholarship(id: string, scholarship: Scholarship) {
-    return this.makeRequest(`/api/scholarships/${id}`, {
+    return this.makeRequest(`/api/scholarships/update/${id}`, {
       method: 'PUT',
       data: scholarship
     })
   }
 
   async deleteScholarship(id: string) {
-    return this.makeRequest(`/api/scholarships/${id}`, {
+    return this.makeRequest(`/api/scholarships/deleteScholarship/${id}`, {
       method: 'DELETE'
     })
   }

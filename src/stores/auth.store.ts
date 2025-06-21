@@ -87,25 +87,31 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const initialize = async () => {
-    if (isInitialized.value) return
+    if (isInitialized.value) {
+      return
+    }
 
     try {
+      console.log('Auth store: Initializing...')
+      
+      if (!auth0) {
+        isInitialized.value = true
+        return
+      }
+      
       await waitForAuth0Initialization(auth0)
       
-      // Load existing session data
       loadSession()
       
-      // If user is authenticated, load user data from backend
+      // If user is authenticated, load user data from server
       if (auth0?.isAuthenticated?.value && auth0.user.value) {
         try {
           const userData = await accountStore.authenticate()
           user.value = userData
           await updateTokenMetadata()
-          // Only set initialized to true if backend loading succeeds
           isInitialized.value = true
         } catch (err) {
           console.error('Failed to load user profile:', err)
-          // If backend authentication fails, reset the auth state
           isInitialized.value = false
           user.value = null
           userStore.clearUser()
@@ -113,7 +119,6 @@ export const useAuthStore = defineStore('auth', () => {
           throw err
         }
       } else {
-        // If not authenticated, we can still initialize
         isInitialized.value = true
       }
     } catch (err) {
@@ -124,6 +129,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const handleCallback = async () => {
     try {
+      console.log('Auth store: Starting callback processing...')
       await waitForAuth0Initialization(auth0)
       
       // After successful authentication, load user data from backend
@@ -132,7 +138,6 @@ export const useAuthStore = defineStore('auth', () => {
           const userData = await accountStore.authenticate()
           user.value = userData
           await updateTokenMetadata()
-          // Only set initialized to true if backend loading succeeds
           isInitialized.value = true
         } catch (err) {
           console.error('Failed to load user profile:', err)
@@ -150,9 +155,6 @@ export const useAuthStore = defineStore('auth', () => {
       return true
     } catch (err) {
       console.error('Failed to handle callback:', err)
-      // Even if there's an error, we should still mark as initialized
-      // so the app can continue and show appropriate error messages
-      isInitialized.value = true
       return false
     }
   }
@@ -180,10 +182,15 @@ export const useAuthStore = defineStore('auth', () => {
     if (!auth0) return
 
     try {
-      isInitialized.value = false
+      // First, logout from the backend
+      await accountStore.logout()
+      
+      // Then clear local state (but keep isInitialized true to prevent re-initialization)
       user.value = null
       userStore.clearUser()
       clearSession()
+      
+      // Finally, logout from Auth0
       await auth0.logout({
         logoutParams: {
           returnTo: window.location.origin
@@ -191,6 +198,34 @@ export const useAuthStore = defineStore('auth', () => {
       })
     } catch (err) {
       console.error('Failed to logout:', err)
+      // Even if there's an error, we should still clear local state
+      user.value = null
+      userStore.clearUser()
+      clearSession()
+    }
+  }
+
+  const register = async () => {
+    if (!auth0) return false
+
+    try {
+      isLoggingIn.value = true
+      
+      // Use Auth0's signup flow by setting screen_hint to 'signup'
+      await auth0.loginWithRedirect({
+        appState: { 
+          target: '/dashboard/applications'
+        },
+        authorizationParams: {
+          screen_hint: 'signup'
+        }
+      })
+      return true
+    } catch (err) {
+      console.error('Failed to register:', err)
+      return false
+    } finally {
+      isLoggingIn.value = false
     }
   }
 
@@ -225,6 +260,16 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  // Method to reset the store state (useful for testing or force refresh)
+  const reset = () => {
+    isInitialized.value = false
+    isLoggingIn.value = false
+    user.value = null
+    userStore.clearUser()
+    clearSession()
+    console.log('Auth store: Reset complete')
+  }
+
   return {
     isInitialized,
     isLoggingIn,
@@ -236,8 +281,10 @@ export const useAuthStore = defineStore('auth', () => {
     handleCallback,
     login,
     logout,
+    register,
     getToken,
     refreshUser,
-    updateTokenMetadata
+    updateTokenMetadata,
+    reset
   }
 }) 

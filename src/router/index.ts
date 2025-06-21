@@ -23,11 +23,13 @@ const router = createRouter({
 const publicRoutes = ['login', 'register', 'callback'];
 
 router.beforeEach(async (to, from, next) => {
+  console.log('Router guard: Navigating from', from.path, 'to', to.path)
   const auth0 = useAuth0();
   const authStore = useAuthStore();
 
   // Wait for Auth0 to finish loading
   if (auth0.isLoading.value) {
+    console.log('Router guard: Waiting for Auth0 to finish loading...')
     await new Promise<void>(resolve => {
       const unwatch = watch(auth0.isLoading, (loading) => {
         if (!loading) {
@@ -41,6 +43,7 @@ router.beforeEach(async (to, from, next) => {
   // Initialize auth store if not already done
   if (!authStore.isInitialized) {
     try {
+      console.log('Router: Initializing auth store...')
       await authStore.initialize();
     } catch (err) {
       console.error('Failed to initialize auth store:', err);
