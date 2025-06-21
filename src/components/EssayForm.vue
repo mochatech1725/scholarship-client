@@ -4,7 +4,7 @@
       <ScholarshipBanner :name="scholarshipName" />
       <q-form @submit="onSubmit" class="q-gutter-md">
         <div class="row items-center justify-between q-mb-md">
-          <div class="text-h6">{{ props.essay ? 'Edit' : 'Add' }} Essay</div>
+          <div class="text-h6">{{ props.essay ? 'Editing' : 'Adding' }} Essay</div>
           <div>
             <q-btn
               label="Cancel"

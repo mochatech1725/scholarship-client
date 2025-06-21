@@ -4,7 +4,7 @@
       <ScholarshipBanner :name="scholarshipName" />
       <q-form @submit="onSubmit" class="q-gutter-md">
         <div class="row items-center justify-between q-mb-md">
-          <div class="text-h6">{{ isEdit ? 'Edit' : 'Add' }} Recommendation</div>
+          <div class="text-h6">{{ isEdit ? 'Editing' : 'Adding' }} Recommendation</div>
           <div>
             <q-btn
               label="Cancel"

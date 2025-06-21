@@ -1,7 +1,7 @@
 <template>
   <q-form @submit="onSubmit" class="q-gutter-md">
     <div class="row items-center justify-between q-mb-md">
-      <div class="text-h6">{{ isEdit ? 'Edit' : 'Add' }} Recommender</div>
+      <div class="text-h6">{{ isEdit ? 'Editing' : 'Adding' }} Recommender</div>
       <div>
         <q-btn
           label="Cancel"
