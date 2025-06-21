@@ -1,10 +1,9 @@
 <template>
   <q-page class="flex flex-center">
     <div class="column items-center">
-      <h2 class="text-h4 q-mb-md">Login</h2>
       <q-btn
         color="primary"
-        label="Login with Auth0"
+        label="Login"
         @click="handleLogin"
         :loading="isLoading"
       />

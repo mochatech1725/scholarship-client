@@ -2,14 +2,10 @@
   <q-page class="flex flex-center">
     <q-card class="register-card">
       <q-card-section>
-        <div class="text-h6">Create Account</div>
-      </q-card-section>
-
-      <q-card-section>
         <div class="text-center q-mb-md">
           <q-btn
             color="primary"
-            label="Sign Up with Auth0"
+            label="Create Acount"
             @click="onSignUp"
             class="full-width"
           />
