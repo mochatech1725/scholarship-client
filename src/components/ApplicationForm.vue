@@ -8,15 +8,15 @@
           <div>
             <q-btn
               label="Cancel"
-              color="grey-7"
-              outline
+              color="grey-6"
+              flat
               @click="$emit('cancel')"
               class="q-mr-sm"
               size="md"
             />
             <q-btn
               type="submit"
-              color="primary"
+              :style="{ backgroundColor: 'var(--q-button-primary)', color: 'white' }"
               :label="isEdit ? 'Update Application' : 'Create Application'"
               size="md"
             />
@@ -34,7 +34,7 @@
             <q-card-section>
               <div class="row q-col-gutter-sm">
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Scholarship Name</div>
+                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Scholarship Name</div>
                   <q-input
                     v-model="form.scholarshipName"
                     :rules="rules.scholarshipName"
@@ -45,7 +45,7 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Target Type</div>
+                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Target Type</div>
                   <q-select
                     v-model="form.targetType"
                     :options="targetTypeOptions"
@@ -55,7 +55,7 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Company</div>
+                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Company</div>
                   <q-input
                     v-model="form.company"
                     :rules="rules.company"
@@ -66,7 +66,7 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Company Website</div>
+                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Company Website</div>
                   <q-input
                     v-model="form.companyWebsite"
                     outlined
@@ -75,7 +75,7 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Platform</div>
+                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Platform</div>
                   <q-input
                     v-model="form.platform"
                     outlined
@@ -84,7 +84,7 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Application Link</div>
+                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Application Link</div>
                   <q-input
                     v-model="form.applicationLink"
                     outlined
@@ -93,7 +93,7 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Amount</div>
+                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Amount</div>
                   <q-input
                     v-model.number="form.amount"
                     type="number"
@@ -110,7 +110,7 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Renewable Terms</div>
+                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Renewable Terms</div>
                   <q-input
                     v-model="form.renewableTerms"
                     outlined
@@ -119,7 +119,7 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Theme</div>
+                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Theme</div>
                   <q-input
                     v-model="form.theme"
                     outlined
@@ -128,7 +128,7 @@
                 </div>
                 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Requirements</div>
+                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Requirements</div>
                   <q-input
                     v-model="form.requirements"
                     outlined
@@ -137,7 +137,7 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Document Info Link</div>
+                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Document Info Link</div>
                   <q-input
                     v-model="form.documentInfoLink"
                     outlined
@@ -146,7 +146,7 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Current Action</div>
+                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Current Action</div>
                   <q-input
                     v-model="form.currentAction"
                     outlined
@@ -155,7 +155,7 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Status</div>
+                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Status</div>
                   <q-select
                     v-model="form.status"
                     :options="statusOptions"
@@ -165,7 +165,7 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Submission Date</div>
+                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Submission Date</div>
                   <q-input
                     v-model="form.submissionDate"
                     type="date"
@@ -175,7 +175,7 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Open Date</div>
+                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Open Date</div>
                   <q-input
                     v-model="form.openDate"
                     type="date"
@@ -185,7 +185,7 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Due Date</div>
+                  <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Due Date</div>
                   <q-input
                     v-model="form.dueDate"
                     type="date"

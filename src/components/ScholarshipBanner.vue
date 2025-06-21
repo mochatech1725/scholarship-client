@@ -20,7 +20,7 @@ const props = defineProps<{
 
 <style scoped>
 .scholarship-banner {
-  background: #6B46C1; /* Lightened version of the original purple */
+  background: #a487e9; /* Lightened version of the original purple */
   border-radius: 12px;
   margin-bottom: 24px;
   box-shadow: 0 4px 20px rgba(107, 70, 193, 0.15);

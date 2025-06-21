@@ -5,8 +5,8 @@
       <div>
         <q-btn
           label="Cancel"
-          color="grey-7"
-          outline
+          color="grey-6"
+          flat
           @click="$emit('cancel')"
           class="q-mr-sm"
           size="md"
@@ -14,7 +14,7 @@
         <q-btn
           label="Save"
           type="submit"
-          color="primary"
+          :style="{ backgroundColor: 'var(--q-button-primary)', color: 'white' }"
           :loading="loading"
           size="md"
         />
@@ -23,7 +23,7 @@
 
     <div class="row q-col-gutter-md">
       <div class="col-12 col-md-6">
-        <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">First Name</div>
+        <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">First Name</div>
         <q-input
           v-model="form.firstName"
           :rules="rules.firstName"
@@ -35,7 +35,7 @@
       </div>
 
       <div class="col-12 col-md-6">
-        <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Last Name</div>
+        <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Last Name</div>
         <q-input
           v-model="form.lastName"
           :rules="rules.lastName"
@@ -47,7 +47,7 @@
       </div>
 
       <div class="col-12 col-md-6">
-        <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Email Address</div>
+        <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Email Address</div>
         <q-input
           v-model="form.emailAddress"
           :rules="rules.emailAddress"
@@ -60,7 +60,7 @@
       </div>
 
       <div class="col-12 col-md-6">
-        <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Phone Number</div>
+        <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Phone Number</div>
         <q-input
           v-model="form.phoneNumber"
           outlined
@@ -72,7 +72,7 @@
       </div>
 
       <div class="col-12 col-md-6">
-        <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Relationship</div>
+        <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Relationship</div>
         <q-select
           v-model="form.relationship"
           :options="relationshipOptions"

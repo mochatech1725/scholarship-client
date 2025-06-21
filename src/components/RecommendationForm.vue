@@ -8,8 +8,8 @@
           <div>
             <q-btn
               label="Cancel"
-              color="grey-7"
-              outline
+              color="grey-6"
+              flat
               @click="$emit('cancel')"
               class="q-mr-sm"
               size="md"
@@ -17,7 +17,7 @@
             <q-btn
               label="Save"
               type="submit"
-              color="primary"
+              :style="{ backgroundColor: 'var(--q-button-primary)', color: 'white' }"
               :loading="loading"
               size="md"
             />
@@ -26,7 +26,7 @@
 
         <div class="row q-col-gutter-md">
           <div class="col-12 col-md-6">
-            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">First Name</div>
+            <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">First Name</div>
             <q-input
               v-model="recommender.firstName"
               outlined
@@ -36,7 +36,7 @@
           </div>
 
           <div class="col-12 col-md-6">
-            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Last Name</div>
+            <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Last Name</div>
             <q-input
               v-model="recommender.lastName"
               outlined
@@ -46,7 +46,7 @@
           </div>
 
           <div class="col-12 col-md-6">
-            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Email Address</div>
+            <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Email Address</div>
             <q-input
               v-model="recommender.emailAddress"
               outlined
@@ -56,7 +56,7 @@
           </div>
 
           <div class="col-12 col-md-6">
-            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Due Date</div>
+            <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Due Date</div>
             <q-input
               v-model="form.dueDate"
               type="date"
@@ -66,7 +66,7 @@
           </div>
 
           <div class="col-12 col-md-6">
-            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Submission Method</div>
+            <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Submission Method</div>
             <q-select
               v-model="form.submissionMethod"
               :options="submissionMethodOptions"
@@ -76,7 +76,7 @@
           </div>
 
           <div class="col-12 col-md-6">
-            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Request Date</div>
+            <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Request Date</div>
             <q-input
               v-model="form.requestDate"
               type="date"
@@ -86,7 +86,7 @@
           </div>
 
           <div class="col-12 col-md-6">
-            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Submission Date</div>
+            <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Submission Date</div>
             <q-input
               v-model="form.submissionDate"
               type="date"

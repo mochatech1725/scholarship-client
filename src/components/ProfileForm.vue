@@ -2,7 +2,7 @@
   <q-form @submit="onSubmit" class="q-gutter-md">
     <div class="row q-col-gutter-sm">
       <div class="col-12 col-md-6">
-        <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Education Level</div>
+        <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Education Level</div>
         <q-select
           v-model="form.userPreferences.searchPreferences.educationLevel"
           :options="educationLevelOptions"
@@ -11,7 +11,7 @@
         />
       </div>
       <div class="col-12 col-md-6">
-        <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Target Types</div>
+        <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Target Types</div>
         <q-select
           v-model="form.userPreferences.searchPreferences.targetTypes"
           :options="targetTypeOptions"
@@ -21,7 +21,7 @@
         />
       </div>
       <div class="col-12 col-md-6">
-        <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Areas of Interest</div>
+        <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Areas of Interest</div>
         <q-select
           v-model="form.userPreferences.searchPreferences.areas"
           :options="areaOptions"
@@ -31,7 +31,7 @@
         />
       </div>
       <div class="col-12 col-md-6">
-        <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Minimum Amount</div>
+        <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Minimum Amount</div>
         <q-input
           v-model.number="form.userPreferences.searchPreferences.minAmount"
           type="number"
@@ -53,7 +53,7 @@
       <q-btn
         label="Save"
         type="submit"
-        color="primary"
+        :style="{ backgroundColor: 'var(--q-button-primary)', color: 'white' }"
         dense
       />
     </div>

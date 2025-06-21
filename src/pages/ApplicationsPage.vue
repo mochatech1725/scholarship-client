@@ -3,7 +3,7 @@
     <div class="row q-mb-md items-center justify-between">
       <div class="text-h5">Applications</div>
       <q-btn
-        color="primary"
+        :style="{ backgroundColor: 'var(--q-button-primary)', color: 'white' }"
         icon="add"
         label="New Application"
         @click="handleEdit(null)"

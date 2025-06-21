@@ -15,7 +15,7 @@
         <div v-show="isExpanded" class="filter-content">
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-3">
-              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Status</div>
+              <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Status</div>
               <q-select
                 v-model="localFilters.status"
                 :options="statusOptions"
@@ -26,7 +26,7 @@
             </div>
 
             <div class="col-12 col-md-3">
-              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Company Name</div>
+              <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Company Name</div>
               <q-input
                 v-model="localFilters.company"
                 clearable
@@ -36,7 +36,7 @@
             </div>
 
             <div class="col-12 col-md-3">
-              <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Due Date</div>
+              <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Due Date</div>
               <q-input
                 v-model="localFilters.dueDate"
                 type="date"

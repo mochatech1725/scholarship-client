@@ -5,7 +5,7 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   
   // Toggl-inspired color palette
-  --q-primary: #492b7c; // ScholarshipBanner background color
+  --q-primary: #492b7c; 
   --q-secondary: #10B981;
   --q-accent: #F59E0B; 
   --q-positive: #10B981; 
@@ -13,10 +13,16 @@
   --q-warning: #F59E0B; 
   --q-info: #3B82F6;
   
+  // Label colors
+  --q-label-color: #1a5cec; 
+  
+  // Button colors
+  --q-button-primary: #1a5cec;
+  
   // Background colors
-  --q-background: #FFFFFF; // Clean white
-  --q-background-secondary: #F8F9FA; // Light gray background
-  --q-background-tertiary: #F5F5F5; // Very light gray
+  --q-background: #FFFFFF; 
+  --q-background-secondary: #F8F9FA; 
+  --q-background-tertiary: #F5F5F5; 
   
   // Text colors
   --q-text-primary: #1F2937; // Dark gray for primary text
@@ -24,8 +30,8 @@
   --q-text-muted: #9CA3AF; // Light gray for muted text
   
   // Border colors
-  --q-border: #E5E7EB; // Light gray borders
-  --q-border-focus: #7C3AED; // Purple-blue for focus states
+  --q-border: #E5E7EB; 
+  --q-border-focus: #7C3AED; 
 }
 
 // Improve text rendering
@@ -140,7 +146,7 @@ body {
 // Table styles
 .q-table {
   thead tr th {
-    color: var(--q-primary) !important;
+    color: var(--q-label-color) !important;
     font-weight: 700 !important;
     font-size: 0.875rem !important;
     text-transform: uppercase !important;
@@ -231,12 +237,43 @@ body {
 }
 
 // Style custom form labels with elegant font
-.text-caption[style*="color: var(--q-primary)"] {
+.text-caption[style*="color: var(--q-label-color)"] {
   font-family: 'Abril Fatface', 'Georgia', 'Times New Roman', serif !important;
   font-weight: 600 !important;
   font-size: 0.875rem !important;
   letter-spacing: 0.5px !important;
   text-transform: uppercase !important;
+}
+
+// Style primary buttons with teal color
+.q-btn--standard.q-btn--unelevated,
+.q-btn--standard.q-btn--raised {
+  background-color: var(--q-button-primary) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+.q-btn--standard.q-btn--unelevated:hover,
+.q-btn--standard.q-btn--raised:hover {
+  background-color: #059669 !important; // Darker teal on hover
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+}
+
+// Style outline buttons with teal border
+.q-btn--outline {
+  border: 2px solid var(--q-button-primary) !important;
+  color: var(--q-button-primary) !important;
+  background-color: transparent !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+.q-btn--outline:hover {
+  background-color: var(--q-button-primary) !important;
+  color: white !important;
+  transform: translateY(-1px) !important;
 }
 
 // Make form components more compact

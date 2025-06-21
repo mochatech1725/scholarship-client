@@ -8,8 +8,8 @@
           <div>
             <q-btn
               label="Cancel"
-              color="grey-7"
-              outline
+              color="grey-6"
+              flat
               @click="$emit('cancel')"
               class="q-mr-sm"
               size="md"
@@ -17,7 +17,7 @@
             <q-btn
               :label="props.essay ? 'Update' : 'Create'"
               type="submit"
-              color="primary"
+              :style="{ backgroundColor: 'var(--q-button-primary)', color: 'white' }"
               size="md"
             />
           </div>
@@ -25,7 +25,7 @@
 
         <div class="row q-col-gutter-sm">
           <div class="col-12 col-md-6">
-            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Theme</div>
+            <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Theme</div>
             <q-input
               v-model="form.theme"
               :rules="[val => !!val || 'Theme is required']"
@@ -36,7 +36,7 @@
             />
           </div>
           <div class="col-12 col-md-6">
-            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Units</div>
+            <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Units</div>
             <q-input
               v-model="form.units"
               :rules="[val => !!val || 'Units is required']"
@@ -47,7 +47,7 @@
             />
           </div>
           <div class="col-12">
-            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Essay Link</div>
+            <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Essay Link</div>
             <q-input
               v-model="form.essayLink"
               :rules="[val => !!val || 'Essay link is required']"
@@ -58,7 +58,7 @@
             />
           </div>
           <div class="col-12">
-            <div class="text-caption q-mb-xs" style="color: var(--q-primary); font-weight: 600;">Count</div>
+            <div class="text-caption q-mb-xs" style="color: var(--q-label-color); font-weight: 600;">Count</div>
             <q-input
               v-model.number="form.count"
               type="number"

@@ -3,7 +3,7 @@
     <div class="row items-center justify-between q-mb-lg">
       <div class="text-h5">Recommenders</div>
       <q-btn
-        color="primary"
+        :style="{ backgroundColor: 'var(--q-button-primary)', color: 'white' }"
         icon="add"
         label="Add Recommender"
         @click="showForm = true"
