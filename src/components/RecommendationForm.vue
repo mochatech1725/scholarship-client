@@ -25,36 +25,18 @@
         </div>
 
         <div class="row q-col-gutter-md">
-          <div class="col-12 col-md-6">
-            <div class="form-label">First Name</div>
-            <q-input
-              v-model="recommender.firstName"
+          <div class="col-12">
+            <div class="form-label">Recommender</div>
+            <q-select
+              v-model="selectedRecommenderId"
+              :options="recommenderOptions"
+              option-label="label"
+              option-value="value"
               flat
               dense
-              readonly
               class="q-mb-md"
-            />
-          </div>
-
-          <div class="col-12 col-md-6">
-            <div class="form-label">Last Name</div>
-            <q-input
-              v-model="recommender.lastName"
-              flat
-              dense
-              readonly
-              class="q-mb-md"
-            />
-          </div>
-
-          <div class="col-12 col-md-6">
-            <div class="form-label">Email Address</div>
-            <q-input
-              v-model="recommender.emailAddress"
-              flat
-              dense
-              readonly
-              class="q-mb-md"
+              :rules="[val => !!val || 'Recommender is required']"
+              @update:model-value="onRecommenderChange"
             />
           </div>
 
@@ -109,7 +91,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
-import type { Recommendation, Application } from 'src/types'
+import { useRecommenderStore } from 'src/stores/recommender.store'
+import type { Recommendation, Application, Recommender } from 'src/types'
 import ScholarshipBanner from 'components/ScholarshipBanner.vue'
 
 const props = defineProps<{
@@ -123,6 +106,10 @@ const emit = defineEmits<{
   (e: 'submit', form: Recommendation): void
   (e: 'cancel'): void
 }>()
+
+const recommenderStore = useRecommenderStore()
+const recommenders = ref<Recommender[]>([])
+const selectedRecommenderId = ref<string | null>(null)
 
 const form = ref<Recommendation>({
   recommender: {
@@ -139,11 +126,11 @@ const form = ref<Recommendation>({
   submissionDate: null
 })
 
-const recommender = computed(() => {
-  if (props.recommendation?.recommender) {
-    return props.recommendation.recommender
-  }
-  return form.value.recommender
+const recommenderOptions = computed(() => {
+  return recommenders.value.map(recommender => ({
+    label: `${recommender.firstName} ${recommender.lastName} (${recommender.emailAddress})`,
+    value: `${recommender.firstName} ${recommender.lastName} (${recommender.emailAddress})`
+  }))
 })
 
 const scholarshipName = computed(() => {
@@ -151,6 +138,29 @@ const scholarshipName = computed(() => {
 })
 
 const submissionMethodOptions = ['DirectEmail', 'StudentUpload', 'DirectMail'] as const
+
+const loadRecommenders = async () => {
+  try {
+    recommenders.value = await recommenderStore.getRecommenders()
+  } catch (error) {
+    console.error('Failed to load recommenders:', error)
+  }
+}
+
+const onRecommenderChange = (selectedValue: string) => {
+  const selectedRecommender = recommenders.value.find(r => 
+    `${r.firstName} ${r.lastName} (${r.emailAddress})` === selectedValue
+  )
+  if (selectedRecommender) {
+    form.value.recommender = {
+      firstName: selectedRecommender.firstName,
+      lastName: selectedRecommender.lastName,
+      emailAddress: selectedRecommender.emailAddress,
+      phoneNumber: selectedRecommender.phoneNumber,
+      relationship: selectedRecommender.relationship
+    }
+  }
+}
 
 const onSubmit = () => {
   emit('submit', form.value)
@@ -166,10 +176,21 @@ const initializeForm = () => {
       requestDate: props.recommendation.requestDate,
       submissionDate: props.recommendation.submissionDate
     }
+    
+    // Set the selected recommender value for the dropdown
+    const matchingRecommender = recommenders.value.find(r => 
+      r.firstName === props.recommendation?.recommender.firstName &&
+      r.lastName === props.recommendation?.recommender.lastName &&
+      r.emailAddress === props.recommendation?.recommender.emailAddress
+    )
+    if (matchingRecommender) {
+      selectedRecommenderId.value = `${matchingRecommender.firstName} ${matchingRecommender.lastName} (${matchingRecommender.emailAddress})`
+    }
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
+  await loadRecommenders()
   initializeForm()
 })
 
