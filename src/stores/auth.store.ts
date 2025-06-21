@@ -42,7 +42,6 @@ export const useAuthStore = defineStore('auth', () => {
       if (sessionData) {
         const parsed = JSON.parse(sessionData)
         tokenMetadata.value = parsed.tokenMetadata
-        // Note: We don't restore user from session, we fetch fresh data
       }
     } catch (error) {
       console.error('Failed to load session:', error)
@@ -50,7 +49,6 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  // Save session data to localStorage
   const saveSession = () => {
     try {
       const sessionData = {
@@ -63,7 +61,6 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  // Clear session data
   const clearSession = () => {
     localStorage.removeItem('auth_session')
     tokenMetadata.value = null
@@ -76,7 +73,6 @@ export const useAuthStore = defineStore('auth', () => {
         // Get the token to ensure it's available (this triggers Auth0's token management)
         await auth0.getAccessTokenSilently()
         
-        // Calculate expiration time (Auth0 tokens typically expire in 1 hour)
         const expiresAt = Date.now() + (60 * 60 * 1000) // 1 hour from now
         
         tokenMetadata.value = {
