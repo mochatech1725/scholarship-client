@@ -8,18 +8,36 @@ export const useAccountStore = defineStore('account', () => {
   const userStore = useUserStore()
   const isLoading = ref(false)
 
-  const getUserProfile = async () => {
+  const authenticate = async () => {
     try {
       isLoading.value = true
-      // Call backend API to get/create user profile
-      const response = await apiService.getProfile()
+      // Call backend API to authenticate and get/create user profile
+      const response = await apiService.login()
       
       const userData = userStore.setUser(response.user)
       
-      console.log('User loaded from server:', userData)
+      console.log('User authenticated and loaded from server:', userData)
       return userData
     } catch (err) {
-      console.error('Failed to load user from server:', err)
+      console.error('Failed to authenticate user:', err)
+      throw err
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  const getUserProfile = async () => {
+    try {
+      isLoading.value = true
+      // Call backend API to get user profile
+      const response = await apiService.getUser()
+      
+      const userData = userStore.setUser(response.user)
+      
+      console.log('User profile loaded from server:', userData)
+      return userData
+    } catch (err) {
+      console.error('Failed to load user profile:', err)
       throw err
     } finally {
       isLoading.value = false
@@ -41,6 +59,7 @@ export const useAccountStore = defineStore('account', () => {
 
   return {
     isLoading,
+    authenticate,
     getUserProfile,
     updateProfile
   }

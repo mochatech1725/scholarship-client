@@ -98,7 +98,7 @@ export const useAuthStore = defineStore('auth', () => {
       // If user is authenticated, load user data from backend
       if (auth0?.isAuthenticated?.value && auth0.user.value) {
         try {
-          const userData = await accountStore.getUserProfile()
+          const userData = await accountStore.authenticate()
           user.value = userData
           await updateTokenMetadata()
           // Only set initialized to true if backend loading succeeds
@@ -129,7 +129,7 @@ export const useAuthStore = defineStore('auth', () => {
       // After successful authentication, load user data from backend
       if (auth0?.isAuthenticated?.value && auth0.user.value) {
         try {
-          const userData = await accountStore.getUserProfile()
+          const userData = await accountStore.authenticate()
           user.value = userData
           await updateTokenMetadata()
           // Only set initialized to true if backend loading succeeds
@@ -215,7 +215,7 @@ export const useAuthStore = defineStore('auth', () => {
   const refreshUser = async () => {
     if (auth0?.isAuthenticated?.value) {
       try {
-        const userData = await accountStore.getUserProfile()
+        const userData = await accountStore.authenticate()
         user.value = userData
         await updateTokenMetadata()
       } catch (err) {

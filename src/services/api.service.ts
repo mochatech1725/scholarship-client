@@ -51,18 +51,20 @@ class ApiService {
   }
 
   // Auth endpoints
-  async getProfile() {
-    return this.makeRequest('/api/auth/profile')
+  async login() {
+    return this.makeRequest('/api/auth/login')
   }
 
   // User endpoints
+  // todo: this isn't right
   async getUser(userId?: string) {
     if (userId) {
       return this.makeRequest(`/api/users/${userId}`)
     }
-    return this.makeRequest('/api/auth/profile')
+    return this.makeRequest('/api/auth/login')
   }
 
+  // todo: this isn't right
   async updateProfile(profile: Profile) {
     return this.makeRequest('/api/users/profile', {
       method: 'PUT',
