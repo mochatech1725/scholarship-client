@@ -22,28 +22,20 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    loadUserFromBackend(userData: { id?: string; auth0Id?: string; firstName: string; lastName: string; emailAddress: string; phoneNumber: string; profile?: User['profile'] }) {
+    setUser(backendUser: User) {
       try {
         // Transform backend user data to match frontend User type
         const user: User = {
-          userId: userData.id || userData.auth0Id || '',
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          emailAddress: userData.emailAddress,
-          phoneNumber: userData.phoneNumber,
-          profile: userData.profile || {
-            userPreferences: {
-              searchPreferences: {
-                educationLevel: 'High School Senior',
-                targetTypes: ['Merit'],
-                areas: ['STEM'],
-                minAmount: 0
-              }
-            }
-          }
+          userId: backendUser.userId || '',
+          firstName: backendUser.firstName,
+          lastName: backendUser.lastName,
+          emailAddress: backendUser.emailAddress,
+          phoneNumber: backendUser.phoneNumber,
+          profile: backendUser.profile
         }
         
         this.user = user
+        localStorage.setItem('user', JSON.stringify(user))
         return user
       } catch (error) {
         console.error('Failed to load user from backend:', error)
@@ -64,6 +56,7 @@ export const useUserStore = defineStore('user', {
 
     clearUser() {
       this.user = null
+      localStorage.removeItem('user')
     }
   }
 }) 

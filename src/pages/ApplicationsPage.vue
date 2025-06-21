@@ -91,12 +91,14 @@ import { useApplicationStore } from 'src/stores/application.store'
 import { useUserStore } from 'src/stores/user.store'
 import { storeToRefs } from 'pinia'
 import { formatDate } from 'src/utils/helper'
+import { useAuthStore } from 'src/stores/auth.store'
 
 const $q = useQuasar()
 const loading = ref(false)
 const { getStatusColor } = useGetStatusColor()
 const applicationStore = useApplicationStore()
 const userStore = useUserStore()
+const authStore = useAuthStore()
 
 const { applications } = storeToRefs(applicationStore)
 
@@ -169,11 +171,33 @@ const handleEdit = (application: Application | null) => {
 }
 
 const loadApplications = async () => {
+  console.log('Loading applications...')
+  console.log('User store user:', userStore.user)
+  console.log('Auth store user:', authStore.user)
+  
+  // Try to get user from auth store first
+  if (!userStore.user && authStore.user) {
+    console.log('Using user from auth store')
+    userStore.user = authStore.user
+  }
+  
+  // If still no user, try to load from backend
   if (!userStore.user) {
-    await userStore.loadUser()
+    console.log('No user found, trying to load from backend...')
+    try {
+      await userStore.loadUser()
+    } catch (error) {
+      console.error('Failed to load user:', error)
+      $q.notify({
+        color: 'negative',
+        message: 'Failed to load user data'
+      })
+      return
+    }
   }
   
   if (!userStore.user) {
+    console.error('No user available after loading attempts')
     $q.notify({
       color: 'negative',
       message: 'User not found'
@@ -181,9 +205,11 @@ const loadApplications = async () => {
     return
   }
   
+  console.log('Loading applications for user:', userStore.user.userId)
   loading.value = true
   try {
     await applicationStore.getApplicationsByUserId(userStore.user.userId)
+    console.log('Applications loaded:', applications.value.length)
   } catch (error) {
     console.error('Failed to load applications:', error)
     $q.notify({

@@ -6,6 +6,7 @@ import {
 } from 'vue-router';
 import routes from './routes';
 import { useAuth0 } from '@auth0/auth0-vue';
+import { useAuthStore } from 'stores/auth.store';
 import { watch } from 'vue';
 
 const createHistory = process.env.SERVER
@@ -23,6 +24,7 @@ const publicRoutes = ['login', 'register', 'callback'];
 
 router.beforeEach(async (to, from, next) => {
   const auth0 = useAuth0();
+  const authStore = useAuthStore();
 
   // Wait for Auth0 to finish loading
   if (auth0.isLoading.value) {
@@ -36,24 +38,29 @@ router.beforeEach(async (to, from, next) => {
     });
   }
 
+  // Initialize auth store if not already done
+  if (!authStore.isInitialized) {
+    try {
+      await authStore.initialize();
+    } catch (err) {
+      console.error('Failed to initialize auth store:', err);
+      // If initialization fails, redirect to login
+      return next({ name: 'login' });
+    }
+  }
+
   // Wait for authentication state to be determined
-  if (!auth0.isAuthenticated.value && !publicRoutes.includes(to.name as string)) {
-    await new Promise<void>(resolve => {
-      const unwatch = watch(auth0.isAuthenticated, (isAuthenticated) => {
-        if (isAuthenticated) {
-          unwatch();
-          resolve();
-        }
-      });
-    });
+  if (!authStore.isAuthenticated && !publicRoutes.includes(to.name as string)) {
+    // If not authenticated and trying to access protected route, redirect to login
+    return next({ name: 'login', query: { redirect: to.fullPath } });
   }
 
   if (to.name === 'home') {
-    return next(auth0.isAuthenticated.value ? { name: 'applicationsList' } : { name: 'login' });
+    return next(authStore.isAuthenticated ? { name: 'applicationsList' } : { name: 'login' });
   }
 
   // Allow access to public routes
-  if (auth0.isAuthenticated.value || publicRoutes.includes(to.name as string) || !to.matched.some(record => record.meta.requiresAuth)) {
+  if (authStore.isAuthenticated || publicRoutes.includes(to.name as string) || !to.matched.some(record => record.meta.requiresAuth)) {
     return next();
   }
 

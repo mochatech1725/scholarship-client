@@ -19,12 +19,22 @@ const router = useRouter()
 
 const handleCallback = async () => {
   try {
+    console.log('Starting callback handling...')
+    console.log('Auth0 isAuthenticated:', auth0.isAuthenticated.value)
+    console.log('Auth0 user:', auth0.user.value)
+    
     const success = await authStore.handleCallback()
+    console.log('Auth store handleCallback result:', success)
+    
     if (success) {
+      console.log('Handling Auth0 redirect callback...')
       const { appState } = await auth0.handleRedirectCallback()
+      console.log('App state:', appState)
       const target = appState?.target || { name: 'applicationsList' }
+      console.log('Redirecting to:', target)
       await router.push(target)
     } else {
+      console.log('Callback failed, redirecting to login')
       await router.push({ name: 'login' })
     }
   } catch (err) {

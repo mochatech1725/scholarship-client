@@ -8,6 +8,12 @@ import { useUserStore } from 'src/stores/user.store'
 // Import the API service
 import { apiService } from 'src/services/api.service'
 
+// Token metadata interface
+interface TokenMetadata {
+  expiresAt: number
+  tokenType: string
+}
+
 export type AuthStore = ReturnType<typeof useAuthStore>
 
 export const useAuthStore = defineStore('auth', () => {
@@ -16,22 +22,94 @@ export const useAuthStore = defineStore('auth', () => {
   const isInitialized = ref(false)
   const isLoggingIn = ref(false)
   const user = ref<User | null>(null)
+  const tokenMetadata = ref<TokenMetadata | null>(null)
 
   const isUserAuthenticated = computed(() => {
     if (!isInitialized.value) return false
     return auth0?.isAuthenticated?.value ?? false
   })
 
+  // Check if token is expired
+  const isTokenExpired = computed(() => {
+    if (!tokenMetadata.value) return true
+    return Date.now() >= tokenMetadata.value.expiresAt
+  })
+
+  // Load session data from localStorage
+  const loadSession = () => {
+    try {
+      const sessionData = localStorage.getItem('auth_session')
+      if (sessionData) {
+        const parsed = JSON.parse(sessionData)
+        tokenMetadata.value = parsed.tokenMetadata
+        // Note: We don't restore user from session, we fetch fresh data
+      }
+    } catch (error) {
+      console.error('Failed to load session:', error)
+      clearSession()
+    }
+  }
+
+  // Save session data to localStorage
+  const saveSession = () => {
+    try {
+      const sessionData = {
+        tokenMetadata: tokenMetadata.value,
+        timestamp: Date.now()
+      }
+      localStorage.setItem('auth_session', JSON.stringify(sessionData))
+    } catch (error) {
+      console.error('Failed to save session:', error)
+    }
+  }
+
+  // Clear session data
+  const clearSession = () => {
+    localStorage.removeItem('auth_session')
+    tokenMetadata.value = null
+  }
+
+  // Update token metadata from Auth0
+  const updateTokenMetadata = async () => {
+    try {
+      if (auth0?.isAuthenticated?.value) {
+        // Get the token to ensure it's available (this triggers Auth0's token management)
+        await auth0.getAccessTokenSilently()
+        
+        // Calculate expiration time (Auth0 tokens typically expire in 1 hour)
+        const expiresAt = Date.now() + (60 * 60 * 1000) // 1 hour from now
+        
+        tokenMetadata.value = {
+          expiresAt,
+          tokenType: 'Bearer'
+        }
+        
+        saveSession()
+        console.log('Token metadata updated, expires at:', new Date(expiresAt))
+      }
+    } catch (error) {
+      console.error('Failed to update token metadata:', error)
+    }
+  }
+
   const initialize = async () => {
     if (isInitialized.value) return
 
     try {
       await waitForAuth0Initialization(auth0)
-      isInitialized.value = true
+      
+      // Load existing session data
+      loadSession()
       
       // If user is authenticated, load user data from backend
       if (auth0?.isAuthenticated?.value && auth0.user.value) {
-        await loadUserFromBackend()
+        await getUserProfile()
+        await updateTokenMetadata()
+        // Only set initialized to true if backend loading succeeds
+        isInitialized.value = true
+      } else {
+        // If not authenticated, we can still initialize
+        isInitialized.value = true
       }
     } catch (err) {
       console.error('Failed to initialize auth:', err)
@@ -42,37 +120,44 @@ export const useAuthStore = defineStore('auth', () => {
   const handleCallback = async () => {
     try {
       await waitForAuth0Initialization(auth0)
-      isInitialized.value = true
       
       // After successful authentication, load user data from backend
       if (auth0?.isAuthenticated?.value && auth0.user.value) {
-        await loadUserFromBackend()
+        await getUserProfile()
+        await updateTokenMetadata()
+        // Only set initialized to true if backend loading succeeds
+        isInitialized.value = true
+      } else {
+        // If not authenticated, we can still initialize
+        isInitialized.value = true
       }
       return true
     } catch (err) {
       console.error('Failed to handle callback:', err)
+      // Even if there's an error, we should still mark as initialized
+      // so the app can continue and show appropriate error messages
+      isInitialized.value = true
       return false
     }
   }
 
-  const loadUserFromBackend = async () => {
+  const getUserProfile = async () => {
     try {
       // Call backend API to get/create user profile
       const response = await apiService.getProfile()
       
-      // Update user store with backend data
-      userStore.loadUserFromBackend(response.user)
-      user.value = userStore.user
+      const userData = userStore.setUser(response.user)
+      user.value = userData
       
-      console.log('User loaded from backend:', response.user)
+      console.log('User loaded from server:', userData)
     } catch (err) {
-      console.error('Failed to load user from backend:', err)
-      // Fallback to Auth0 user data if backend fails
-      const auth0User = auth0.user.value
-      if (auth0User) {
-        await userStore.loadUser(auth0User.sub || '')
-        user.value = userStore.user
-      }
+      console.error('Failed to load user from server:', err)
+      // If backend authentication fails, reset the auth state
+      isInitialized.value = false
+      user.value = null
+      userStore.clearUser()
+      clearSession()
+      throw err
     }
   }
 
@@ -102,6 +187,7 @@ export const useAuthStore = defineStore('auth', () => {
       isInitialized.value = false
       user.value = null
       userStore.clearUser()
+      clearSession()
       await auth0.logout({
         logoutParams: {
           returnTo: window.location.origin
@@ -116,6 +202,12 @@ export const useAuthStore = defineStore('auth', () => {
     if (!auth0) return null
 
     try {
+      // Check if token is expired and refresh if needed
+      if (isTokenExpired.value) {
+        console.log('Token expired, refreshing...')
+        await updateTokenMetadata()
+      }
+      
       return await auth0.getAccessTokenSilently()
     } catch (err) {
       console.error('Failed to get token:', err)
@@ -126,7 +218,8 @@ export const useAuthStore = defineStore('auth', () => {
   // Method to refresh user data from backend
   const refreshUser = async () => {
     if (auth0?.isAuthenticated?.value) {
-      await loadUserFromBackend()
+      await getUserProfile()
+      await updateTokenMetadata()
     }
   }
 
@@ -134,12 +227,15 @@ export const useAuthStore = defineStore('auth', () => {
     isInitialized,
     isLoggingIn,
     user,
+    tokenMetadata,
     isAuthenticated: isUserAuthenticated,
+    isTokenExpired,
     initialize,
     handleCallback,
     login,
     logout,
     getToken,
-    refreshUser
+    refreshUser,
+    updateTokenMetadata
   }
 }) 

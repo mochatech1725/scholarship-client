@@ -55,10 +55,6 @@ class ApiService {
     return this.makeRequest('/api/auth/profile')
   }
 
-  async checkAuth() {
-    return this.makeRequest('/api/auth/me')
-  }
-
   // User endpoints
   async getUser(userId?: string) {
     if (userId) {
