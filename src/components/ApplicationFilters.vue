@@ -1,6 +1,6 @@
 <template>
   <div class="application-filters" :class="{ expanded: isExpanded }">
-    <q-card class="q-pa-md" style="background-color: white;">
+    <q-card class="q-pa-md">
       <div class="row items-center justify-between q-mb-md">
         <div class="text-h6">Filters</div>
         <q-btn
