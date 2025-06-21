@@ -90,6 +90,7 @@ import { useGetStatusColor } from 'src/composables/useGetStatusColor'
 import { useApplicationStore } from 'src/stores/application.store'
 import { useUserStore } from 'src/stores/user.store'
 import { storeToRefs } from 'pinia'
+import { formatDate } from 'src/utils/helper'
 
 const $q = useQuasar()
 const loading = ref(false)
@@ -112,7 +113,7 @@ const columns: QTableColumn[] = [
   { name: 'company', label: 'Company', field: 'company', sortable: true, align: 'left' },
   { name: 'scholarshipName', label: 'Scholarship', field: 'scholarshipName', sortable: true, align: 'left' },
   { name: 'status', label: 'Status', field: 'status', sortable: true, align: 'left' },
-  { name: 'dueDate', label: 'Due Date', field: 'dueDate', sortable: true, align: 'left' },
+  { name: 'dueDate', label: 'Due Date', field: 'dueDate', sortable: true, align: 'left', format: (val: string) => formatDate(val) },
   { name: 'actions', label: 'Actions', field: 'actions', align: 'right' }
 ]
 

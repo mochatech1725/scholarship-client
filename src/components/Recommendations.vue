@@ -88,6 +88,7 @@ import { useApplicationStore } from 'src/stores/application.store'
 import type { Recommendation, Application } from 'src/types'
 import { useGetStatusColor } from 'src/composables/useGetStatusColor'
 import RecommendationForm from 'src/components/RecommendationForm.vue'
+import { formatDate } from 'src/utils/helper'
 
 const props = defineProps<{
   application: Application | null
@@ -108,8 +109,8 @@ const recommendationColumns = [
     if (!row.recommender) return 'Loading...' 
     return `${row.recommender.firstName} ${row.recommender.lastName} (${row.recommender.emailAddress})` }, align: 'left' as const },
   { name: 'status', label: 'Status', field: 'status', align: 'left' as const },
-  { name: 'dueDate', label: 'Due Date', field: 'dueDate', align: 'left' as const, format: (val: string) => new Date(val).toLocaleDateString() },
-  { name: 'submissionDate', label: 'Submitted', field: 'submissionDate', align: 'left' as const, format: (val: string | null) => val ? new Date(val).toLocaleDateString() : '-' },
+  { name: 'dueDate', label: 'Due Date', field: 'dueDate', align: 'left' as const, format: (val: string) => formatDate(val) },
+  { name: 'submissionDate', label: 'Submitted', field: 'submissionDate', align: 'left' as const, format: (val: string | null) => val ? formatDate(val) : '-' },
   { name: 'actions', label: 'Actions', field: 'actions', align: 'right' as const }
 ]
 
