@@ -4,11 +4,8 @@ import { useAuth0 } from '@auth0/auth0-vue'
 import { waitForAuth0Initialization } from 'src/boot/auth0'
 import type { User } from 'src/types'
 import { useUserStore } from 'src/stores/user.store'
+import { useAccountStore } from 'src/stores/account.store'
 
-// Import the API service
-import { apiService } from 'src/services/api.service'
-
-// Token metadata interface
 interface TokenMetadata {
   expiresAt: number
   tokenType: string
@@ -19,6 +16,7 @@ export type AuthStore = ReturnType<typeof useAuthStore>
 export const useAuthStore = defineStore('auth', () => {
   const auth0 = useAuth0()
   const userStore = useUserStore()
+  const accountStore = useAccountStore()
   const isInitialized = ref(false)
   const isLoggingIn = ref(false)
   const user = ref<User | null>(null)
@@ -99,10 +97,21 @@ export const useAuthStore = defineStore('auth', () => {
       
       // If user is authenticated, load user data from backend
       if (auth0?.isAuthenticated?.value && auth0.user.value) {
-        await getUserProfile()
-        await updateTokenMetadata()
-        // Only set initialized to true if backend loading succeeds
-        isInitialized.value = true
+        try {
+          const userData = await accountStore.getUserProfile()
+          user.value = userData
+          await updateTokenMetadata()
+          // Only set initialized to true if backend loading succeeds
+          isInitialized.value = true
+        } catch (err) {
+          console.error('Failed to load user profile:', err)
+          // If backend authentication fails, reset the auth state
+          isInitialized.value = false
+          user.value = null
+          userStore.clearUser()
+          clearSession()
+          throw err
+        }
       } else {
         // If not authenticated, we can still initialize
         isInitialized.value = true
@@ -119,10 +128,21 @@ export const useAuthStore = defineStore('auth', () => {
       
       // After successful authentication, load user data from backend
       if (auth0?.isAuthenticated?.value && auth0.user.value) {
-        await getUserProfile()
-        await updateTokenMetadata()
-        // Only set initialized to true if backend loading succeeds
-        isInitialized.value = true
+        try {
+          const userData = await accountStore.getUserProfile()
+          user.value = userData
+          await updateTokenMetadata()
+          // Only set initialized to true if backend loading succeeds
+          isInitialized.value = true
+        } catch (err) {
+          console.error('Failed to load user profile:', err)
+          // If backend authentication fails, reset the auth state
+          isInitialized.value = false
+          user.value = null
+          userStore.clearUser()
+          clearSession()
+          throw err
+        }
       } else {
         // If not authenticated, we can still initialize
         isInitialized.value = true
@@ -134,26 +154,6 @@ export const useAuthStore = defineStore('auth', () => {
       // so the app can continue and show appropriate error messages
       isInitialized.value = true
       return false
-    }
-  }
-
-  const getUserProfile = async () => {
-    try {
-      // Call backend API to get/create user profile
-      const response = await apiService.getProfile()
-      
-      const userData = userStore.setUser(response.user)
-      user.value = userData
-      
-      console.log('User loaded from server:', userData)
-    } catch (err) {
-      console.error('Failed to load user from server:', err)
-      // If backend authentication fails, reset the auth state
-      isInitialized.value = false
-      user.value = null
-      userStore.clearUser()
-      clearSession()
-      throw err
     }
   }
 
@@ -214,8 +214,14 @@ export const useAuthStore = defineStore('auth', () => {
   // Method to refresh user data from backend
   const refreshUser = async () => {
     if (auth0?.isAuthenticated?.value) {
-      await getUserProfile()
-      await updateTokenMetadata()
+      try {
+        const userData = await accountStore.getUserProfile()
+        user.value = userData
+        await updateTokenMetadata()
+      } catch (err) {
+        console.error('Failed to refresh user:', err)
+        // Don't throw here, just log the error
+      }
     }
   }
 
