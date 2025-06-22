@@ -128,7 +128,7 @@ const form = ref<Recommendation>({
 const recommenderOptions = computed(() => {
   return props.recommenders.map(recommender => ({
     label: `${recommender.firstName} ${recommender.lastName} (${recommender.emailAddress})`,
-    value: recommender._id
+    value: `${recommender.firstName} ${recommender.lastName} (${recommender.emailAddress})`
   }))
 })
 
@@ -152,6 +152,16 @@ const onRecommenderChange = (selectedValue: string) => {
   }
 }
 
+const formatDateForInput = (dateString: string | null | undefined): string => {
+  if (!dateString) return ''
+  try {
+    // Convert ISO date string to yyyy-MM-dd format for HTML date input
+    return new Date(dateString).toISOString().split('T')[0] || ''
+  } catch {
+    return ''
+  }
+}
+
 const onSubmit = () => {
   emit('submit', form.value)
 }
@@ -160,22 +170,16 @@ const initializeForm = () => {
   if (props.recommendation) {
     const { recommender } = props.recommendation
     form.value = {
-      ...props.recommendation
+      recommender: recommender,
+      dueDate: formatDateForInput(props.recommendation.dueDate),
+      status: props.recommendation.status,
+      submissionMethod: props.recommendation.submissionMethod,
+      requestDate: formatDateForInput(props.recommendation.requestDate),
+      submissionDate: props.recommendation.submissionDate ? formatDateForInput(props.recommendation.submissionDate) : null
     }
     
-    const matchingRecommender = props.recommenders.find(r => 
-      r._id === recommender._id
-    )
-    
-    if (matchingRecommender) {
-      selectedRecommenderId.value = matchingRecommender._id || null
-    } else if (recommender._id) {
-      // Fallback: if the recommender has an _id, use it directly
-      selectedRecommenderId.value = recommender._id
-    } else {
-      // If no match found and no _id, set to null
-      selectedRecommenderId.value = null
-    }
+    // Set the selected recommender value for the dropdown
+    selectedRecommenderId.value = `${recommender.firstName} ${recommender.lastName} (${recommender.emailAddress})`
   }
 }
 
