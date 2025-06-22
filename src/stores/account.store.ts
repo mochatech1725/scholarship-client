@@ -11,15 +11,10 @@ export const useAccountStore = defineStore('account', () => {
   const authenticate = async () => {
     try {
       isLoading.value = true
-      // Call backend API to authenticate and get/create user profile
       const response = await apiService.login()
       console.log('Login response:', response)
       
-      // After login, fetch the complete user profile from MongoDB
-      const userProfileResponse = await apiService.getUser()
-      console.log('User profile response:', userProfileResponse)
-      
-      const userData = userStore.setUser(userProfileResponse.user)
+      const userData = userStore.setUser(response.user)
       
       console.log('User authenticated and loaded from server:', userData)
       return userData

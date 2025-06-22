@@ -45,7 +45,6 @@ export const useUserStore = defineStore('user', {
       try {
         console.log('setUser called with backendUser:', backendUser)
         
-        // Transform backend user data to match frontend User type
         const user: User = {
           userId: backendUser.userId || '',
           firstName: backendUser.firstName,
