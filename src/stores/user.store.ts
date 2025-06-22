@@ -25,8 +25,10 @@ export const useUserStore = defineStore('user', {
   actions: {
     async loadUser(userId?: string) {
       try {
+        console.log('loadUser called with userId:', userId)
         const user = await apiService.getUser(userId)
         this.user = user
+        this.setUser(user)
         return user
       } catch (error) {
         console.error('Failed to load user from API:', error)
@@ -46,12 +48,7 @@ export const useUserStore = defineStore('user', {
         console.log('setUser called with backendUser:', backendUser)
         
         const user: User = {
-          userId: backendUser.userId || '',
-          firstName: backendUser.firstName,
-          lastName: backendUser.lastName,
-          emailAddress: backendUser.emailAddress,
-          phoneNumber: backendUser.phoneNumber,
-          profile: backendUser.profile
+          ...backendUser
         }
         
         console.log('Transformed user object:', user)

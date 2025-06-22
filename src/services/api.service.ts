@@ -38,7 +38,6 @@ class ApiService {
         ...options
       })
 
-      console.log('API response data:', response.data)
       return response.data
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
