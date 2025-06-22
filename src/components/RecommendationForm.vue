@@ -91,7 +91,6 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
-import { useRecommenderStore } from 'src/stores/recommender.store'
 import type { Recommendation, Application, Recommender } from 'src/types'
 import ScholarshipBanner from 'components/ScholarshipBanner.vue'
 
@@ -100,6 +99,7 @@ const props = defineProps<{
   loading?: boolean
   recommendation: Recommendation | null
   application?: Application | null
+  recommenders: Recommender[]
 }>()
 
 const emit = defineEmits<{
@@ -107,12 +107,11 @@ const emit = defineEmits<{
   (e: 'cancel'): void
 }>()
 
-const recommenderStore = useRecommenderStore()
-const recommenders = ref<Recommender[]>([])
 const selectedRecommenderId = ref<string | null>(null)
 
 const form = ref<Recommendation>({
   recommender: {
+    studentId: '',
     firstName: '',
     lastName: '',
     emailAddress: '',
@@ -127,9 +126,9 @@ const form = ref<Recommendation>({
 })
 
 const recommenderOptions = computed(() => {
-  return recommenders.value.map(recommender => ({
+  return props.recommenders.map(recommender => ({
     label: `${recommender.firstName} ${recommender.lastName} (${recommender.emailAddress})`,
-    value: `${recommender.firstName} ${recommender.lastName} (${recommender.emailAddress})`
+    value: recommender._id
   }))
 })
 
@@ -139,20 +138,11 @@ const scholarshipName = computed(() => {
 
 const submissionMethodOptions = ['DirectEmail', 'StudentUpload', 'DirectMail'] as const
 
-const loadRecommenders = async () => {
-  try {
-    recommenders.value = await recommenderStore.getRecommenders()
-  } catch (error) {
-    console.error('Failed to load recommenders:', error)
-  }
-}
-
 const onRecommenderChange = (selectedValue: string) => {
-  const selectedRecommender = recommenders.value.find(r => 
-    `${r.firstName} ${r.lastName} (${r.emailAddress})` === selectedValue
-  )
+  const selectedRecommender = props.recommenders.find(r => r._id === selectedValue)
   if (selectedRecommender) {
     form.value.recommender = {
+      studentId: selectedRecommender.studentId,
       firstName: selectedRecommender.firstName,
       lastName: selectedRecommender.lastName,
       emailAddress: selectedRecommender.emailAddress,
@@ -168,29 +158,28 @@ const onSubmit = () => {
 
 const initializeForm = () => {
   if (props.recommendation) {
+    const { recommender } = props.recommendation
     form.value = {
-      recommender: props.recommendation.recommender,
-      dueDate: props.recommendation.dueDate,
-      status: props.recommendation.status,
-      submissionMethod: props.recommendation.submissionMethod,
-      requestDate: props.recommendation.requestDate,
-      submissionDate: props.recommendation.submissionDate
+      ...props.recommendation
     }
     
-    // Set the selected recommender value for the dropdown
-    const matchingRecommender = recommenders.value.find(r => 
-      r.firstName === props.recommendation?.recommender.firstName &&
-      r.lastName === props.recommendation?.recommender.lastName &&
-      r.emailAddress === props.recommendation?.recommender.emailAddress
+    const matchingRecommender = props.recommenders.find(r => 
+      r._id === recommender._id
     )
+    
     if (matchingRecommender) {
-      selectedRecommenderId.value = `${matchingRecommender.firstName} ${matchingRecommender.lastName} (${matchingRecommender.emailAddress})`
+      selectedRecommenderId.value = matchingRecommender._id || null
+    } else if (recommender._id) {
+      // Fallback: if the recommender has an _id, use it directly
+      selectedRecommenderId.value = recommender._id
+    } else {
+      // If no match found and no _id, set to null
+      selectedRecommenderId.value = null
     }
   }
 }
 
-onMounted(async () => {
-  await loadRecommenders()
+onMounted(() => {
   initializeForm()
 })
 

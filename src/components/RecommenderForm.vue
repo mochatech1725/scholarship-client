@@ -105,6 +105,7 @@ const emit = defineEmits<{
 const relationshipOptions = ['Teacher', 'Counselor', 'Employer', 'Friend', 'Other']
 
 const form = ref<Omit<Recommender, '_id'> & { emailAddress: string; phoneNumber: string }>({
+  studentId: props.user?._id || '',
   firstName: '',
   lastName: '',
   relationship: '',
@@ -127,6 +128,7 @@ const rules = {
 const loadData = () => {
   if (props.isEdit && props.recommender) {
     form.value = {
+      studentId: props.recommender.studentId,
       firstName: props.recommender.firstName,
       lastName: props.recommender.lastName,
       relationship: props.recommender.relationship,

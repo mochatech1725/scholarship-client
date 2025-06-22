@@ -2,15 +2,19 @@
   <q-page padding>
     <div class="row q-col-gutter-md">
       <div class="col-12">
-        <Recommendations :application="application" />
+        <Recommendations 
+          :application="application" 
+          :recommenders="recommenders"
+        />
       </div>
     </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { Application } from 'src/types'
+import { ref, onMounted, computed } from 'vue'
+import type { Application, Recommender } from 'src/types'
+import { useRecommenderStore } from 'src/stores/recommender.store'
 import Recommendations from 'src/components/Recommendations.vue'
 
 const props = defineProps<{
@@ -18,4 +22,19 @@ const props = defineProps<{
 }>()
 
 const application = computed(() => props.application)
+const recommenderStore = useRecommenderStore()
+const recommenders = ref<Recommender[]>([])
+
+const loadRecommenders = async () => {
+  try {
+    const userId = props.application?.studentId || 'user-1' // Default fallback
+    recommenders.value = await recommenderStore.getRecommendersByUserId(userId)
+  } catch (error) {
+    console.error('Failed to load recommenders:', error)
+  }
+}
+
+onMounted(async () => {
+  await loadRecommenders()
+})
 </script> 

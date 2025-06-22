@@ -232,7 +232,7 @@
           header-class="text-primary"
           class="q-mt-md"
         >
-          <Recommendations :application="application" />
+          <Recommendations :application="application" :recommenders="recommenders" />
         </q-expansion-item>
       </q-form>
     </q-card-section>
@@ -244,11 +244,13 @@ import { ref, onMounted, watch, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'stores/application.store'
 import { ObjectId } from 'bson'
-import type { Application } from 'src/types'
+import type { Application, Recommender } from 'src/types'
 import { targetTypeOptions, statusOptions } from 'src/types'
 import Essays from 'components/Essays.vue'
 import Recommendations from 'components/Recommendations.vue'
 import ScholarshipBanner from 'components/ScholarshipBanner.vue'
+import { useRecommenderStore } from 'src/stores/recommender.store'
+
 
 const $q = useQuasar()
 const applicationStore = useApplicationStore()
@@ -263,6 +265,8 @@ const emit = defineEmits<{
   (e: 'cancel'): void
   (e: 'submit'): void
 }>()
+const recommenderStore = useRecommenderStore()
+const recommenders = ref<Recommender[]>([])
 
 // Single source of truth for default form data
 const getDefaultFormData = (): Application => ({
@@ -367,7 +371,20 @@ const onSubmit = async () => {
   }
 }
 
-onMounted(() => {
+
+const loadRecommenders = async () => {
+  try {
+    // Get userId from application or use a default
+    const userId = props.application?.studentId || 'user-1' // Default fallback
+    recommenders.value = await recommenderStore.getRecommendersByUserId(userId)
+    console.log('Recommenders loaded:', recommenders.value)
+  } catch (error) {
+    console.error('Failed to load recommenders:', error)
+  }
+}
+
+onMounted(async () => {
+  await loadRecommenders()
   initializeForm()
 })
 

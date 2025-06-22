@@ -1,5 +1,5 @@
 import { useAuthStore } from 'src/stores/auth.store'
-import type { Profile, Scholarship, RegisterData } from 'src/types'
+import type { Profile, Application, RegisterData, Recommender } from 'src/types'
 import { api } from 'src/boot/axios'
 import type { AxiosRequestConfig } from 'axios'
 
@@ -85,31 +85,68 @@ class ApiService {
     })
   }
 
-  // Scholarship endpoints
-  async getScholarships() {
-    return this.makeRequest('/api/scholarships/getAll')
+  // Application endpoints
+  async getApplications() {
+    return this.makeRequest('/api/applications/getAll')
   }
 
-  async getById(id: string) {
-    return this.makeRequest(`/api/scholarships/getById${id}`)
+  async getApplicationById(id: string) {
+    return this.makeRequest(`/api/applications/getById/${id}`)
   }
 
-  async createScholarship(scholarship: Scholarship) {
-    return this.makeRequest('/api/scholarships/create', {
+  async createApplication(application: Omit<Application, 'applicationId'>) {
+    return this.makeRequest('/api/applications/create', {
       method: 'POST',
-      data: scholarship
+      data: application
     })
   }
 
-  async updateScholarship(id: string, scholarship: Scholarship) {
-    return this.makeRequest(`/api/scholarships/update/${id}`, {
+  async updateApplication(id: string, application: Application) {
+    return this.makeRequest(`/api/applications/update/${id}`, {
       method: 'PUT',
-      data: scholarship
+      data: application
     })
   }
 
-  async deleteScholarship(id: string) {
-    return this.makeRequest(`/api/scholarships/deleteScholarship/${id}`, {
+  async deleteApplication(id: string) {
+    return this.makeRequest(`/api/applications/delete/${id}`, {
+      method: 'DELETE'
+    })
+  }
+
+  async getApplicationsByUserId(userId: string) {
+    return this.makeRequest(`/api/applications/getByUserId/${userId}`)
+  }
+
+  // Recommender endpoints
+  async getRecommendersByUserId(userId: string) {
+    return this.makeRequest(`/api/recommenders/getByUserId/${userId}`)
+  }
+
+  async getRecommenders() {
+    return this.makeRequest('/api/recommenders/getAll')
+  }
+
+  async getRecommenderById(id: string) {
+    return this.makeRequest(`/api/recommenders/getById/${id}`)
+  }
+
+  async createRecommender(recommender: Omit<Recommender, '_id'>) {
+    return this.makeRequest('/api/recommenders/create', {
+      method: 'POST',
+      data: recommender
+    })
+  }
+
+  async updateRecommender(id: string, recommender: Omit<Recommender, '_id'>) {
+    return this.makeRequest(`/api/recommenders/update/${id}`, {
+      method: 'PUT',
+      data: recommender
+    })
+  }
+
+  async deleteRecommender(id: string) {
+    return this.makeRequest(`/api/recommenders/delete/${id}`, {
       method: 'DELETE'
     })
   }

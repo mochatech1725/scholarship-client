@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { mockService } from 'src/services/mock.service'
+import { apiService } from 'src/services/api.service'
 import type { Recommender } from 'src/types'
 
 export const useRecommenderStore = defineStore('recommender', {
@@ -9,44 +9,37 @@ export const useRecommenderStore = defineStore('recommender', {
 
   actions: {
     async createRecommender(recommender: Omit<Recommender, '_id'>) {
-      // TODO: Implement API call
-      await new Promise(resolve => setTimeout(resolve, 100)) // Simulate API delay
-      const newRecommender: Recommender = {
-        ...recommender,
-      }
+      const newRecommender = await apiService.createRecommender(recommender)
       this.recommenders.push(newRecommender)
       return newRecommender
     },
 
     async getRecommenders() {
-      const recommenders = await mockService.getRecommenders()
-      return recommenders
+      this.recommenders = await apiService.getRecommenders()
+      return this.recommenders || []
     },
 
-    async getRecommenderById(recommenderId: string) {
-      const recommenders = await mockService.getRecommenders()
-      return recommenders.find(r => r._id === recommenderId) || null
+    async getRecommendersByUserId(userId: string) {
+      this.recommenders = await apiService.getRecommendersByUserId(userId)
+      return this.recommenders
     },
 
-    async updateRecommender(recommenderId: string, updates: Omit<Recommender, '_id'>) {
-      // TODO: Implement API call
-      await new Promise(resolve => setTimeout(resolve, 100)) // Simulate API delay
-      const index = this.recommenders.findIndex(r => r._id === recommenderId)
+    async getRecommenderById(id: string) {
+      return await apiService.getRecommenderById(id)
+    },
+
+    async updateRecommender(id: string, updates: Omit<Recommender, '_id'>) {
+      const updatedRecommender = await apiService.updateRecommender(id, updates)
+      const index = this.recommenders.findIndex(r => r._id === id)
       if (index !== -1) {
-        const existingRecommender = this.recommenders[index]
-        if (existingRecommender) {
-          const updatedRecommender: Recommender = {
-            ...updates
-          }
-          this.recommenders[index] = updatedRecommender
-        }
+        this.recommenders[index] = updatedRecommender
       }
+      return updatedRecommender
     },
 
-    async deleteRecommender(recommenderId: string) {
-      // TODO: Implement API call
-      await new Promise(resolve => setTimeout(resolve, 100)) // Simulate API delay
-      const index = this.recommenders.findIndex(r => r._id === recommenderId)
+    async deleteRecommender(id: string) {
+      await apiService.deleteRecommender(id)
+      const index = this.recommenders.findIndex(r => r._id === id)
       if (index !== -1) {
         this.recommenders.splice(index, 1)
       }

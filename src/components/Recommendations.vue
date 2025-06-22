@@ -71,6 +71,7 @@
               :loading="loading"
               :recommendation="editingRecommendation"
               :application="application"
+              :recommenders="recommenders"
               @submit="handleSubmit"
               @cancel="closeForm"
             />
@@ -82,16 +83,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'src/stores/application.store'
-import type { Recommendation, Application } from 'src/types'
+import type { Recommendation, Application, Recommender } from 'src/types'
 import { useGetStatusColor } from 'src/composables/useGetStatusColor'
 import RecommendationForm from 'src/components/RecommendationForm.vue'
 import { formatDate } from 'src/utils/helper'
 
 const props = defineProps<{
   application: Application | null
+  recommenders: Recommender[]
 }>()
 
 const $q = useQuasar()
@@ -103,11 +105,16 @@ const editingRecommendation = ref<Recommendation | null>(null)
 
 const { getStatusColor } = useGetStatusColor()
 
+const recommenderDisplayName = computed(() => {
+  return (recommendation: Recommendation) => {
+    if (!recommendation.recommender) return 'Loading...'
+    return `${recommendation.recommender.firstName} ${recommendation.recommender.lastName} (${recommendation.recommender.emailAddress})`
+  }
+})
+
 const recommendationColumns = [
   { name: 'recommender', label: 'Recommender', 
-  field: (row: Recommendation) => { 
-    if (!row.recommender) return 'Loading...' 
-    return `${row.recommender.firstName} ${row.recommender.lastName} (${row.recommender.emailAddress})` }, align: 'left' as const },
+  field: (row: Recommendation) => recommenderDisplayName.value(row), align: 'left' as const },
   { name: 'status', label: 'Status', field: 'status', align: 'left' as const },
   { name: 'dueDate', label: 'Due Date', field: 'dueDate', align: 'left' as const, format: (val: string) => formatDate(val) },
   { name: 'submissionDate', label: 'Submitted', field: 'submissionDate', align: 'left' as const, format: (val: string | null) => val ? formatDate(val) : '-' },

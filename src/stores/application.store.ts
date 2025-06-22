@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
-import { mockService } from 'src/services/mock.service'
+import { apiService } from 'src/services/api.service'
+
 import type { Application } from 'src/types'
 
 export const useApplicationStore = defineStore('application', {
@@ -8,39 +9,25 @@ export const useApplicationStore = defineStore('application', {
   }),
 
   actions: {
-    async getApplication(id: string) {
-      return await mockService.getApplication(id)
+    async getApplicationById(id: string) {
+      return await apiService.getApplicationById(id)
     },
 
     async createApplication(application: Omit<Application, 'applicationId'>) {
-      return await mockService.createApplication(application)
+      return await apiService.createApplication(application)
     },
 
     async updateApplication(id: string, application: Application) {
-      return await mockService.updateApplication(id, application)
+      return await apiService.updateApplication(id, application)
     },
 
     async getApplicationsByUserId(userId: string) {
-      this.applications = await mockService.getApplicationsByUserId(userId)
+      this.applications = await apiService.getApplicationsByUserId(userId)
       return this.applications
     },
 
     async deleteApplication(id: string) {
-      await mockService.deleteApplication(id)
-      const index = this.applications.findIndex(app => app.applicationId === id)
-      if (index !== -1) {
-        this.applications.splice(index, 1)
-      }
+      await apiService.deleteApplication(id)
     },
-
-    async deleteRecommendation(id: string) {
-      // Since recommendations are now nested in applications, 
-      // deletion should be handled through application updates
-      await new Promise(resolve => setTimeout(resolve, 100)) // Simulate async operation
-      console.log('deleteRecommendation', id)
-    },
-
-    // Essay and Recommendation methods removed since they are now nested documents
-    // and handled through the application CRUD operations
   }
 }) 

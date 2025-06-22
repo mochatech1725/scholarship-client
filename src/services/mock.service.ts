@@ -1,6 +1,5 @@
-import type { Application, Recommender, Profile, User, EducationLevel, TargetType, Area } from 'src/types'
+import type { Recommender, Profile, User, EducationLevel, TargetType, Area } from 'src/types'
 import mockUserData from '../mocks/mockUserData.json'
-import applicationData from '../mocks/mockApplicationData.json'
 import recommenderData from '../mocks/mockRecommenderData.json'
 import { educationLevelOptions, targetTypeOptions, areaOptions } from 'src/types'
 
@@ -17,58 +16,12 @@ function castAreas(arr: string[]): Area[] {
 }
 
 class MockService {
-  // Application methods
-  async getApplications(): Promise<Application[]> {
-    await new Promise(resolve => setTimeout(resolve, 100))
-    return [applicationData as Application]
-  }
-
-  async getApplicationsByUserId(userId: string): Promise<Application[]> {
-    await new Promise(resolve => setTimeout(resolve, 100))
-    
-    // In a real service, we would filter by userId
-    // For mock data, we'll just return the mock application if the userId matches the studentId
-    if (applicationData.studentId === userId) {
-      return [applicationData as Application]
-    }
-    return []
-  }
-
-  async getApplication(id: string): Promise<Application | null> {
-    await new Promise(resolve => setTimeout(resolve, 100))
-    if (applicationData.applicationId !== id) return null
-    return applicationData as Application
-  }
-
-  async createApplication(application: Omit<Application, 'applicationId'>): Promise<Application> {
-    await new Promise(resolve => setTimeout(resolve, 100))
-    const newApp = {
-      ...application,
-    } as Application
-    return newApp
-  }
-
-  async updateApplication(id: string, application: Partial<Application>): Promise<Application> {
-    await new Promise(resolve => setTimeout(resolve, 100))
-    if (applicationData.applicationId !== id) {
-      throw new Error('Application not found')
-    }
-
-    return {
-      ...applicationData,
-      ...application
-    } as Application
-  }
-
-  async deleteApplication(id: string): Promise<void> {
-    await new Promise(resolve => setTimeout(resolve, 100))
-    console.log('deleteApplication', id)
-  }
 
   // Recommender methods
-  async getRecommenders(): Promise<Recommender[]> {
+  async getRecommendersByUserId(userId: string): Promise<Recommender[]> {
     await new Promise(resolve => setTimeout(resolve, 100))
-    return recommenderData.recommenders
+    const recommenders = recommenderData.recommenders.filter(rec => rec.studentId === userId)
+    return recommenders || []
   }
 
   async getRecommender(id: string): Promise<Recommender | null> {
@@ -77,11 +30,10 @@ class MockService {
     return recommender || null
   }
 
-  async createRecommender(recommender: Omit<Recommender, '_id'>): Promise<Recommender> {
+  async createRecommender(userId: string, recommender: Omit<Recommender, '_id'>): Promise<Recommender> {
     await new Promise(resolve => setTimeout(resolve, 100))
     return {
       ...recommender,
-      _id: Math.random().toString(36).substr(2, 9)
     }
   }
 
@@ -93,6 +45,7 @@ class MockService {
     // Ensure all required fields are present
     const updatedRecommender: Recommender = {
       _id: existingRec._id,
+      studentId: existingRec.studentId,
       firstName: recommender.firstName ?? existingRec.firstName,
       lastName: recommender.lastName ?? existingRec.lastName,
       relationship: recommender.relationship ?? existingRec.relationship,

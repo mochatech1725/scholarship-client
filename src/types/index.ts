@@ -13,6 +13,7 @@ export interface Essay {
 
 export interface Recommender {
   _id?: string
+  studentId: string
   firstName: string
   lastName: string
   relationship: string
@@ -43,8 +44,6 @@ export interface User {
   phoneNumber: string
   profile: Profile
 } 
-
-
 
 export interface Application {
   _id?: string

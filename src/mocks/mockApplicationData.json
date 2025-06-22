@@ -18,9 +18,9 @@
   "requirements": "Test requirements",
   "recommendations": [
     {
-      "_id": "rec-1",
+      "_id": "507f1f77bcf86cd799439011",
       "recommender": {
-        "_id": "recommender-1",
+        "_id": "507f1f77bcf86cd799439012",
         "firstName": "John",
         "lastName": "Smith",
         "emailAddress": "john.smith@school.edu",
@@ -33,9 +33,9 @@
       "submissionDate": null
     },
     {
-      "_id": "rec-2",
+      "_id": "507f1f77bcf86cd799439012",
       "recommender": {
-        "_id": "recommender-2",
+        "_id": "507f1f77bcf86cd799439013",
         "firstName": "Sarah",
         "lastName": "Johnson",
         "emailAddress": "sarah.johnson@company.com",
@@ -49,9 +49,9 @@
       "submissionDate": "2024-03-15"
     },
     {
-      "_id": "rec-3",
+      "_id": "507f1f77bcf86cd799439013",
       "recommender": {
-        "_id": "recommender-3",
+        "_id": "507f1f77bcf86cd799439014",
         "firstName": "Michael",
         "lastName": "Brown",
         "emailAddress": "michael.brown@school.edu",
