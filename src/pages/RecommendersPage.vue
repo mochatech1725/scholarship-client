@@ -89,67 +89,36 @@ import { ref, onMounted, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import type { Recommender } from 'src/types'
 import { useRecommenderStore } from 'src/stores/recommender.store'
-import { useAuthStore } from 'src/stores/auth.store'
+import { useUserStore } from 'src/stores/user.store'
 import RecommenderForm from 'src/components/RecommenderForm.vue'
 
 const $q = useQuasar()
 const recommenderStore = useRecommenderStore()
-const authStore = useAuthStore()
+const userStore = useUserStore()
 const recommenders = ref<Recommender[]>([])
 const loading = ref(false)
 const showForm = ref(false)
 const editingRecommender = ref<Recommender | null>(null)
+const showDeleteDialog = ref(false)
+const recommenderToDelete = ref<Recommender | null>(null)
 
-const user = computed(() => authStore.user)
+const user = computed(() => userStore.user)
 
 // Type for form data (excludes optional _id field)
 type RecommenderFormData = Omit<Recommender, '_id'>
 
 const columns = [
-  {
-    name: 'name',
-    label: 'Name',
-    field: (row: Recommender) => `${row.firstName} ${row.lastName}`,
-    align: 'left' as const,
-    style: 'width: 150px'
-  },
-  {
-    name: 'email',
-    label: 'Email',
-    field: 'emailAddress',
-    align: 'left' as const,
-    style: 'width: 200px'
-  },
-  {
-    name: 'phone',
-    label: 'Phone',
-    field: 'phoneNumber',
-    align: 'left' as const,
-    style: 'width: 120px'
-  },
-  {
-    name: 'relationship',
-    label: 'Relationship',
-    field: 'relationship',
-    align: 'left' as const,
-    style: 'width: 150px'
-  },
-  {
-    name: 'actions',
-    label: '',
-    field: 'actions',
-    align: 'center' as const,
-    style: 'width: 80px'
-  }
+  { name: 'name', label: 'Name', field: (row: Recommender) => `${row.firstName} ${row.lastName}`, align: 'left' as const, style: 'width: 150px' },
+  { name: 'email', label: 'Email', field: 'emailAddress', align: 'left' as const, style: 'width: 200px' },
+  { name: 'phone', label: 'Phone', field: 'phoneNumber', align: 'left' as const, style: 'width: 120px' },
+  { name: 'relationship', label: 'Relationship', field: 'relationship', align: 'left' as const, style: 'width: 150px' },
+  { name: 'actions', label: '', field: 'actions', align: 'center' as const, style: 'width: 80px' }
 ]
-
-const showDeleteDialog = ref(false)
-const recommenderToDelete = ref<Recommender | null>(null)
 
 const loadRecommenders = async () => {
   try {
     loading.value = true
-    recommenders.value = await recommenderStore.getRecommenders()
+    recommenders.value = await recommenderStore.getRecommendersByUserId(user?.value?.userId || '')
   } catch (err) {
     console.error('Failed to load recommenders:', err)
     $q.notify({

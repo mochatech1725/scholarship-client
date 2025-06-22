@@ -37,24 +37,40 @@
               />
             </div>
 
-            <div class="col-12 col-sm-6 col-md-3 col-lg-3">
-              <div class="form-label">Due Date From</div>
+            <div class="col-12 col-sm-6 col-md-4 col-lg-4">
+              <div class="form-label">Due Date Range</div>
               <q-input
-                v-model="localFilters.dueDateFrom"
-                type="date"
+                :model-value="dateRangeDisplay"
                 flat
                 dense
+                readonly
                 class="q-mb-sm"
-              />
+                placeholder="Select date range"
+              >
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                      <q-date
+                        v-model="dateRange"
+                        range
+                        mask="MM/DD/YYYY"
+                        today-btn
+                        @update:model-value="onDateRangeChange"
+                      />
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
             </div>
 
             <div class="col-12 col-sm-6 col-md-3 col-lg-3">
-              <div class="form-label">Due Date To</div>
-              <q-input
-                v-model="localFilters.dueDateTo"
-                type="date"
+              <div class="form-label">&nbsp;</div>
+              <q-btn
+                label="Clear All"
+                color="grey-6"
                 flat
                 dense
+                @click="clearAllFilters"
                 class="q-mb-sm"
               />
             </div>
@@ -66,7 +82,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
+import { formatDate } from 'src/utils/helper'
 
 const isExpanded = ref(true)
 
@@ -86,13 +103,52 @@ const emit = defineEmits<{
 
 const localFilters = ref({ ...props.filters })
 
+// Date range picker
+const dateRange = ref<{ from: string; to: string } | null>(null)
+
+const dateRangeDisplay = computed(() => {
+  if (!dateRange.value?.from && !dateRange.value?.to) return ''
+  
+  if (dateRange.value?.from && dateRange.value?.to) {
+    return `${formatDate(dateRange.value.from)} to ${formatDate(dateRange.value.to)}`
+  }
+  if (dateRange.value?.from) return `From ${formatDate(dateRange.value.from)}`
+  if (dateRange.value?.to) return `To ${formatDate(dateRange.value.to)}`
+  return ''
+})
+
+const onDateRangeChange = (newRange: { from: string; to: string } | null) => {
+  dateRange.value = newRange
+  localFilters.value.dueDateFrom = newRange?.from || null
+  localFilters.value.dueDateTo = newRange?.to || null
+}
+
+// Initialize date range from filters
+watch(() => props.filters, (newFilters) => {
+  localFilters.value = { ...newFilters }
+  if (newFilters.dueDateFrom || newFilters.dueDateTo) {
+    dateRange.value = {
+      from: newFilters.dueDateFrom || '',
+      to: newFilters.dueDateTo || ''
+    }
+  } else {
+    dateRange.value = null
+  }
+}, { deep: true, immediate: true })
+
 watch(localFilters, (newValue) => {
   emit('update:filters', newValue)
 }, { deep: true })
 
-watch(() => props.filters, (newValue) => {
-  localFilters.value = { ...newValue }
-}, { deep: true })
+const clearAllFilters = () => {
+  localFilters.value = {
+    status: null,
+    company: '',
+    dueDateFrom: null,
+    dueDateTo: null
+  }
+  dateRange.value = null
+}
 </script>
 
 <style scoped>

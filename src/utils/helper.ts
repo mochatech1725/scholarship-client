@@ -11,3 +11,18 @@ export function formatDate(date: string | Date): string {
     year: 'numeric' 
   })
 }
+
+/**
+ * Formats a date string for HTML date input (yyyy-MM-dd format)
+ * @param dateString - Date string or null/undefined
+ * @returns Formatted date string in yyyy-MM-dd format for HTML date inputs
+ */
+export function formatDateForInput(dateString: string | null | undefined): string {
+  if (!dateString) return ''
+  try {
+    // Convert ISO date string to yyyy-MM-dd format for HTML date input
+    return new Date(dateString).toISOString().split('T')[0] || ''
+  } catch {
+    return ''
+  }
+}

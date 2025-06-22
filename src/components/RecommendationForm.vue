@@ -92,6 +92,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
 import type { Recommendation, Application, Recommender } from 'src/types'
+import { formatDateForInput } from 'src/utils/helper'
 import ScholarshipBanner from 'components/ScholarshipBanner.vue'
 
 const props = defineProps<{
@@ -149,16 +150,6 @@ const onRecommenderChange = (selectedValue: string) => {
       phoneNumber: selectedRecommender.phoneNumber,
       relationship: selectedRecommender.relationship
     }
-  }
-}
-
-const formatDateForInput = (dateString: string | null | undefined): string => {
-  if (!dateString) return ''
-  try {
-    // Convert ISO date string to yyyy-MM-dd format for HTML date input
-    return new Date(dateString).toISOString().split('T')[0] || ''
-  } catch {
-    return ''
   }
 }
 

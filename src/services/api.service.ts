@@ -69,7 +69,6 @@ class ApiService {
   }
 
   // User endpoints
-  // todo: this isn't right
   async getUser(userId?: string) {
     if (userId) {
       return this.makeRequest(`/api/users/getById/${userId}`)
@@ -77,7 +76,6 @@ class ApiService {
     return this.makeRequest('/api/auth/login')
   }
 
-  // todo: this isn't right
   async updateProfile(profile: Profile) {
     return this.makeRequest('/api/users/profile', {
       method: 'PUT',

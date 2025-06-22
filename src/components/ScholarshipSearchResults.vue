@@ -53,6 +53,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import type { Scholarship } from 'src/types'
+import { formatDate } from 'src/utils/helper'
 import mockRecommendations from 'src/mocks/mockScholarshipRecommendationsData.json'
 
 const searchResults = ref<Scholarship[]>([])
@@ -90,10 +91,6 @@ const scholarshipColumns = [
     align: 'left' as const
   }
 ]
-
-const formatDate = (date: string) => {
-  return new Date(date).toLocaleDateString()
-}
 
 const onSearch = () => {
   // TODO: Implement actual search logic
