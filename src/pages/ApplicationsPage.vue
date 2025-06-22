@@ -114,7 +114,9 @@ const applicationStatusOptions = [...statusOptions]
 const columns: QTableColumn[] = [
   { name: 'company', label: 'Company', field: 'company', sortable: true, align: 'left' },
   { name: 'scholarshipName', label: 'Scholarship', field: 'scholarshipName', sortable: true, align: 'left' },
+  { name: 'amount', label: 'Amount', field: 'amount', sortable: true, align: 'right', format: (val: number) => `$${val.toLocaleString()}` },
   { name: 'status', label: 'Status', field: 'status', sortable: true, align: 'left' },
+  { name: 'currentAction', label: 'Current Action', field: 'currentAction', sortable: true, align: 'left' },
   { name: 'dueDate', label: 'Due Date', field: 'dueDate', sortable: true, align: 'left', format: (val: string) => formatDate(val) },
   { name: 'actions', label: 'Actions', field: 'actions', align: 'right' }
 ]

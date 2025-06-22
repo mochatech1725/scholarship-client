@@ -1,7 +1,7 @@
 <template>
   <div class="application-filters" :class="{ expanded: isExpanded }">
-    <q-card class="q-pa-md">
-      <div class="row items-center justify-between q-mb-md">
+    <q-card class="q-pa-sm">
+      <div class="row items-center justify-between q-mb-sm">
         <div class="text-h6">Filters</div>
         <q-btn
           flat
@@ -13,8 +13,8 @@
 
       <q-slide-transition>
         <div v-show="isExpanded" class="filter-content">
-          <div class="row q-col-gutter-md">
-            <div class="col-12 col-md-3">
+          <div class="row q-col-gutter-sm">
+            <div class="col-12 col-sm-6 col-md-2 col-lg-2">
               <div class="form-label">Status</div>
               <q-select
                 v-model="localFilters.status"
@@ -22,40 +22,40 @@
                 clearable
                 flat
                 dense
-                class="q-mb-md"
+                class="q-mb-sm"
               />
             </div>
 
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-sm-6 col-md-3 col-lg-3">
               <div class="form-label">Company Name</div>
               <q-input
                 v-model="localFilters.company"
                 clearable
                 flat
                 dense
-                class="q-mb-md"
+                class="q-mb-sm"
               />
             </div>
 
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-sm-6 col-md-3 col-lg-3">
               <div class="form-label">Due Date From</div>
               <q-input
                 v-model="localFilters.dueDateFrom"
                 type="date"
                 flat
                 dense
-                class="q-mb-md"
+                class="q-mb-sm"
               />
             </div>
 
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-sm-6 col-md-3 col-lg-3">
               <div class="form-label">Due Date To</div>
               <q-input
                 v-model="localFilters.dueDateTo"
                 type="date"
                 flat
                 dense
-                class="q-mb-md"
+                class="q-mb-sm"
               />
             </div>
           </div>
