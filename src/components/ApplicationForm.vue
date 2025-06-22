@@ -215,15 +215,6 @@
           </q-card>
         </q-expansion-item>
 
-        <!-- Essays Section -->
-        <q-expansion-item
-          icon="description"
-          label="Essays"
-          header-class="text-primary"
-          class="q-mt-md"
-        >
-          <Essays :application="application" />
-        </q-expansion-item>
 
         <!-- Recommendations Section -->
         <q-expansion-item
@@ -234,6 +225,17 @@
         >
           <Recommendations :application="application" :recommenders="recommenders" />
         </q-expansion-item>
+        
+        <!-- Essays Section -->
+        <q-expansion-item
+          icon="description"
+          label="Essays"
+          header-class="text-primary"
+          class="q-mt-md"
+        >
+          <Essays :application="application" />
+        </q-expansion-item>
+
       </q-form>
     </q-card-section>
   </q-card>
