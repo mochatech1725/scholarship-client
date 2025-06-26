@@ -77,7 +77,7 @@ class ApiService {
 
   async updateProfile(profile: Profile) {
     return this.makeRequest('/api/users/profile', {
-      method: 'PUT',
+      method: 'POST',
       data: profile
     })
   }
@@ -100,7 +100,7 @@ class ApiService {
 
   async updateApplication(id: string, application: Application) {
     return this.makeRequest(`/api/applications/update/${id}`, {
-      method: 'PUT',
+      method: 'POST',
       data: application
     })
   }
@@ -137,7 +137,7 @@ class ApiService {
 
   async updateRecommender(id: string, recommender: Omit<Recommender, '_id'>) {
     return this.makeRequest(`/api/recommenders/update/${id}`, {
-      method: 'PUT',
+      method: 'POST',
       data: recommender
     })
   }
