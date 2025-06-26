@@ -79,6 +79,9 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <!-- Token Expiry Warning Component -->
+    <TokenExpiryWarning />
   </q-layout>
 </template>
 
@@ -87,6 +90,7 @@ import { watch } from 'vue'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from 'stores/auth.store'
 import { useRouter } from 'vue-router'
+import TokenExpiryWarning from 'src/components/TokenExpiryWarning.vue'
 
 const $q = useQuasar()
 const authStore = useAuthStore()
