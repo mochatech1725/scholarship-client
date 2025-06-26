@@ -91,7 +91,7 @@ class ApiService {
     return this.makeRequest(`/api/applications/getById/${id}`)
   }
 
-  async createApplication(application: Omit<Application, 'applicationId'>) {
+  async createApplication(application: Omit<Application, '_id'>) {
     return this.makeRequest('/api/applications/create', {
       method: 'POST',
       data: application

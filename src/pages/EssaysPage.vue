@@ -102,7 +102,7 @@ const columns = [
 ]
 
 const loadEssays = () => {
-  if (!props.application?.applicationId) {
+  if (!props.application?._id) {
     $q.notify({
       type: 'negative',
       message: 'No application provided'
@@ -119,7 +119,7 @@ const confirmDelete = (essay: Essay) => {
 }
 
 const handleDelete = async () => {
-  if (!selectedEssay.value?._id) return
+  if (!selectedEssay.value?._id || !props.application._id) return
 
   try {
     // Since essays are nested in applications, we need to update the application
@@ -130,7 +130,7 @@ const handleDelete = async () => {
       essays: updatedEssays
     }
     
-    await applicationStore.updateApplication(props.application.applicationId, updatedApplication)
+    await applicationStore.updateApplication(props.application._id, updatedApplication)
     
     $q.notify({
       type: 'positive',

@@ -94,7 +94,7 @@ const essayColumns = [
 ]
 
 const loadEssays = () => {
-  if (!props.application?.applicationId) return
+  if (!props.application?._id) return
   
   try {
     loading.value = true

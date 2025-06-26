@@ -13,7 +13,7 @@ export const useApplicationStore = defineStore('application', {
       return await apiService.getApplicationById(id)
     },
 
-    async createApplication(application: Omit<Application, 'applicationId'>) {
+    async createApplication(application: Omit<Application, '_id'>) {
       return await apiService.createApplication(application)
     },
 

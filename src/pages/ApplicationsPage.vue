@@ -225,12 +225,14 @@ const confirmDelete = (application: Application) => {
   }).onOk(() => {
     void (async () => {
       try {
-        await applicationStore.deleteApplication(application.applicationId)
-        $q.notify({
-          color: 'positive',
-          message: 'Application deleted successfully'
-        })
-        await loadApplications()
+        if (application._id) {
+          await applicationStore.deleteApplication(application._id)
+          $q.notify({
+            color: 'positive',
+            message: 'Application deleted successfully'
+          })
+          await loadApplications()
+        }
       } catch (error) {
         console.error('Failed to delete application:', error)
         $q.notify({

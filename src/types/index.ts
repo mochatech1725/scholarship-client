@@ -47,7 +47,6 @@ export interface User {
 
 export interface Application {
   _id?: string
-  applicationId: string
   studentId: string
   scholarshipName: string
   targetType: 'Merit' | 'Need' | 'Both'
