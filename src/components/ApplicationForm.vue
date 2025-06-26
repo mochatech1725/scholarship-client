@@ -245,7 +245,6 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'stores/application.store'
-import { ObjectId } from 'bson'
 import type { Application, Recommender } from 'src/types'
 import { targetTypeOptions, statusOptions } from 'src/types'
 import Essays from 'components/Essays.vue'
@@ -271,8 +270,7 @@ const recommenderStore = useRecommenderStore()
 const recommenders = ref<Recommender[]>([])
 
 // Single source of truth for default form data
-const getDefaultFormData = (): Application => ({
-  applicationId: new ObjectId().toString(),
+const getDefaultFormData = (): Omit<Application, '_id'> => ({
   studentId: '', // TODO: Get from auth store
   scholarshipName: '',
   targetType: 'Both' as const,
@@ -295,7 +293,7 @@ const getDefaultFormData = (): Application => ({
   recommendations: []
 })
 
-const form = ref<Application>(getDefaultFormData())
+const form = ref<Application>(getDefaultFormData() as Application)
 
 const rules = {
   scholarshipName: [
@@ -330,27 +328,19 @@ const scholarshipName = computed(() => {
   return props.application?.scholarshipName || form.value.scholarshipName || ''
 })
 
-// Utility function to omit a property from an object
-function omitKey<T extends object, K extends keyof T>(obj: T, key: K): Omit<T, K> {
-  const clone = { ...obj };
-  delete clone[key];
-  return clone;
-}
-
 const onSubmit = async () => {
   try {
     loading.value = true
-    if (props.isEdit) {
-      await applicationStore.updateApplication(form.value.applicationId, form.value)
+    if (props.isEdit && form.value._id) {
+      await applicationStore.updateApplication(form.value._id, form.value)
       $q.notify({
         color: 'positive',
         message: 'Application updated successfully'
       })
     } else {
       // For new applications, let the server handle ID generation
-      const applicationData = omitKey(form.value, 'applicationId');
-      const newApplication: Omit<Application, 'applicationId'> = {
-        ...applicationData
+      const newApplication: Omit<Application, '_id'> = {
+        ...form.value
       };
       
       // Create the application first
