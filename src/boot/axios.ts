@@ -71,11 +71,6 @@ export default defineBoot(({ app }) => {
   // Add response interceptor for better error handling and token refresh
   api.interceptors.response.use(
     (response) => {
-      console.log('API response:', {
-        status: response.status,
-        statusText: response.statusText,
-        data: response.data
-      });
       return response;
     },
     async (error) => {

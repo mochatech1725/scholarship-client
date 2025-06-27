@@ -18,12 +18,12 @@ class ApiService {
       const headers = await this.getAuthHeaders()
       const url = endpoint
       
-      console.log('Making API request:', {
-        url,
-        method: options.method || 'GET',
-        headers: headers,
-        hasToken: !!headers.Authorization
-      })
+      // console.log('Making API request:', {
+      //   url,
+      //   method: options.method || 'GET',
+      //   headers: headers,
+      //   hasToken: !!headers.Authorization
+      // })
       
       const response = await api({
         url,
