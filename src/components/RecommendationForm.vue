@@ -47,7 +47,7 @@
               type="date"
               flat
               dense
-              class="q-mb-md"
+              class="q-mb-sm"
             />
           </div>
 
@@ -58,7 +58,7 @@
               :options="submissionMethodOptions"
               flat
               dense
-              class="q-mb-md"
+              class="q-mb-sm"
             />
           </div>
 
@@ -80,7 +80,7 @@
               type="date"
               flat
               dense
-              class="q-mb-md"
+              class="q-mb-sm"
             />
           </div>
         </div>

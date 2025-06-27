@@ -44,7 +44,7 @@
                 :options="educationLevelOptions"
                 flat
                 dense
-                class="q-mb-md"
+                class="q-mb-sm"
               />
             </div>
             <div class="col-12 col-md-6">
@@ -55,7 +55,7 @@
                 multiple
                 flat
                 dense
-                class="q-mb-md"
+                class="q-mb-sm"
               />
             </div>
             <div class="col-12 col-md-6">
@@ -66,7 +66,7 @@
                 multiple
                 flat
                 dense
-                class="q-mb-md"
+                class="q-mb-sm"
               />
             </div>
             <div class="col-12 col-md-6">
@@ -76,7 +76,7 @@
                 type="number"
                 flat
                 dense
-                class="q-mb-md"
+                class="q-mb-sm"
               />
             </div>
           </div>

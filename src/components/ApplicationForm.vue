@@ -41,7 +41,7 @@
                     flat
                     dense
                     hide-bottom-space
-                    class="q-mb-md"
+                    class="q-mb-sm"
                   />
                 </div>
 
@@ -52,7 +52,7 @@
                     :options="targetTypeOptions"
                     flat
                     dense
-                    class="q-mb-md"
+                    class="q-mb-sm"
                   />
                 </div>
 
@@ -64,7 +64,7 @@
                     flat
                     dense
                     hide-bottom-space
-                    class="q-mb-md"
+                    class="q-mb-sm"
                   />
                 </div>
 
@@ -74,7 +74,7 @@
                     v-model="form.companyWebsite"
                     flat
                     dense
-                    class="q-mb-md"
+                    class="q-mb-sm"
                   />
                 </div>
 
@@ -84,7 +84,7 @@
                     v-model="form.platform"
                     flat
                     dense
-                    class="q-mb-md"
+                    class="q-mb-sm"
                   />
                 </div>
 
@@ -94,7 +94,7 @@
                     v-model="form.applicationLink"
                     flat
                     dense
-                    class="q-mb-md"
+                    class="q-mb-sm"
                   />
                 </div>
 
@@ -105,7 +105,7 @@
                     type="number"
                     flat
                     dense
-                    class="q-mb-md"
+                    class="q-mb-sm"
                   />
                 </div>
 
@@ -113,7 +113,7 @@
                   <q-checkbox
                     v-model="form.renewable"
                     label="Renewable"
-                    class="q-mb-md"
+                    class="q-mb-sm"
                   />
                 </div>
 
@@ -123,7 +123,7 @@
                     v-model="form.renewableTerms"
                     flat
                     dense
-                    class="q-mb-md"
+                    class="q-mb-sm"
                   />
                 </div>
 
@@ -133,7 +133,7 @@
                     v-model="form.theme"
                     flat
                     dense
-                    class="q-mb-md"
+                    class="q-mb-sm"
                   />
                 </div>
                 
@@ -143,7 +143,7 @@
                     v-model="form.requirements"
                     flat
                     dense
-                    class="q-mb-md"
+                    class="q-mb-sm"
                   />
                 </div>
 
@@ -153,7 +153,7 @@
                     v-model="form.documentInfoLink"
                     flat
                     dense
-                    class="q-mb-md"
+                    class="q-mb-sm"
                   />
                 </div>
 
@@ -163,7 +163,7 @@
                     v-model="form.currentAction"
                     flat
                     dense
-                    class="q-mb-md"
+                    class="q-mb-sm"
                   />
                 </div>
 
@@ -174,7 +174,7 @@
                     :options="statusOptions"
                     flat
                     dense
-                    class="q-mb-md"
+                    class="q-mb-sm"
                   />
                 </div>
 
@@ -185,7 +185,7 @@
                     type="date"
                     flat
                     dense
-                    class="q-mb-md"
+                    class="q-mb-sm"
                   />
                 </div>
 
@@ -196,7 +196,7 @@
                     type="date"
                     flat
                     dense
-                    class="q-mb-md"
+                    class="q-mb-sm"
                   />
                 </div>
 
@@ -207,7 +207,7 @@
                     type="date"
                     flat
                     dense
-                    class="q-mb-md"
+                    class="q-mb-sm"
                   />
                 </div>
               </div>
@@ -369,7 +369,6 @@ const loadRecommenders = async () => {
     // Get userId from application or use a default
     const userId = props.application?.studentId || 'user-1' // Default fallback
     recommenders.value = await recommenderStore.getRecommendersByUserId(userId)
-    console.log('Recommenders loaded:', recommenders.value)
   } catch (error) {
     console.error('Failed to load recommenders:', error)
   }

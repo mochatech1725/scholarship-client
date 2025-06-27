@@ -32,18 +32,17 @@
               flat
               dense
               hide-bottom-space
-              class="q-mb-md"
+              class="q-mb-sm"
             />
           </div>
           <div class="col-12 col-md-6">
             <div class="form-label">Units</div>
-            <q-input
+            <q-select
               v-model="form.units"
-              :rules="[val => !!val || 'Units is required']"
+              :options="unitOptions"
               flat
               dense
-              hide-bottom-space
-              class="q-mb-md"
+              class="q-mb-sm"
             />
           </div>
           <div class="col-12">
@@ -54,7 +53,7 @@
               flat
               dense
               hide-bottom-space
-              class="q-mb-md"
+              class="q-mb-sm"
             />
           </div>
           <div class="col-12">
@@ -66,7 +65,7 @@
               flat
               dense
               hide-bottom-space
-              class="q-mb-md"
+              class="q-mb-sm"
             />
           </div>
         </div>
@@ -93,6 +92,8 @@ const emit = defineEmits<{
 const scholarshipName = computed(() => {
   return props.application?.scholarshipName || ''
 })
+
+const unitOptions = ['words', 'characters', 'pages', 'sentences']
 
 const form = ref<Essay>({
   essayLink: '',

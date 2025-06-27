@@ -14,10 +14,7 @@ export const useAccountStore = defineStore('account', () => {
       const response = await apiService.login()
       console.log('Login response:', response)
       
-      const userData = userStore.setUser(response.user)
-      
-      console.log('User authenticated and loaded from server:', userData)
-      return userData
+      return userStore.setUser(response.user)
     } catch (err) {
       console.error('Failed to authenticate user:', err)
       throw err
@@ -29,23 +26,18 @@ export const useAccountStore = defineStore('account', () => {
   const register = async (auth0User: Auth0User) => {
     try {
       isLoading.value = true
-      // Call backend API to register new user
       const registerData = {
         userId: auth0User.sub,
         emailAddress: auth0User.emailAddress,
       }
       
-      const response = await apiService.register(registerData)
-      console.log('Register response:', response)
+      await apiService.register(registerData)
       
       // After registration, fetch the complete user profile from MongoDB
       const userProfileResponse = await apiService.getUser()
-      console.log('User profile response after registration:', userProfileResponse)
+      //console.log('User profile response after registration:', userProfileResponse)
       
-      const registeredUser = userStore.setUser(userProfileResponse.user)
-      
-      console.log('User registered and loaded from server:', registeredUser)
-      return registeredUser
+      return userStore.setUser(userProfileResponse.user)
     } catch (err) {
       console.error('Failed to register user:', err)
       throw err
@@ -57,13 +49,9 @@ export const useAccountStore = defineStore('account', () => {
   const getUserProfile = async () => {
     try {
       isLoading.value = true
-      // Call backend API to get user profile
       const response = await apiService.getUser()
       
-      const userData = userStore.setUser(response.user)
-      
-      console.log('User profile loaded from server:', userData)
-      return userData
+      return  userStore.setUser(response.user)
     } catch (err) {
       console.error('Failed to load user profile:', err)
       throw err
@@ -75,8 +63,7 @@ export const useAccountStore = defineStore('account', () => {
   const updateProfile = async (profile: User['profile']) => {
     try {
       isLoading.value = true
-      const updatedUser = await userStore.updateProfile(profile)
-      return updatedUser
+      return await userStore.updateProfile(profile)
     } catch (error) {
       console.error('Failed to update profile:', error)
       throw error

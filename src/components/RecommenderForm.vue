@@ -30,7 +30,7 @@
           flat
           dense
           hide-bottom-space
-          class="q-mb-md"
+          class="q-mb-sm"
         />
       </div>
 
@@ -42,7 +42,7 @@
           flat
           dense
           hide-bottom-space
-          class="q-mb-md"
+          class="q-mb-sm"
         />
       </div>
 
@@ -55,7 +55,7 @@
           dense
           type="email"
           hide-bottom-space
-          class="q-mb-md"
+          class="q-mb-sm"
         />
       </div>
 
@@ -67,7 +67,7 @@
           dense
           mask="(###) ###-####"
           hide-bottom-space
-          class="q-mb-md"
+          class="q-mb-sm"
         />
       </div>
 
@@ -79,7 +79,7 @@
           flat
           dense
           hide-bottom-space
-          class="q-mb-md"
+          class="q-mb-sm"
         />
       </div>
     </div>
