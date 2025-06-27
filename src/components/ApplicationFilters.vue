@@ -1,51 +1,55 @@
 <template>
   <div class="application-filters" :class="{ expanded: isExpanded }">
     <q-card class="q-pa-sm">
-      <div class="row items-center justify-between q-mb-sm">
-        <div class="text-h6">Filters</div>
-        <q-btn
-          flat
-          round
-          :icon="isExpanded ? 'expand_less' : 'expand_more'"
-          @click="isExpanded = !isExpanded"
-        />
-      </div>
+      <q-card-section class="q-pb-none">
+        <div class="row items-center justify-between">
+          <div class="text-h6">Filters</div>
+          <q-btn
+            flat
+            round
+            :icon="isExpanded ? 'expand_less' : 'expand_more'"
+            @click="isExpanded = !isExpanded"
+          />
+        </div>
+      </q-card-section>
 
       <q-slide-transition>
-        <div v-show="isExpanded" class="filter-content">
-          <div class="row q-col-gutter-sm">
-            <div class="col-12 col-sm-6 col-md-2 col-lg-2">
-              <div class="form-label">Status</div>
+        <q-card-section v-show="isExpanded" class="q-pt-sm">
+          <div class="row items-end q-gutter-sm">
+            <div class="col-auto">
+              <div class="form-label text-caption">Status</div>
               <q-select
                 v-model="localFilters.status"
                 :options="statusOptions"
                 clearable
                 flat
                 dense
-                class="q-mb-sm"
+                emit-value
+                map-options
+                style="min-width: 160px"
               />
             </div>
 
-            <div class="col-12 col-sm-6 col-md-3 col-lg-3">
-              <div class="form-label">Company Name</div>
+            <div class="col-auto">
+              <div class="form-label text-caption">Company</div>
               <q-input
                 v-model="localFilters.company"
                 clearable
                 flat
                 dense
-                class="q-mb-sm"
+                style="min-width: 220px"
               />
             </div>
 
-            <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-              <div class="form-label">Due Date Range</div>
+            <div class="col">
+              <div class="form-label text-caption">Due Date Range</div>
               <q-input
                 :model-value="dateRangeDisplay"
                 flat
                 dense
                 readonly
-                class="q-mb-sm"
                 placeholder="Select date range"
+                style="min-width: 200px"
               >
                 <template v-slot:append>
                   <q-icon name="event" class="cursor-pointer">
@@ -63,19 +67,17 @@
               </q-input>
             </div>
 
-            <div class="col-12 col-sm-6 col-md-3 col-lg-3">
-              <div class="form-label">&nbsp;</div>
+            <div class="col-auto">
               <q-btn
                 label="Clear All"
                 color="grey-6"
                 flat
                 dense
                 @click="clearAllFilters"
-                class="q-mb-sm"
               />
             </div>
           </div>
-        </div>
+        </q-card-section>
       </q-slide-transition>
     </q-card>
   </div>
@@ -159,5 +161,27 @@ const clearAllFilters = () => {
 
 .filter-content {
   min-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .application-filters .row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .application-filters .col-auto {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  
+  .application-filters .col {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+}
+
+.form-label {
+  margin-bottom: 2px;
+  font-weight: 500;
 }
 </style> 
