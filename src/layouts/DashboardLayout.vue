@@ -152,11 +152,8 @@ const isReady = ref(false)
 const mobileMenu = ref(false)
 
 onMounted(() => {
-  // Auth initialization is now handled by the router guard
-  // No need to call initialize() here
   isReady.value = true
 
-  // Set active tab based on current route
   if (route.path.includes('/applications')) {
     mobileMenu.value = false
   } else if (route.path.includes('/scholarship')) {

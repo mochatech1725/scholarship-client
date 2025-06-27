@@ -38,12 +38,13 @@
         </template>
 
         <template v-slot:body-cell-actions="props">
-          <q-td :props="props" class="q-gutter-sm">
+          <q-td :props="props">
             <q-btn
               flat
               round
               color="primary"
               icon="edit"
+              size="sm"
               @click="handleEdit(props.row)"
             />
             <q-btn
@@ -51,6 +52,7 @@
               round
               color="negative"
               icon="delete"
+              size="sm"
               @click="confirmDelete(props.row)"
             />
           </q-td>
@@ -114,11 +116,12 @@ const applicationStatusOptions = [...statusOptions]
 const columns: QTableColumn[] = [
   { name: 'company', label: 'Company', field: 'company', sortable: true, align: 'left' },
   { name: 'scholarshipName', label: 'Scholarship', field: 'scholarshipName', sortable: true, align: 'left' },
+  { name: 'targetType', label: 'Type', field: 'targetType', sortable: true, align: 'left' },
   { name: 'amount', label: 'Amount', field: 'amount', sortable: true, align: 'right', format: (val: number) => `$${val.toLocaleString()}` },
   { name: 'status', label: 'Status', field: 'status', sortable: true, align: 'left' },
   { name: 'currentAction', label: 'Current Action', field: 'currentAction', sortable: true, align: 'left' },
   { name: 'dueDate', label: 'Due Date', field: 'dueDate', sortable: true, align: 'left', format: (val: string) => formatDate(val) },
-  { name: 'actions', label: 'Actions', field: 'actions', align: 'right' }
+  { name: 'actions', label: 'Actions', field: 'actions', align: 'right', style: 'width: 70px' }
 ]
 
 const pagination = ref({
