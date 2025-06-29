@@ -4,20 +4,20 @@
 :root {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   
-  // Toggl-inspired color palette
-  --q-primary: #492b7c; 
-  --q-secondary: #10B981;
+  // Green-inspired color palette
+  --q-primary: #05961d; 
+  --q-secondary: #10b981;
   --q-accent: #F59E0B; 
   --q-positive: #10B981; 
   --q-negative: #EF4444;
   --q-warning: #F59E0B; 
   --q-info: #3B82F6;
   
-  // Label colors
+  // Label colors - changed back to blue as requested
   --q-label-color: #1a5cec; 
   
   // Button colors
-  --q-button-primary: #1a5cec;
+  --q-button-primary: #05961d;
   
   // Background colors
   --q-background: #FFFFFF; 
@@ -31,24 +31,24 @@
   
   // Border colors
   --q-border: #E5E7EB; 
-  --q-border-focus: #7C3AED; 
+  --q-border-focus: #05961d; 
   
   // Table header styling
-  --table-header-color: var(--q-label-color);
-  --table-header-weight: 400;
+  --table-header-color: #000000;
+  --table-header-weight: 500;
   --table-header-size: 0.875rem;
   --table-header-family: inherit;
   --table-header-letter-spacing: normal;
   --table-header-padding: 16px 12px;
-  --table-header-border: 2px solid var(--q-primary);
+  --table-header-border: 2px solid #1e40af;
   --table-header-bg: linear-gradient(135deg, var(--q-background-secondary) 0%, var(--q-background-tertiary) 100%);
-  --table-header-hover-bg: linear-gradient(135deg, var(--q-background-tertiary) 0%, #E0E7FF 100%);
+  --table-header-hover-bg: linear-gradient(135deg, var(--q-background-tertiary) 0%, #D1FAE5 100%);
 }
 
-// Reusable form label class
+// Reusable form label class - changed to black
 .form-label {
-  color: var(--q-label-color);
-  font-weight: 400;
+  color: #000000;
+  font-weight: 500;
   font-size: 0.875rem;
   margin-bottom: 0.25rem;
 }
@@ -85,7 +85,7 @@
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f5f3fa;
+  background-color: #ffffff;
 }
 
 // Custom font weights
@@ -181,7 +181,7 @@ body {
 // Specific styling for form tabs
 .q-form .q-tabs {
   .q-tab--active {
-    background-color: rgba(73, 43, 124, 0.1) !important;
+    background-color: rgba(5, 150, 29, 0.1) !important;
     color: var(--q-primary) !important;
     
     .q-tab__label {
@@ -234,27 +234,21 @@ body {
   }
 }
 
-// Make sure expansion item headers are also blue
-.q-expansion-item__title {
-  color: var(--q-primary) !important;
-  font-weight: 600;
-}
-
-// Make text-h6 use primary color
+// Make text-h6 use black color instead of primary green
 .text-h6, .text-h5, .text-h4, .text-h3, .text-h2, .text-h1 {
-  color: var(--q-primary) !important;
+  color: #000000 !important;
 }
 
-// Make input labels match primary color
+// Make input labels black instead of primary green
 .q-field__label {
-  color: var(--q-primary) !important;
+  color: #000000 !important;
   font-weight: 600 !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
 }
 
-// Make checkbox labels match primary color
+// Make checkbox labels black instead of primary green
 .q-checkbox__label {
-  color: var(--q-primary) !important;
+  color: #000000 !important;
   font-weight: 600 !important;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
 }
@@ -364,8 +358,8 @@ body {
 
 // Add subtle color to q-cards and panels
 .q-card {
-  background: linear-gradient(135deg, #FAF9FF 0%, #F5F3FF 100%) !important;
-  border: 1px solid rgba(107, 70, 193, 0.1) !important;
+  background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
 }
 
 .q-card-section {
@@ -374,20 +368,20 @@ body {
 
 // Style expansion panels with subtle color
 .q-expansion-item {
-  background: linear-gradient(135deg, #F8F7FF 0%, #F3F1FF 100%) !important;
+  background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%) !important;
   border-radius: 8px !important;
   margin-bottom: 8px !important;
-  border: 1px solid rgba(107, 70, 193, 0.08) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
 }
 
 .q-expansion-item__content {
-  background: linear-gradient(135deg, #FFFFFF 0%, #FAF9FF 100%) !important;
+  background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%) !important;
 }
 
 // Style dialog cards
 .q-dialog .q-card {
-  background: linear-gradient(135deg, #FFFFFF 0%, #FAF9FF 100%) !important;
-  border: 1px solid rgba(107, 70, 193, 0.15) !important;
+  background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%) !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
 }
 
 // Mobile responsive improvements
@@ -515,7 +509,7 @@ body {
 
 // Toggl-inspired header styling
 .q-header {
-  background: linear-gradient(135deg, #492b7c 0%, #301551 100%) !important;
+  background: #1e40af !important;
   border-bottom: 2px solid rgba(255, 255, 255, 0.1) !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
   color: white !important;
@@ -615,8 +609,8 @@ body {
 
 // Mobile navigation
 .mobile-nav {
-  background: linear-gradient(135deg, #f5f3fa 0%, #e8e4ff 100%) !important;
-  border-top: 1px solid rgba(107, 70, 193, 0.1) !important;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
+  border-top: 1px solid rgba(5, 150, 29, 0.1) !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
   color: var(--q-primary) !important;
 }
@@ -637,17 +631,17 @@ body {
   left: 16px !important;
   right: 16px !important;
   height: 1px !important;
-  background: rgba(107, 70, 193, 0.2) !important;
+  background: rgba(5, 150, 29, 0.2) !important;
 }
 
 .mobile-nav .q-item:hover {
   color: var(--q-primary) !important;
-  background: rgba(107, 70, 193, 0.1) !important;
+  background: rgba(5, 150, 29, 0.1) !important;
 }
 
 .mobile-nav .q-item.text-primary {
   color: var(--q-primary) !important;
-  background: rgba(107, 70, 193, 0.15) !important;
+  background: rgba(5, 150, 29, 0.15) !important;
 }
 
 // Responsive header
@@ -672,4 +666,15 @@ body {
   .q-toolbar-title {
     font-size: 1.25rem !important;
   }
+}
+
+// Make expansion item headers black instead of primary green
+.q-expansion-item__title {
+  color: #000000 !important;
+  font-weight: 600;
+}
+
+// Override text-primary class for expansion items in forms
+.q-expansion-item .text-primary {
+  color: #000000 !important;
 }

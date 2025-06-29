@@ -21,15 +21,15 @@ const props = defineProps<{
   gap: 8px;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--q-primary);
+  color: #000000;
   box-shadow: none;
 }
 
 .banner-icon {
-  color: var(--q-primary);
+  color: #000000;
 }
 
 .banner-text {
-  color: var(--q-primary);
+  color: #000000;
 }
 </style> 
