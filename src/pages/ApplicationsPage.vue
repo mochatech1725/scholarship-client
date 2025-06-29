@@ -13,7 +13,7 @@
     <!-- Filters Section -->
     <ApplicationFilters
       v-model:filters="filters"
-      :status-options="applicationStatusOptions"
+      :target-type-options="targetTypeOptions"
     />
 
     <!-- Applications List -->
@@ -87,7 +87,7 @@ import type { QTableColumn } from 'quasar'
 import ApplicationFilters from 'src/components/ApplicationFilters.vue'
 import ApplicationForm from 'src/components/ApplicationForm.vue'
 import type { ApplicationStatus, Application } from 'src/types'
-import { applicationStatusOptions } from 'src/types'
+import { targetTypeOptions } from 'src/types'
 import { useGetStatusColor } from 'src/composables/useGetStatusColor'
 import { useApplicationStore } from 'src/stores/application.store'
 import { useUserStore } from 'src/stores/user.store'
@@ -106,6 +106,8 @@ const { applications } = storeToRefs(applicationStore)
 
 const filters = ref({
   status: null as ApplicationStatus | null,
+  targetType: null as string | null,
+  currentAction: '',
   company: '',
   dueDateFrom: null as string | null,
   dueDateTo: null as string | null
@@ -132,6 +134,8 @@ const pagination = ref({
 const filteredApplications = computed(() => {
   return applications.value.filter(app => {
     if (filters.value.status && app.status !== filters.value.status) return false
+    if (filters.value.targetType && app.targetType !== filters.value.targetType) return false
+    if (filters.value.currentAction && !app.currentAction.toLowerCase().includes(filters.value.currentAction.toLowerCase())) return false
     if (filters.value.company && !app.company.toLowerCase().includes(filters.value.company.toLowerCase())) return false
     
     // Date range filtering

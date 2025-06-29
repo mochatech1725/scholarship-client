@@ -20,13 +20,41 @@
               <div class="form-label text-caption">Status</div>
               <q-select
                 v-model="localFilters.status"
-                :options="statusOptions"
+                :options="applicationStatusOptions"
                 clearable
                 flat
                 dense
                 emit-value
                 map-options
                 style="min-width: 160px"
+              />
+            </div>
+
+            <div class="col-auto">
+              <div class="form-label text-caption">Type</div>
+              <q-select
+                v-model="localFilters.targetType"
+                :options="targetTypeOptions"
+                clearable
+                flat
+                dense
+                emit-value
+                map-options
+                style="min-width: 160px"
+              />
+            </div>
+
+            <div class="col-auto">
+              <div class="form-label text-caption">Current Action</div>
+              <q-select
+                v-model="localFilters.currentAction"
+                :options="currentActionOptions"
+                clearable
+                flat
+                dense
+                emit-value
+                map-options
+                style="min-width: 200px"
               />
             </div>
 
@@ -86,17 +114,19 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import { formatDate } from 'src/utils/helper'
+import { targetTypeOptions, applicationStatusOptions, currentActionOptions } from 'src/types'
 
 const isExpanded = ref(true)
 
 const props = defineProps<{
   filters: {
     status: string | null
+    targetType: string | null
+    currentAction: string
     company: string
     dueDateFrom: string | null
     dueDateTo: string | null
   }
-  statusOptions: readonly string[]
 }>()
 
 const emit = defineEmits<{
@@ -145,6 +175,8 @@ watch(localFilters, (newValue) => {
 const clearAllFilters = () => {
   localFilters.value = {
     status: null,
+    targetType: null,
+    currentAction: '',
     company: '',
     dueDateFrom: null,
     dueDateTo: null

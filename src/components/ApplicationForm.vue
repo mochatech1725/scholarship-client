@@ -284,7 +284,7 @@ const getDefaultFormData = (): Omit<Application, '_id'> => ({
   renewable: false,
   renewableTerms: '',
   documentInfoLink: '',
-  currentAction: '',
+  currentAction: 'N/A' as const,
   status: 'Not Started' as const,
   submissionDate: '',
   openDate: '',

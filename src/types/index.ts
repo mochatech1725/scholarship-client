@@ -102,6 +102,13 @@ export const applicationStatusOptions = [
   'Not Awarded'
 ] as const
 
+export const currentActionOptions = [
+  'Waiting for Recommendations',
+  'Waiting for Essay Review',
+  'Ready to Submit',
+  'N/A'
+] as const
+
 export type EducationLevel = typeof educationLevelOptions[number]
 export type TargetType = typeof targetTypeOptions[number]
 export type SubjectArea = typeof subjectAreaOptions[number]
@@ -111,7 +118,7 @@ export type EducationYear = typeof educationYearOptions[number]
 export type ApplicationStatus = typeof applicationStatusOptions[number]
 export type RecommendationStatus = typeof recomendationOptions[number]
 export type SubmissionMethod = typeof submissionMethodOptions[number]
-
+export type CurrentAction = typeof currentActionOptions[number]
 
 export interface Auth0User {
   sub: string
@@ -175,7 +182,7 @@ export interface Application {
   renewable: boolean
   renewableTerms?: string
   documentInfoLink: string
-  currentAction: string
+  currentAction: CurrentAction
   status: ApplicationStatus
   essays: Essay[]
   recommendations: Recommendation[]
