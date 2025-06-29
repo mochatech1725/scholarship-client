@@ -5,12 +5,16 @@
       <q-form @submit="onSubmit" class="q-gutter-md">
         <div class="row items-center justify-between q-mb-md">
           <div class="text-h6">{{ isEdit ? 'Editing' : 'Adding' }} Recommendation</div>
-          <div>
+          <div class="row items-center">
+            <div v-if="isFormDirty" class="text-caption text-orange q-mr-md">
+              <q-icon name="warning" size="sm" class="q-mr-xs" />
+              Unsaved changes
+            </div>
             <q-btn
               label="Cancel"
               color="grey-6"
               flat
-              @click="$emit('cancel')"
+              @click="handleCancel"
               class="q-mr-sm"
               size="md"
             />
@@ -91,9 +95,12 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
+import { useQuasar } from 'quasar'
 import type { Recommendation, Application, Recommender } from 'src/types'
 import { formatDateForInput } from 'src/utils/helper'
 import ScholarshipBanner from 'components/ScholarshipBanner.vue'
+
+const $q = useQuasar()
 
 const props = defineProps<{
   isEdit: boolean
@@ -126,6 +133,23 @@ const form = ref<Recommendation>({
   submissionDate: null
 })
 
+const originalFormData = ref<Recommendation | null>(null)
+const originalSelectedRecommenderId = ref<string | null>(null)
+const isInitialized = ref(false)
+
+// Track if form is dirty (has been modified)
+const isFormDirty = computed(() => {
+  if (!originalFormData.value || !isInitialized.value) return false
+  
+  // Deep comparison of form data
+  const current = JSON.stringify(form.value)
+  const original = JSON.stringify(originalFormData.value)
+  const currentSelected = selectedRecommenderId.value
+  const originalSelected = originalSelectedRecommenderId.value
+  
+  return current !== original || currentSelected !== originalSelected
+})
+
 const recommenderOptions = computed(() => {
   return props.recommenders.map(recommender => ({
     label: `${recommender.firstName} ${recommender.lastName} (${recommender.emailAddress})`,
@@ -153,14 +177,36 @@ const onRecommenderChange = (selectedValue: string) => {
   }
 }
 
+const handleCancel = () => {
+  if (isFormDirty.value) {
+    $q.dialog({
+      title: 'Unsaved Changes',
+      message: 'You have unsaved changes. Are you sure you want to cancel?',
+      cancel: true,
+      persistent: true,
+      ok: {
+        label: 'Discard Changes',
+        color: 'negative'
+      }
+    }).onOk(() => {
+      emit('cancel')
+    })
+  } else {
+    emit('cancel')
+  }
+}
+
 const onSubmit = () => {
+  // Reset dirty state after successful submission
+  originalFormData.value = { ...form.value }
+  originalSelectedRecommenderId.value = selectedRecommenderId.value
   emit('submit', form.value)
 }
 
 const initializeForm = () => {
   if (props.recommendation) {
     const { recommender } = props.recommendation
-    form.value = {
+    const recommendationData = {
       recommender: recommender,
       dueDate: formatDateForInput(props.recommendation.dueDate),
       status: props.recommendation.status,
@@ -170,8 +216,40 @@ const initializeForm = () => {
     }
     
     // Set the selected recommender value for the dropdown
-    selectedRecommenderId.value = `${recommender.firstName} ${recommender.lastName} (${recommender.emailAddress})`
+    const selectedValue = `${recommender.firstName} ${recommender.lastName} (${recommender.emailAddress})`
+    
+    // Store original data first
+    originalFormData.value = { ...recommendationData }
+    originalSelectedRecommenderId.value = selectedValue
+    
+    // Then set form data
+    form.value = recommendationData
+    selectedRecommenderId.value = selectedValue
+  } else {
+    const defaultData: Recommendation = {
+      recommender: {
+        studentId: '',
+        firstName: '',
+        lastName: '',
+        emailAddress: '',
+        phoneNumber: '',
+        relationship: ''
+      },
+      dueDate: '',
+      status: 'Pending' as const,
+      submissionMethod: 'DirectEmail' as const,
+      requestDate: '',
+      submissionDate: null
+    }
+    
+    // Store original data first
+    originalFormData.value = { ...defaultData }
+    originalSelectedRecommenderId.value = selectedRecommenderId.value
+    
+    // Then set form data
+    form.value = defaultData
   }
+  isInitialized.value = true
 }
 
 onMounted(() => {

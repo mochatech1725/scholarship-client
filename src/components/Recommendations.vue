@@ -96,6 +96,10 @@ const props = defineProps<{
   recommenders: Recommender[]
 }>()
 
+const emit = defineEmits<{
+  (e: 'recommendations-updated', recommendations: Recommendation[]): void
+}>()
+
 const $q = useQuasar()
 const applicationStore = useApplicationStore()
 const recommendations = ref<Recommendation[]>([])
@@ -195,10 +199,11 @@ const handleSubmit = async (form: Recommendation) => {
     }
     closeForm()
     loadRecommendations()
+    emit('recommendations-updated', recommendations.value)
   } catch (err) {
     console.error('Failed to save recommendation:', err)
     $q.notify({
-      type: 'negative',
+      color: 'negative',
       message: 'Failed to save recommendation'
     })
   } finally {
@@ -234,6 +239,7 @@ const confirmDeleteRecommendation = (recommendation: Recommendation) => {
           message: 'Recommendation deleted successfully'
         })
         loadRecommendations()
+        emit('recommendations-updated', recommendations.value)
       } catch (err) {
         console.error('Failed to delete recommendation:', err)
         $q.notify({

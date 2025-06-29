@@ -2,12 +2,16 @@
   <q-form @submit="onSubmit" class="q-gutter-md">
     <div class="row items-center justify-between q-mb-md">
       <div class="text-h6">{{ isEdit ? 'Editing' : 'Adding' }} Recommender</div>
-      <div>
+      <div class="row items-center">
+        <div v-if="isFormDirty" class="text-caption text-orange q-mr-md">
+          <q-icon name="warning" size="sm" class="q-mr-xs" />
+          Unsaved changes
+        </div>
         <q-btn
           label="Cancel"
           color="grey-6"
           flat
-          @click="$emit('cancel')"
+          @click="handleCancel"
           class="q-mr-sm"
           size="md"
         />
@@ -87,8 +91,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useQuasar } from 'quasar'
 import type { Recommender, User } from 'src/types'
+
+const $q = useQuasar()
 
 const props = defineProps<{
   isEdit?: boolean
@@ -113,6 +120,19 @@ const form = ref<Omit<Recommender, '_id'> & { emailAddress: string; phoneNumber:
   phoneNumber: ''
 })
 
+const originalFormData = ref<Omit<Recommender, '_id'> & { emailAddress: string; phoneNumber: string } | null>(null)
+const isInitialized = ref(false)
+
+// Track if form is dirty (has been modified)
+const isFormDirty = computed(() => {
+  if (!originalFormData.value || !isInitialized.value) return false
+  
+  // Deep comparison of form data
+  const current = JSON.stringify(form.value)
+  const original = JSON.stringify(originalFormData.value)
+  return current !== original
+})
+
 const rules = {
   firstName: [
     (val: string) => !!val || 'First name is required'
@@ -127,7 +147,7 @@ const rules = {
 
 const loadData = () => {
   if (props.isEdit && props.recommender) {
-    form.value = {
+    const recommenderData = {
       studentId: props.recommender.studentId,
       firstName: props.recommender.firstName,
       lastName: props.recommender.lastName,
@@ -135,10 +155,49 @@ const loadData = () => {
       emailAddress: props.recommender.emailAddress,
       phoneNumber: props.recommender.phoneNumber
     }
+    // Store original data first
+    originalFormData.value = { ...recommenderData }
+    // Then set form data
+    form.value = recommenderData
+  } else {
+    const defaultData = {
+      studentId: props.user?._id || '',
+      firstName: '',
+      lastName: '',
+      relationship: '',
+      emailAddress: '',
+      phoneNumber: ''
+    }
+    // Store original data first
+    originalFormData.value = { ...defaultData }
+    // Then set form data
+    form.value = defaultData
+  }
+  isInitialized.value = true
+}
+
+const handleCancel = () => {
+  if (isFormDirty.value) {
+    $q.dialog({
+      title: 'Unsaved Changes',
+      message: 'You have unsaved changes. Are you sure you want to cancel?',
+      cancel: true,
+      persistent: true,
+      ok: {
+        label: 'Discard Changes',
+        color: 'negative'
+      }
+    }).onOk(() => {
+      emit('cancel')
+    })
+  } else {
+    emit('cancel')
   }
 }
 
 const onSubmit = () => {
+  // Reset dirty state after successful submission
+  originalFormData.value = { ...form.value }
   emit('submit', form.value)
 }
 

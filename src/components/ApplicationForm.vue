@@ -5,12 +5,16 @@
       <q-form @submit="onSubmit" class="q-gutter-md">
         <div class="row items-center justify-between q-mb-md">
           <div class="text-h6">{{ isEdit ? 'Edit' : 'Add' }} Application</div>
-          <div>
+          <div class="row items-center">
+            <div v-if="isFormDirty" class="text-caption text-orange q-mr-md">
+              <q-icon name="warning" size="sm" class="q-mr-xs" />
+              Unsaved changes
+            </div>
             <q-btn
               label="Cancel"
               color="grey-6"
               flat
-              @click="$emit('cancel')"
+              @click="handleCancel"
               class="q-mr-sm"
               size="md"
             />
@@ -223,7 +227,11 @@
           header-class="text-primary"
           class="q-mt-md"
         >
-          <Recommendations :application="application" :recommenders="recommenders" />
+          <Recommendations 
+            :application="application" 
+            :recommenders="recommenders"
+            @recommendations-updated="handleRecommendationsUpdated"
+          />
         </q-expansion-item>
         
         <!-- Essays Section -->
@@ -233,7 +241,10 @@
           header-class="text-primary"
           class="q-mt-md"
         >
-          <Essays :application="application" />
+          <Essays 
+            :application="application"
+            @essays-updated="handleEssaysUpdated"
+          />
         </q-expansion-item>
 
       </q-form>
@@ -245,7 +256,7 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'stores/application.store'
-import type { Application, Recommender } from 'src/types'
+import type { Application, Recommender, Essay, Recommendation } from 'src/types'
 import { targetTypeOptions, applicationStatusOptions } from 'src/types'
 import Essays from 'components/Essays.vue'
 import Recommendations from 'components/Recommendations.vue'
@@ -294,6 +305,32 @@ const getDefaultFormData = (): Omit<Application, '_id'> => ({
 })
 
 const form = ref<Application>(getDefaultFormData() as Application)
+const originalFormData = ref<Application | null>(null)
+const isInitialized = ref(false)
+
+// Track if form is dirty (has been modified)
+const isFormDirty = computed(() => {
+  if (!originalFormData.value || !isInitialized.value) return false
+  
+  // Check main form data (excluding essays and recommendations)
+  const currentMain = { ...form.value, essays: [], recommendations: [] }
+  const originalMain = { ...originalFormData.value, essays: [], recommendations: [] }
+  const currentMainStr = JSON.stringify(currentMain)
+  const originalMainStr = JSON.stringify(originalMain)
+  const mainFormDirty = currentMainStr !== originalMainStr
+  
+  // Check essays
+  const currentEssays = JSON.stringify(form.value.essays || [])
+  const originalEssays = JSON.stringify(originalFormData.value.essays || [])
+  const essaysDirty = currentEssays !== originalEssays
+  
+  // Check recommendations
+  const currentRecommendations = JSON.stringify(form.value.recommendations || [])
+  const originalRecommendations = JSON.stringify(originalFormData.value.recommendations || [])
+  const recommendationsDirty = currentRecommendations !== originalRecommendations
+  
+  return mainFormDirty || essaysDirty || recommendationsDirty
+})
 
 const rules = {
   scholarshipName: [
@@ -308,11 +345,18 @@ const rules = {
 const initializeForm = () => {
   if (props.application) {
     const applicationData = { ...props.application }
+    // Store original data first
+    originalFormData.value = { ...applicationData }
+    // Then set form data
     form.value = applicationData
   } else {
-    // Reset form for new application with new ObjectId
-    form.value = getDefaultFormData()
+    const defaultData = getDefaultFormData()
+    // Store original data first
+    originalFormData.value = { ...defaultData } as Application
+    // Then set form data
+    form.value = defaultData as Application
   }
+  isInitialized.value = true
 }
 
 // Watch for changes in props.application
@@ -320,7 +364,11 @@ watch(() => props.application, (newApplication) => {
   if (newApplication) {
     // Update form with application data, excluding the created field
     const { ...applicationData } = newApplication
+    // Store original data first
+    originalFormData.value = { ...applicationData }
+    // Then set form data
     form.value = applicationData
+    isInitialized.value = true
   }
 }, { immediate: true })
 
@@ -351,6 +399,10 @@ const onSubmit = async () => {
         message: 'Application created successfully'
       })
     }
+    
+    // Reset dirty state after successful submission
+    originalFormData.value = { ...form.value }
+    
     emit('submit')
   } catch (error) {
     console.error('Error submitting application:', error)
@@ -374,10 +426,39 @@ const loadRecommenders = async () => {
   }
 }
 
+const handleCancel = () => {
+  if (isFormDirty.value) {
+    $q.dialog({
+      title: 'Unsaved Changes',
+      message: 'You have unsaved changes. Are you sure you want to cancel?',
+      cancel: true,
+      persistent: true,
+      ok: {
+        label: 'Discard Changes',
+        color: 'negative'
+      }
+    }).onOk(() => {
+      emit('cancel')
+    })
+  } else {
+    emit('cancel')
+  }
+}
+
 onMounted(async () => {
   await loadRecommenders()
   initializeForm()
 })
+
+const handleRecommendationsUpdated = (updatedRecommendations: Recommendation[]) => {
+  // Update the application form data with the new recommendations
+  form.value.recommendations = updatedRecommendations
+}
+
+const handleEssaysUpdated = (updatedEssays: Essay[]) => {
+  // Update the application form data with the new essays
+  form.value.essays = updatedEssays
+}
 
 </script>
 

@@ -5,12 +5,16 @@
       <q-form @submit="onSubmit" class="q-gutter-sm">
         <div class="row items-center justify-between q-mb-sm">
           <div class="text-h6">{{ props.essay ? 'Editing' : 'Adding' }} Essay</div>
-          <div>
+          <div class="row items-center">
+            <div v-if="isFormDirty" class="text-caption text-orange q-mr-md">
+              <q-icon name="warning" size="sm" class="q-mr-xs" />
+              Unsaved changes
+            </div>
             <q-btn
               label="Cancel"
               color="grey-6"
               flat
-              @click="$emit('cancel')"
+              @click="handleCancel"
               class="q-mr-sm"
               size="sm"
             />
@@ -76,8 +80,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
+import { useQuasar } from 'quasar'
 import type { Essay, Application } from 'src/types'
 import ScholarshipBanner from 'components/ScholarshipBanner.vue'
+
+const $q = useQuasar()
 
 const props = defineProps<{
   application?: Application | null
@@ -102,22 +109,62 @@ const form = ref<Essay>({
   theme: ''
 })
 
+const originalFormData = ref<Essay | null>(null)
+const isInitialized = ref(false)
+
+// Track if form is dirty (has been modified)
+const isFormDirty = computed(() => {
+  if (!originalFormData.value || !isInitialized.value) return false
+  
+  // Deep comparison of form data
+  const current = JSON.stringify(form.value)
+  const original = JSON.stringify(originalFormData.value)
+  return current !== original
+})
+
 const initializeForm = () => {
   if (props.essay) {
-    form.value = {
+    const essayData = {
       essayLink: props.essay.essayLink,
       count: props.essay.count,
       units: props.essay.units,
       theme: props.essay.theme
     }
+    // Store original data first
+    originalFormData.value = { ...essayData }
+    // Then set form data
+    form.value = essayData
   } else {
-    // Reset to defaults for new essay
-    form.value = {
+    const defaultData = {
       essayLink: '',
       count: 0,
       units: 'words',
       theme: ''
     }
+    // Store original data first
+    originalFormData.value = { ...defaultData }
+    // Then set form data
+    form.value = defaultData
+  }
+  isInitialized.value = true
+}
+
+const handleCancel = () => {
+  if (isFormDirty.value) {
+    $q.dialog({
+      title: 'Unsaved Changes',
+      message: 'You have unsaved changes. Are you sure you want to cancel?',
+      cancel: true,
+      persistent: true,
+      ok: {
+        label: 'Discard Changes',
+        color: 'negative'
+      }
+    }).onOk(() => {
+      emit('cancel')
+    })
+  } else {
+    emit('cancel')
   }
 }
 
@@ -126,6 +173,8 @@ onMounted(() => {
 })
 
 const onSubmit = () => {
+  // Reset dirty state after successful submission
+  originalFormData.value = { ...form.value }
   emit('submit', form.value)
 }
 </script>

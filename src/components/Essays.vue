@@ -60,6 +60,7 @@
             :application="application"
             :essay="editingEssay"
             @cancel="closeEssayForm"
+            @submit="handleEssaySubmit"
           />
         </q-card-section>
       </q-card>
@@ -75,6 +76,10 @@ import EssayForm from './EssayForm.vue'
 
 const props = defineProps<{
   application: Application | null
+}>()
+
+const emit = defineEmits<{
+  (e: 'essays-updated', essays: Essay[]): void
 }>()
 
 const $q = useQuasar()
@@ -151,6 +156,26 @@ const confirmDeleteEssay = (essay: Essay) => {
       })
     }
   })
+}
+
+const handleEssaySubmit = (updatedEssay: Essay) => {
+  // Update the essays array with the new/updated essay
+  if (editingEssay.value && editingEssay.value._id) {
+    // Update existing essay
+    const index = essays.value.findIndex(e => e._id === editingEssay.value!._id)
+    if (index !== -1) {
+      essays.value[index] = updatedEssay
+    }
+  } else {
+    // Add new essay
+    essays.value.push({ ...updatedEssay, _id: crypto.randomUUID() })
+  }
+  
+  // Emit the updated essays to the parent
+  emit('essays-updated', essays.value)
+  
+  closeEssayForm()
+  loadEssays()
 }
 
 onMounted(() => {

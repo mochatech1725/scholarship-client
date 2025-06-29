@@ -128,12 +128,16 @@
           </div>
 
           <div class="row justify-end q-mt-md">
+            <div v-if="isFormDirty" class="text-caption text-orange q-mr-md">
+              <q-icon name="warning" size="sm" class="q-mr-xs" />
+              Unsaved changes
+            </div>
             <q-btn
               label="Cancel"
               color="grey"
               flat
               class="q-mr-sm"
-              @click="$emit('cancel')"
+              @click="handleCancel"
               dense
             />
             <q-btn
@@ -193,7 +197,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
+import { useQuasar } from 'quasar'
 import type { Profile, User } from 'src/types'
 import { 
   educationLevelOptions, 
@@ -203,6 +208,8 @@ import {
   genderOptions, 
   ethnicityOptions 
 } from 'src/types'
+
+const $q = useQuasar()
 
 const props = defineProps<{ 
   isEdit?: boolean; 
@@ -232,11 +239,28 @@ const form = ref<Profile>({
   }
 })
 
+const originalFormData = ref<Profile | null>(null)
+const isInitialized = ref(false)
+
+// Track if form is dirty (has been modified)
+const isFormDirty = computed(() => {
+  if (!originalFormData.value || !isInitialized.value) return false
+  
+  // Deep comparison of form data
+  const current = JSON.stringify(form.value)
+  const original = JSON.stringify(originalFormData.value)
+  return current !== original
+})
+
 watch(
   () => [!!props.profile, props.profile],
   ([hasProfile, newProfile]) => {
     if (hasProfile && newProfile) {
+      // Store original data first
+      originalFormData.value = JSON.parse(JSON.stringify(newProfile)) as Profile
+      // Then set form data
       form.value = newProfile as Profile
+      isInitialized.value = true
     }
   },
   { immediate: true }
@@ -256,10 +280,30 @@ watch(
   { immediate: true }
 )
 
-const onSubmit = () => {
-  emit('submit', form.value)
+const handleCancel = () => {
+  if (isFormDirty.value) {
+    $q.dialog({
+      title: 'Unsaved Changes',
+      message: 'You have unsaved changes. Are you sure you want to cancel?',
+      cancel: true,
+      persistent: true,
+      ok: {
+        label: 'Discard Changes',
+        color: 'negative'
+      }
+    }).onOk(() => {
+      emit('cancel')
+    })
+  } else {
+    emit('cancel')
+  }
 }
 
+const onSubmit = () => {
+  // Reset dirty state after successful submission
+  originalFormData.value = { ...form.value }
+  emit('submit', form.value)
+}
 </script>
 
 <style scoped>
