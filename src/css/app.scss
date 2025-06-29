@@ -661,14 +661,14 @@ body {
 
 // Mobile navigation
 .mobile-nav {
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
-  border-top: 1px solid rgba(5, 150, 29, 0.1) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-  color: var(--q-primary) !important;
+  background: #ffffff !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  color: #000000 !important;
 }
 
 .mobile-nav .q-item {
-  color: var(--q-primary) !important;
+  color: #000000 !important;
   border-radius: 8px !important;
   margin: 4px 8px !important;
   padding: 12px 16px !important;
@@ -683,17 +683,17 @@ body {
   left: 16px !important;
   right: 16px !important;
   height: 1px !important;
-  background: rgba(5, 150, 29, 0.2) !important;
+  background: rgba(0, 0, 0, 0.1) !important;
 }
 
 .mobile-nav .q-item:hover {
-  color: var(--q-primary) !important;
-  background: rgba(5, 150, 29, 0.1) !important;
+  color: #000000 !important;
+  background: rgba(0, 0, 0, 0.05) !important;
 }
 
 .mobile-nav .q-item.text-primary {
-  color: var(--q-primary) !important;
-  background: rgba(5, 150, 29, 0.15) !important;
+  color: #000000 !important;
+  background: rgba(0, 0, 0, 0.1) !important;
 }
 
 // Responsive header
