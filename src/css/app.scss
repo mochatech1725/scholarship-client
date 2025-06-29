@@ -240,12 +240,12 @@ body {
 }
 
 // Make text-h6 use black color instead of primary green
-.text-h6, .text-h4, .text-h3, .text-h2, .text-h1 {
+.text-h4, .text-h3, .text-h2, .text-h1 {
   color: #000000 !important;
 }
 
 // Make text-h5 use navy blue color
-.text-h5 {
+.text-h5, .text-h6 {
   color: #1e40af !important;
 }
 
