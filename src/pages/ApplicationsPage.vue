@@ -12,15 +12,16 @@
 
     <!-- Main Content with Sidebar -->
     <div class="applications-layout">
-      <!-- Filters Sidebar -->
-      <div class="filters-sidebar-container">
-        <ApplicationFilters
-          v-model:filters="filters"
-        />
-      </div>
+      <!-- Left Column: Filters and Table -->
+      <div class="applications-main">
+        <!-- Filters Section -->
+        <div class="filters-section q-mb-md">
+          <ApplicationFilters
+            v-model:filters="filters"
+          />
+        </div>
 
-      <!-- Applications Table -->
-      <div class="applications-content">
+        <!-- Applications Table -->
         <q-card>
           <q-table
             :rows="filteredApplications"
@@ -271,13 +272,15 @@ onMounted(() => {
   align-items: flex-start;
 }
 
-.filters-sidebar-container {
-  flex-shrink: 0;
-}
-
-.applications-content {
+.applications-main {
   flex: 1;
   min-width: 0;
+}
+
+.filters-section {
+  flex-shrink: 0;
+  width: 280px;
+  max-width: 280px;
 }
 
 @media (max-width: 768px) {
@@ -286,7 +289,7 @@ onMounted(() => {
     gap: 16px;
   }
   
-  .filters-sidebar-container {
+  .applications-main {
     width: 100%;
   }
 }

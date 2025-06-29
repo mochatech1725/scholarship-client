@@ -244,12 +244,16 @@ const clearAllFilters = () => {
 }
 
 .filters-expanded {
+  position: absolute;
+  top: 0;
+  left: 0;
   background: white;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   min-width: 280px;
   max-width: 320px;
+  z-index: 1000;
 }
 
 .filters-header {
