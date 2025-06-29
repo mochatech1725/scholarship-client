@@ -75,8 +75,8 @@ class ApiService {
     return this.makeRequest('/api/auth/login')
   }
 
-  async updateProfile(profile: Profile) {
-    return this.makeRequest('/api/users/profile', {
+  async updateProfile(profile: Profile, userId: string) {
+    return this.makeRequest(`/api/users/saveProfile/${userId}`, {
       method: 'POST',
       data: profile
     })

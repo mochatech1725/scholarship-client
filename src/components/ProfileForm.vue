@@ -48,11 +48,20 @@
               />
             </div>
             <div class="col-12 col-md-6">
-              <div class="form-label">Target Types</div>
+              <div class="form-label">Education Year</div>
               <q-select
-                v-model="form.userPreferences.searchPreferences.targetTypes"
+                v-model="form.userPreferences.searchPreferences.educationYear"
+                :options="educationYearOptions"
+                flat
+                dense
+                class="q-mb-sm"
+              />
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-label">Target Type</div>
+              <q-select
+                v-model="form.userPreferences.searchPreferences.targetType"
                 :options="targetTypeOptions"
-                multiple
                 flat
                 dense
                 class="q-mb-sm"
@@ -70,12 +79,49 @@
               />
             </div>
             <div class="col-12 col-md-6">
-              <div class="form-label">Minimum Amount</div>
-              <q-input
-                v-model.number="form.userPreferences.searchPreferences.minAmount"
-                type="number"
+              <div class="form-label">Gender</div>
+              <q-select
+                v-model="form.userPreferences.searchPreferences.gender"
+                :options="genderOptions"
                 flat
                 dense
+                class="q-mb-sm"
+              />
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-label">Ethnicity</div>
+              <q-select
+                v-model="form.userPreferences.searchPreferences.ethnicity"
+                :options="ethnicityOptions"
+                flat
+                dense
+                class="q-mb-sm"
+              />
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-label">Academic GPA</div>
+              <q-input
+                v-model.number="form.userPreferences.searchPreferences.academicGPA"
+                type="number"
+                step="0.01"
+                min="0"
+                max="4.0"
+                flat
+                dense
+                class="q-mb-sm"
+              />
+            </div>
+            <div class="col-12 col-md-6">
+              <q-checkbox
+                v-model="form.userPreferences.searchPreferences.essayRequired"
+                label="Essay Required"
+                class="q-mb-sm"
+              />
+            </div>
+            <div class="col-12 col-md-6">
+              <q-checkbox
+                v-model="form.userPreferences.searchPreferences.recommendationRequired"
+                label="Recommendation Required"
                 class="q-mb-sm"
               />
             </div>
@@ -103,19 +149,41 @@
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-6">
               <div class="form-label">Education Level</div>
-              <div class="q-pa-sm">{{ profile?.userPreferences.searchPreferences.educationLevel || 'Not set' }}</div>
+              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.educationLevel || 'Not set' }}</div>
             </div>
             <div class="col-12 col-md-6">
-              <div class="form-label">Target Types</div>
-              <div class="q-pa-sm">{{ profile?.userPreferences.searchPreferences.targetTypes?.join(', ') || 'Not set' }}</div>
+              <div class="form-label">Education Year</div>
+              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.educationYear || 'Not set' }}</div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-label">Target Type</div>
+              <div class="q-pa-sm">{{ 
+                  profile?.userPreferences?.searchPreferences?.targetType || 'Not set' 
+              }}</div>
             </div>
             <div class="col-12 col-md-6">
               <div class="form-label">Areas of Interest</div>
-              <div class="q-pa-sm">{{ profile?.userPreferences.searchPreferences.areas?.join(', ') || 'Not set' }}</div>
+              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.areas?.join(', ') || 'Not set' }}</div>
             </div>
             <div class="col-12 col-md-6">
-              <div class="form-label">Minimum Amount</div>
-              <div class="q-pa-sm">${{ profile?.userPreferences.searchPreferences.minAmount || '0' }}</div>
+              <div class="form-label">Gender</div>
+              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.gender || 'Not set' }}</div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-label">Ethnicity</div>
+              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.ethnicity || 'Not set' }}</div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-label">Academic GPA</div>
+              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.academicGPA || 'Not set' }}</div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-label">Essay Required</div>
+              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.essayRequired ? 'Yes' : 'No' }}</div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="form-label">Recommendation Required</div>
+              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.recommendationRequired ? 'Yes' : 'No' }}</div>
             </div>
           </div>
         </div>
@@ -127,7 +195,14 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import type { Profile, User } from 'src/types'
-import { educationLevelOptions, targetTypeOptions, areaOptions } from 'src/types'
+import { 
+  educationLevelOptions, 
+  educationYearOptions, 
+  targetTypeOptions, 
+  areaOptions, 
+  genderOptions, 
+  ethnicityOptions 
+} from 'src/types'
 
 const props = defineProps<{ 
   isEdit?: boolean; 
@@ -144,10 +219,15 @@ const emit = defineEmits<{
 const form = ref<Profile>({
   userPreferences: {
     searchPreferences: {
-      educationLevel: 'College Freshman',
-      targetTypes: [],
+      educationLevel: 'Undergraduate',
+      educationYear: 'College Freshman',
+      targetType: 'Both',
       areas: [],
-      minAmount: 0
+      gender: 'Male',
+      ethnicity: 'White/Caucasian',
+      academicGPA: 3.0,
+      essayRequired: false,
+      recommendationRequired: false
     }
   }
 })
@@ -156,8 +236,22 @@ watch(
   () => [!!props.profile, props.profile],
   ([hasProfile, newProfile]) => {
     if (hasProfile && newProfile) {
-      form.value = JSON.parse(JSON.stringify(newProfile))
+      form.value = newProfile as Profile
     }
+  },
+  { immediate: true }
+)
+
+// Debug watch to see what props are being received
+watch(
+  () => [props.user, props.profile],
+  ([user, profile]) => {
+    console.log('ProfileForm props changed:', {
+      user: user,
+      profile: profile,
+      hasUser: !!user,
+      hasProfile: !!profile
+    })
   },
   { immediate: true }
 )
@@ -165,6 +259,7 @@ watch(
 const onSubmit = () => {
   emit('submit', form.value)
 }
+
 </script>
 
 <style scoped>

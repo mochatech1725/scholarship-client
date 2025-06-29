@@ -7,8 +7,9 @@ function castEducationLevel(val: string): EducationLevel {
   return educationLevelOptions.find(opt => opt === val) as EducationLevel
 }
 
-function castTargetTypes(arr: string[]): TargetType[] {
-  return arr.filter(val => targetTypeOptions.includes(val as TargetType)) as TargetType[]
+function castTargetType(val: string): TargetType {
+  const found = targetTypeOptions.find(opt => opt === val)
+  return found || 'Both'
 }
 
 function castAreas(arr: string[]): Area[] {
@@ -71,9 +72,14 @@ class MockService {
       userPreferences: {
         searchPreferences: {
           educationLevel: castEducationLevel(mockUserData.profile.preferences.educationLevel),
-          targetTypes: castTargetTypes(mockUserData.profile.preferences.targetTypes),
+          targetType: castTargetType(mockUserData.profile.preferences.targetType),
           areas: castAreas(mockUserData.profile.preferences.areas),
-          minAmount: mockUserData.profile.preferences.minAmount
+          educationYear: 'College Freshman',
+          gender: 'Male',
+          ethnicity: 'White/Caucasian',
+          academicGPA: 3.0,
+          essayRequired: false,
+          recommendationRequired: false
         }
       }
     }
@@ -103,9 +109,14 @@ class MockService {
         userPreferences: {
           searchPreferences: {
             educationLevel: castEducationLevel(mockUserData.profile.preferences.educationLevel),
-            targetTypes: castTargetTypes(mockUserData.profile.preferences.targetTypes),
+            targetType: castTargetType(mockUserData.profile.preferences.targetType),
             areas: castAreas(mockUserData.profile.preferences.areas),
-            minAmount: mockUserData.profile.preferences.minAmount
+            educationYear: 'College Freshman',
+            gender: 'Male',
+            ethnicity: 'White/Caucasian',
+            academicGPA: 3.0,
+            essayRequired: false,
+            recommendationRequired: false
           }
         }
       }

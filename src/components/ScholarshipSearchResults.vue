@@ -17,11 +17,6 @@
         </q-td>
       </template>
 
-      <template v-slot:body-cell-deadline="props">
-        <q-td :props="props">
-          {{ formatDate(props.row.deadline) }}
-        </q-td>
-      </template>
     </q-table>
 
     <!-- Search Results -->
@@ -41,11 +36,6 @@
         </q-td>
       </template>
 
-      <template v-slot:body-cell-deadline="props">
-        <q-td :props="props">
-          {{ formatDate(props.row.deadline) }}
-        </q-td>
-      </template>
     </q-table>
   </div>
 </template>
@@ -53,7 +43,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import type { Scholarship } from 'src/types'
-import { formatDate } from 'src/utils/helper'
 import mockRecommendations from 'src/mocks/mockScholarshipRecommendationsData.json'
 
 const searchResults = ref<Scholarship[]>([])
@@ -79,12 +68,6 @@ const scholarshipColumns = [
     align: 'right' as const
   },
   {
-    name: 'deadline',
-    label: 'Deadline',
-    field: (row: Scholarship) => row.deadline,
-    align: 'left' as const
-  },
-  {
     name: 'url',
     label: 'Website',
     field: (row: Scholarship) => row.url,
@@ -103,7 +86,24 @@ const onSearch = () => {
 onMounted(() => {
   // TODO: Implement actual API call
   // For now, using mock data
-  recommendedScholarships.value = mockRecommendations as Scholarship[]
+  recommendedScholarships.value = mockRecommendations.map(item => ({
+    name: item.name,
+    organization: item.organization,
+    description: item.description,
+    amount: item.amount,
+    targetType: item.targetType,
+    requirements: item.requirements,
+    ethnicity: 'Any',
+    gender: 'Any',
+    educationLevel: 'Any',
+    educationYear: 'Any',
+    area: item.theme,
+    academicGPA: 3.0,
+    essay: false,
+    recommendation: false,
+    url: item.url,
+    isActive: item.isActive
+  })) as Scholarship[]
 })
 
 defineExpose({

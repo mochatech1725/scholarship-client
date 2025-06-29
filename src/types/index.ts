@@ -1,3 +1,118 @@
+export const ethnicityOptions = [
+  'Asian/Pacific Islander',
+  'Black/African American',
+  'Hispanic/Latino',
+  'White/Caucasian',
+  'Native American/Alaska Native',
+  'Native Hawaiian/Pacific Islander',
+  'Middle Eastern/North African',
+  'South Asian',
+  'East Asian',
+  'Southeast Asian',
+  'Other'
+] as const
+
+export const genderOptions = [  
+  'Male',
+  'Female',
+  'Non-Binary'
+] as const
+
+export const educationLevelOptions = [
+  'High School',
+  'Undergraduate',
+  'Graduate'
+] as const
+
+export const educationYearOptions = [
+  'High School Junior',
+  'High School Senior',
+  'College Freshman',
+  'College Sophomore',
+  'College Junior',
+  'College Senior',
+  'Graduate Student'
+] as const
+
+export const targetTypeOptions = [
+  'Merit',
+  'Need',
+  'Both',
+] as const
+
+export const areaOptions = [
+  'Agriculture',
+  'Arts',
+  'Architecture',
+  'Athletics',
+  'Aviation',
+  'Biology',
+  'Business',
+  'Chemistry',
+  'Communication',
+  'Community Service',
+  'Criminal Justice',
+  'Culinary Arts',
+  'Computer Science',
+  'Dance',
+  'Dentistry',
+  'Disablity',
+  'Design',
+  'Drama',
+  'Economics',
+  'Education',
+  'Engineering',
+  'Environmental Science',
+  'Healthcare',
+  'Humanities',
+  'Journalism',
+  'Law',
+  'Mathematics',
+  'Medicine',
+  'Music',
+  'Military',
+  'Nursing',
+  'Physics',
+  'Psychology',
+  'Public Policy',
+  'Religion',
+  'Science',
+  'Social Sciences',
+  'STEM',
+  'Writing'
+] as const
+
+export const recomendationOptions = [
+  'Pending',
+  'Submitted'
+] as const 
+
+
+export const submissionMethodOptions = [
+  'DirectEmail',
+  'StudentUpload',
+  'DirectMail'
+] as const
+
+export const applicationStatusOptions = [
+  'Not Started',
+  'In Progress',
+  'Submitted',
+  'Awarded',
+  'Not Awarded'
+] as const
+
+export type EducationLevel = typeof educationLevelOptions[number]
+export type TargetType = typeof targetTypeOptions[number]
+export type Area = typeof areaOptions[number]
+export type Gender = typeof genderOptions[number]
+export type Ethnicity = typeof ethnicityOptions[number]
+export type EducationYear = typeof educationYearOptions[number]
+export type ApplicationStatus = typeof applicationStatusOptions[number]
+export type RecommendationStatus = typeof recomendationOptions[number]
+export type SubmissionMethod = typeof submissionMethodOptions[number]
+
+
 export interface Auth0User {
   sub: string
   emailAddress: string
@@ -25,7 +140,7 @@ export interface Recommendation {
   _id?: string
   recommender: Recommender
   status: RecommendationStatus
-  submissionMethod: 'DirectEmail' | 'StudentUpload' | 'DirectMail'
+  submissionMethod: SubmissionMethod
   requestDate: string
   dueDate: string
   submissionDate: string | null
@@ -49,7 +164,7 @@ export interface Application {
   _id?: string
   studentId: string
   scholarshipName: string
-  targetType: 'Merit' | 'Need' | 'Both'
+  targetType: TargetType
   company: string
   companyWebsite: string
   platform: string
@@ -74,9 +189,25 @@ export interface RegisterData {
   emailAddress: string
 }
 
-export type EducationLevel = typeof educationLevelOptions[number]
-export type TargetType = typeof targetTypeOptions[number]
-export type Area = typeof areaOptions[number]
+export interface Scholarship {
+  name: string
+  organization: string
+  description: string
+  amount: number
+  deadline: string
+  targetType: string
+  requirements: string
+  ethnicity: string
+  gender: string
+  educationLevel: string
+  educationYear: string
+  area: string
+  academicGPA: number
+  essay: boolean
+  recommendation: boolean
+  url: string
+  isActive: boolean
+}
 
 export interface UserPreferences {
   searchPreferences: SearchPreferences
@@ -84,77 +215,13 @@ export interface UserPreferences {
 
 export interface SearchPreferences {
   educationLevel: EducationLevel
-  targetTypes: TargetType[]
+  educationYear: EducationYear
+  targetType: TargetType
   areas: Area[]
-  minAmount: number
-}
-
-export const educationLevelOptions = [
-  'High School Senior',
-  'College Freshman',
-  'College Sophomore',
-  'College Junior',
-  'College Senior',
-  'Graduate Student'
-] as const
-
-export const targetTypeOptions = [
-  'Merit',
-  'Need',
-  'Both',
-] as const
-
-export const areaOptions = [
-  'STEM',
-  'Humanities',
-  'Social Sciences',
-  'Business',
-  'Arts',
-  'Education',
-  'Healthcare',
-  'Law',
-  'Public Policy',
-  'Environmental Science',
-  'Computer Science',
-  'Engineering',
-  'Mathematics',
-  'Physics',
-  'Chemistry',
-  'Biology',
-  'Medicine',
-  'Psychology',
-  'Economics',
-  'Other'
-] as const
-
-export type ApplicationStatus = typeof statusOptions[number]
-
-export const statusOptions = [
-  'Not Started',
-  'In Progress',
-  'Submitted',
-  'Awarded',
-  'Not Awarded'
-] as const 
-
-export type RecommendationStatus = typeof recomendationOptions[number]
-
-export const recomendationOptions = [
-  'Pending',
-  'Submitted'
-] as const 
-
-export interface Scholarship {
-  scholarshipId: string
-  name: string
-  organization: string
-  description: string
-  amount: number
-  deadline: string
-  targetType: string
-  theme: string
-  requirements: string
-  url: string
-  isActive: boolean
+  gender: Gender
+  ethnicity: Ethnicity
+  academicGPA: number
+  essayRequired: boolean
+  recommendationRequired: boolean
 }
 

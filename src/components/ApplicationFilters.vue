@@ -96,7 +96,7 @@ const props = defineProps<{
     dueDateFrom: string | null
     dueDateTo: string | null
   }
-  statusOptions: string[]
+  statusOptions: readonly string[]
 }>()
 
 const emit = defineEmits<{

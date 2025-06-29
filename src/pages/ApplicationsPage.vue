@@ -87,7 +87,7 @@ import type { QTableColumn } from 'quasar'
 import ApplicationFilters from 'src/components/ApplicationFilters.vue'
 import ApplicationForm from 'src/components/ApplicationForm.vue'
 import type { ApplicationStatus, Application } from 'src/types'
-import { statusOptions } from 'src/types'
+import { applicationStatusOptions } from 'src/types'
 import { useGetStatusColor } from 'src/composables/useGetStatusColor'
 import { useApplicationStore } from 'src/stores/application.store'
 import { useUserStore } from 'src/stores/user.store'
@@ -110,8 +110,6 @@ const filters = ref({
   dueDateFrom: null as string | null,
   dueDateTo: null as string | null
 })
-
-const applicationStatusOptions = [...statusOptions]
 
 const columns: QTableColumn[] = [
   { name: 'company', label: 'Company', field: 'company', sortable: true, align: 'left' },
@@ -186,7 +184,12 @@ const loadApplications = async () => {
   // If still no user, try to load from backend
   if (!userStore.user) {
     try {
-      await userStore.loadUser()
+      // If we have a user in auth store, use their ID, otherwise load without ID
+      if (authStore.user?.userId) {
+        await userStore.loadUser(authStore.user.userId)
+      } else {
+        await userStore.loadUser()
+      }
     } catch (error) {
       console.error('Failed to load user:', error)
       $q.notify({

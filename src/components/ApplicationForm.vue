@@ -171,7 +171,7 @@
                   <div class="form-label">Status</div>
                   <q-select
                     v-model="form.status"
-                    :options="statusOptions"
+                    :options="applicationStatusOptions"
                     flat
                     dense
                     class="q-mb-sm"
@@ -246,7 +246,7 @@ import { ref, onMounted, watch, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'stores/application.store'
 import type { Application, Recommender } from 'src/types'
-import { targetTypeOptions, statusOptions } from 'src/types'
+import { targetTypeOptions, applicationStatusOptions } from 'src/types'
 import Essays from 'components/Essays.vue'
 import Recommendations from 'components/Recommendations.vue'
 import ScholarshipBanner from 'components/ScholarshipBanner.vue'

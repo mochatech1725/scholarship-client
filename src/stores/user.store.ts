@@ -40,7 +40,10 @@ export const useUserStore = defineStore('user', {
 
     async updateProfile(profile: User['profile']) {
       try {
-        const updatedUser = await apiService.updateProfile(profile)
+        if (!this.user?.userId) {
+          throw new Error('User ID not available')
+        }
+        const updatedUser = await apiService.updateProfile(profile, this.user.userId)
         this.user = updatedUser
         return updatedUser
       } catch (error) {

@@ -7,7 +7,7 @@
   "profile": {
     "preferences": {
       "educationLevel": "College Freshman",
-      "targetTypes": ["Merit", "Both"],
+      "targetType":"Both",
       "areas": ["STEM", "Computer Science"],
       "minAmount": 1000
     }

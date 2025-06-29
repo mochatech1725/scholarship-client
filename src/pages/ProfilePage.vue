@@ -45,7 +45,12 @@ const handleCancel = () => {
 
 onMounted(async () => {
   try {
-    await userStore.loadUser()
+    // If we already have a user, use their ID, otherwise load user data
+    if (userStore.user?.userId) {
+      await userStore.loadUser(userStore.user.userId)
+    } else {
+      await userStore.loadUser()
+    }
   } catch (error) {
     console.error('Failed to load user:', error)
     $q.notify({
