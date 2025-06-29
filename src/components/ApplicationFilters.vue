@@ -1,128 +1,121 @@
 <template>
-  <div class="application-filters" :class="{ expanded: isExpanded }">
-    <q-card class="q-pa-sm">
-      <q-card-section class="q-pb-none">
-        <div class="row items-center justify-between">
-          <div class="text-h6">Filters</div>
-          <q-btn
-            flat
-            round
-            :icon="isExpanded ? 'expand_less' : 'expand_more'"
-            @click="isExpanded = !isExpanded"
+  <div class="filters-sidebar">
+    <!-- Collapsed State -->
+    <div v-if="!isExpanded" class="filters-collapsed" @click="isExpanded = true">
+      <span class="filters-text">Filters</span>
+      <span class="filters-count">{{ activeFiltersCount }}</span>
+    </div>
+
+    <!-- Expanded State -->
+    <div v-else class="filters-expanded">
+      <div class="filters-header">
+        <div class="filters-title">Filters</div>
+        <q-btn
+          flat
+          round
+          dense
+          icon="close"
+          @click="isExpanded = false"
+        />
+      </div>
+
+      <div class="filters-content">
+        <!-- Status Filter -->
+        <div class="filter-section">
+          <div class="filter-label">Status</div>
+          <q-select
+            v-model="localFilters.status"
+            :options="applicationStatusOptions"
+            clearable
+            outlined
+            dense
+            emit-value
+            map-options
+            placeholder="All Statuses"
           />
         </div>
-      </q-card-section>
 
-      <q-slide-transition>
-        <q-card-section v-show="isExpanded" class="q-pt-sm">
-          <div class="row items-start q-gutter-sm">
-            <div class="col-auto">
-              <div class="form-label text-caption">Status</div>
-              <q-select
-                v-model="localFilters.status"
-                :options="applicationStatusOptions"
-                clearable
-                flat
-                dense
-                emit-value
-                map-options
-                style="min-width: 160px"
-              />
-              <div v-if="localFilters.status" class="selected-value">
-                {{ localFilters.status }}
-              </div>
-            </div>
+        <!-- Type Filter -->
+        <div class="filter-section">
+          <div class="filter-label">Type</div>
+          <q-select
+            v-model="localFilters.targetType"
+            :options="targetTypeOptions"
+            clearable
+            outlined
+            dense
+            emit-value
+            map-options
+            placeholder="All Types"
+          />
+        </div>
 
-            <div class="col-auto">
-              <div class="form-label text-caption">Type</div>
-              <q-select
-                v-model="localFilters.targetType"
-                :options="targetTypeOptions"
-                clearable
-                flat
-                dense
-                emit-value
-                map-options
-                style="min-width: 160px"
-              />
-              <div v-if="localFilters.targetType" class="selected-value">
-                {{ localFilters.targetType }}
-              </div>
-            </div>
+        <!-- Current Action Filter -->
+        <div class="filter-section">
+          <div class="filter-label">Current Action</div>
+          <q-select
+            v-model="localFilters.currentAction"
+            :options="currentActionOptions"
+            clearable
+            outlined
+            dense
+            emit-value
+            map-options
+            placeholder="All Actions"
+          />
+        </div>
 
-            <div class="col-auto">
-              <div class="form-label text-caption">Current Action</div>
-              <q-select
-                v-model="localFilters.currentAction"
-                :options="currentActionOptions"
-                clearable
-                flat
-                dense
-                emit-value
-                map-options
-                style="min-width: 200px"
-              />
-              <div v-if="localFilters.currentAction" class="selected-value">
-                {{ localFilters.currentAction }}
-              </div>
-            </div>
+        <!-- Company Filter -->
+        <div class="filter-section">
+          <div class="filter-label">Company</div>
+          <q-input
+            v-model="localFilters.company"
+            clearable
+            outlined
+            dense
+            placeholder="Search companies"
+          />
+        </div>
 
-            <div class="col-auto">
-              <div class="form-label text-caption">Company</div>
-              <q-input
-                v-model="localFilters.company"
-                clearable
-                flat
-                dense
-                style="min-width: 220px"
-              />
-              <div v-if="localFilters.company" class="selected-value">
-                {{ localFilters.company }}
-              </div>
-            </div>
+        <!-- Date Range Filter -->
+        <div class="filter-section">
+          <div class="filter-label">Due Date Range</div>
+          <q-input
+            :model-value="dateRangeDisplay"
+            outlined
+            dense
+            readonly
+            placeholder="Select date range"
+          >
+            <template v-slot:append>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-date
+                    v-model="dateRange"
+                    range
+                    mask="MM/DD/YYYY"
+                    today-btn
+                    @update:model-value="onDateRangeChange"
+                  />
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
+        </div>
 
-            <div class="col">
-              <div class="form-label text-caption">Due Date Range</div>
-              <q-input
-                :model-value="dateRangeDisplay"
-                flat
-                dense
-                readonly
-                placeholder="Select date range"
-                style="min-width: 200px"
-              >
-                <template v-slot:append>
-                  <q-icon name="event" class="cursor-pointer">
-                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                      <q-date
-                        v-model="dateRange"
-                        range
-                        mask="MM/DD/YYYY"
-                        today-btn
-                        @update:model-value="onDateRangeChange"
-                      />
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
-              <div v-if="dateRangeDisplay" class="selected-value">
-                {{ dateRangeDisplay }}
-              </div>
-            </div>
-
-            <div class="col-auto">
-              <q-btn
-                label="Clear All"
-                color="grey-6"
-                flat
-                dense
-                @click="clearAllFilters"
-              />
-            </div>
-          </div>
-        </q-card-section>
-      </q-slide-transition>
-    </q-card>
+        <!-- Clear All Button -->
+        <div class="filter-section">
+          <q-btn
+            label="Clear All Filters"
+            color="grey-6"
+            outline
+            dense
+            full-width
+            @click="clearAllFilters"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -131,7 +124,7 @@ import { ref, watch, computed } from 'vue'
 import { formatDate } from 'src/utils/helper'
 import { targetTypeOptions, applicationStatusOptions, currentActionOptions } from 'src/types'
 
-const isExpanded = ref(true)
+const isExpanded = ref(false)
 
 const props = defineProps<{
   filters: {
@@ -162,6 +155,16 @@ const dateRangeDisplay = computed(() => {
   if (dateRange.value?.from) return `From ${formatDate(dateRange.value.from)}`
   if (dateRange.value?.to) return `To ${formatDate(dateRange.value.to)}`
   return ''
+})
+
+const activeFiltersCount = computed(() => {
+  let count = 0
+  if (localFilters.value.status) count++
+  if (localFilters.value.targetType) count++
+  if (localFilters.value.currentAction) count++
+  if (localFilters.value.company) count++
+  if (dateRange.value?.from || dateRange.value?.to) count++
+  return count
 })
 
 const onDateRangeChange = (newRange: { from: string; to: string } | null) => {
@@ -201,41 +204,97 @@ const clearAllFilters = () => {
 </script>
 
 <style scoped>
-.application-filters {
-  width: 100%;
-  margin-bottom: 16px;
+.filters-sidebar {
+  position: relative;
 }
 
-.filter-content {
-  min-width: 100%;
+.filters-collapsed {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.filters-collapsed:hover {
+  background: #f5f5f5;
+  border-color: #ccc;
+}
+
+.filters-text {
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #333;
+}
+
+.filters-count {
+  background: #1e40af;
+  color: white;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  min-width: 20px;
+  text-align: center;
+}
+
+.filters-expanded {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-width: 280px;
+  max-width: 320px;
+}
+
+.filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.filters-title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+}
+
+.filters-content {
+  padding: 16px;
+}
+
+.filter-section {
+  margin-bottom: 20px;
+}
+
+.filter-section:last-child {
+  margin-bottom: 0;
+}
+
+.filter-label {
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 8px;
 }
 
 @media (max-width: 768px) {
-  .application-filters .row {
-    flex-direction: column;
-    align-items: stretch;
+  .filters-expanded {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    max-width: 90vw;
+    max-height: 80vh;
+    overflow-y: auto;
   }
-  
-  .application-filters .col-auto {
-    width: 100%;
-    margin-bottom: 8px;
-  }
-  
-  .application-filters .col {
-    width: 100%;
-    margin-bottom: 8px;
-  }
-}
-
-.form-label {
-  margin-bottom: 2px;
-  font-weight: 500;
-}
-
-.selected-value {
-  margin-top: 4px;
-  font-size: 0.75rem;
-  color: #666;
-  font-style: italic;
 }
 </style> 

@@ -10,55 +10,61 @@
       />
     </div>
 
-    <!-- Filters Section -->
-    <ApplicationFilters
-      v-model:filters="filters"
-      :target-type-options="targetTypeOptions"
-    />
+    <!-- Main Content with Sidebar -->
+    <div class="applications-layout">
+      <!-- Filters Sidebar -->
+      <div class="filters-sidebar-container">
+        <ApplicationFilters
+          v-model:filters="filters"
+        />
+      </div>
 
-    <!-- Applications List -->
-    <q-card>
-      <q-table
-        :rows="filteredApplications"
-        :columns="columns"
-        row-key="id"
-        :loading="loading"
-        v-model:pagination="pagination"
-      >
-        <template v-slot:body-cell-status="props">
-          <q-td :props="props">
-            <q-chip
-              :color="getStatusColor(props.value)"
-              text-color="white"
-              dense
-            >
-              {{ props.value }}
-            </q-chip>
-          </q-td>
-        </template>
+      <!-- Applications Table -->
+      <div class="applications-content">
+        <q-card>
+          <q-table
+            :rows="filteredApplications"
+            :columns="columns"
+            row-key="id"
+            :loading="loading"
+            v-model:pagination="pagination"
+          >
+            <template v-slot:body-cell-status="props">
+              <q-td :props="props">
+                <q-chip
+                  :color="getStatusColor(props.value)"
+                  text-color="white"
+                  dense
+                >
+                  {{ props.value }}
+                </q-chip>
+              </q-td>
+            </template>
 
-        <template v-slot:body-cell-actions="props">
-          <q-td :props="props">
-            <q-btn
-              flat
-              round
-              color="primary"
-              icon="edit"
-              size="sm"
-              @click="handleEdit(props.row)"
-            />
-            <q-btn
-              flat
-              round
-              color="negative"
-              icon="delete"
-              size="sm"
-              @click="confirmDelete(props.row)"
-            />
-          </q-td>
-        </template>
-      </q-table>
-    </q-card>
+            <template v-slot:body-cell-actions="props">
+              <q-td :props="props">
+                <q-btn
+                  flat
+                  round
+                  color="primary"
+                  icon="edit"
+                  size="sm"
+                  @click="handleEdit(props.row)"
+                />
+                <q-btn
+                  flat
+                  round
+                  color="negative"
+                  icon="delete"
+                  size="sm"
+                  @click="confirmDelete(props.row)"
+                />
+              </q-td>
+            </template>
+          </q-table>
+        </q-card>
+      </div>
+    </div>
 
     <!-- Application Form Dialog -->
     <q-dialog v-model="showForm" persistent>
@@ -87,7 +93,6 @@ import type { QTableColumn } from 'quasar'
 import ApplicationFilters from 'src/components/ApplicationFilters.vue'
 import ApplicationForm from 'src/components/ApplicationForm.vue'
 import type { ApplicationStatus, Application } from 'src/types'
-import { targetTypeOptions } from 'src/types'
 import { useGetStatusColor } from 'src/composables/useGetStatusColor'
 import { useApplicationStore } from 'src/stores/application.store'
 import { useUserStore } from 'src/stores/user.store'
@@ -257,4 +262,32 @@ const confirmDelete = (application: Application) => {
 onMounted(() => {
   void loadApplications()
 })
-</script> 
+</script>
+
+<style scoped>
+.applications-layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.filters-sidebar-container {
+  flex-shrink: 0;
+}
+
+.applications-content {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .applications-layout {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .filters-sidebar-container {
+    width: 100%;
+  }
+}
+</style> 
