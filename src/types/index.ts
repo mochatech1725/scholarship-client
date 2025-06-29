@@ -232,3 +232,16 @@ export interface SearchPreferences {
   recommendationRequired: boolean
 }
 
+export interface SearchFilters {
+  searchQuery: string
+  educationLevel: string | null
+  educationYear: string | null
+  targetType: string | null
+  subjectAreas: string[]
+  gender: string | null
+  ethnicity: string | null
+  academicGPA: number | null
+  essayRequired: boolean | null
+  recommendationRequired: boolean | null
+}
+

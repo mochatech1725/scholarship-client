@@ -1,5 +1,5 @@
 import { useAuthStore } from 'src/stores/auth.store'
-import type { Profile, Application, RegisterData, Recommender } from 'src/types'
+import type { Profile, Application, RegisterData, Recommender, SearchFilters } from 'src/types'
 import { api } from 'src/boot/axios'
 import type { AxiosRequestConfig } from 'axios'
 
@@ -147,6 +147,15 @@ class ApiService {
       method: 'DELETE'
     })
   }
+
+  async findScholarships(filters: SearchFilters) {
+    return this.makeRequest('/api/scholarships/search', {
+      method: 'POST',
+      data: filters
+    })
+  }
 }
+
+
 
 export const apiService = new ApiService() 

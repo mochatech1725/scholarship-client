@@ -1,17 +1,51 @@
 <template>
-  <div class="text-h6 q-mb-md">Search Filter</div>
+  <div class="filters-sidebar">
+    <!-- Collapsed State -->
+    <div v-if="!isExpanded" class="filters-collapsed" @click="isExpanded = true">
+      <span class="filters-text">Search Filters</span>
+      <span class="filters-count">{{ activeFiltersCount }}</span>
+    </div>
 
-  <q-card class="q-pa-sm" style="background-color: white;">
-    <q-card-section class="q-pa-sm">
-      <div class="row items-center q-gutter-x-md">
-        <div class="col-6">
-          <div class="form-label">Search</div>
+    <!-- Expanded State -->
+    <div v-else class="filters-expanded">
+      <div class="filters-header">
+        <div class="filters-title">Search Filters</div>
+        <q-btn
+          flat
+          round
+          dense
+          icon="close"
+          @click="isExpanded = false"
+        />
+      </div>
+
+      <div class="filters-content">
+        <!-- Clear All Button -->
+        <div class="filter-section">
+          <div class="row justify-end">
+            <q-btn
+              flat
+              round
+              dense
+              icon="refresh"
+              @click="clearAllFilters"
+              size="sm"
+              color="grey-6"
+              class="reset-btn"
+              title="Clear all filters"
+            />
+          </div>
+        </div>
+
+        <!-- Search Query Filter -->
+        <div class="filter-section">
+          <div class="filter-label">Search</div>
           <q-input
-            v-model="searchQuery"
+            v-model="localFilters.searchQuery"
             clearable
+            outlined
             dense
-            flat
-            class="q-mb-md"
+            placeholder="Search scholarships..."
           >
             <template v-slot:append>
               <q-icon name="search" />
@@ -19,79 +53,344 @@
           </q-input>
         </div>
 
-        <div class="col-2">
-          <div class="form-label">Theme</div>
+        <!-- Education Level Filter -->
+        <div class="filter-section">
+          <div class="filter-label">Education Level</div>
           <q-select
-            v-model="filters.theme"
-            :options="themeOptions"
+            v-model="localFilters.educationLevel"
+            :options="educationLevelOptions"
             clearable
+            outlined
             dense
-            flat
-            class="q-mb-md"
+            emit-value
+            map-options
+            placeholder="All Education Levels"
           />
         </div>
 
-        <div class="col-2">
-          <div class="form-label">Target Type</div>
+        <!-- Education Year Filter -->
+        <div class="filter-section">
+          <div class="filter-label">Education Year</div>
           <q-select
-            v-model="filters.targetType"
+            v-model="localFilters.educationYear"
+            :options="educationYearOptions"
+            clearable
+            outlined
+            dense
+            emit-value
+            map-options
+            placeholder="All Education Years"
+          />
+        </div>
+
+        <!-- Target Type Filter -->
+        <div class="filter-section">
+          <div class="filter-label">Target Type</div>
+          <q-select
+            v-model="localFilters.targetType"
             :options="targetTypeOptions"
             clearable
+            outlined
             dense
-            flat
-            class="q-mb-md"
+            emit-value
+            map-options
+            placeholder="All Types"
+          />
+        </div>
+
+        <!-- Subject Areas Filter -->
+        <div class="filter-section">
+          <div class="filter-label">Subject Areas</div>
+          <q-select
+            v-model="localFilters.subjectAreas"
+            :options="subjectAreaOptions"
+            multiple
+            outlined
+            dense
+            emit-value
+            map-options
+            placeholder="All Subject Areas"
+          />
+        </div>
+
+        <!-- Gender Filter -->
+        <div class="filter-section">
+          <div class="filter-label">Gender</div>
+          <q-select
+            v-model="localFilters.gender"
+            :options="genderOptions"
+            clearable
+            outlined
+            dense
+            emit-value
+            map-options
+            placeholder="All Genders"
+          />
+        </div>
+
+        <!-- Ethnicity Filter -->
+        <div class="filter-section">
+          <div class="filter-label">Ethnicity</div>
+          <q-select
+            v-model="localFilters.ethnicity"
+            :options="ethnicityOptions"
+            clearable
+            outlined
+            dense
+            emit-value
+            map-options
+            placeholder="All Ethnicities"
+          />
+        </div>
+
+        <!-- Academic GPA Filter -->
+        <div class="filter-section">
+          <div class="filter-label">Minimum GPA</div>
+          <q-input
+            v-model.number="localFilters.academicGPA"
+            type="number"
+            step="0.1"
+            min="0"
+            max="4.0"
+            outlined
+            dense
+            placeholder="Any GPA"
+          />
+        </div>
+
+        <!-- Essay Required Filter -->
+        <div class="filter-section">
+          <div class="filter-label">Essay Required</div>
+          <q-select
+            v-model="localFilters.essayRequired"
+            :options="[
+              { label: 'Any', value: null },
+              { label: 'Required', value: true },
+              { label: 'Not Required', value: false }
+            ]"
+            outlined
+            dense
+            emit-value
+            map-options
+          />
+        </div>
+
+        <!-- Recommendation Required Filter -->
+        <div class="filter-section">
+          <div class="filter-label">Recommendation Required</div>
+          <q-select
+            v-model="localFilters.recommendationRequired"
+            :options="[
+              { label: 'Any', value: null },
+              { label: 'Required', value: true },
+              { label: 'Not Required', value: false }
+            ]"
+            outlined
+            dense
+            emit-value
+            map-options
           />
         </div>
       </div>
-    </q-card-section>
-  </q-card>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { targetTypeOptions } from 'src/types'
+import { ref, watch, computed } from 'vue'
+import { 
+  educationLevelOptions, 
+  educationYearOptions, 
+  targetTypeOptions, 
+  subjectAreaOptions, 
+  genderOptions, 
+  ethnicityOptions 
+} from 'src/types'
 
-const searchQuery = ref('')
-const filters = ref({
-  theme: null,
-  targetType: null
+const isExpanded = ref(false)
+
+const props = defineProps<{
+  filters: {
+    searchQuery: string
+    educationLevel: string | null
+    educationYear: string | null
+    targetType: string | null
+    subjectAreas: string[]
+    gender: string | null
+    ethnicity: string | null
+    academicGPA: number | null
+    essayRequired: boolean | null
+    recommendationRequired: boolean | null
+  }
+}>()
+
+const emit = defineEmits<{
+  'update:filters': [value: typeof props.filters]
+}>()
+
+const localFilters = ref({ ...props.filters })
+
+const activeFiltersCount = computed(() => {
+  let count = 0
+  if (localFilters.value.searchQuery) count++
+  if (localFilters.value.educationLevel) count++
+  if (localFilters.value.educationYear) count++
+  if (localFilters.value.targetType) count++
+  if (localFilters.value.subjectAreas && localFilters.value.subjectAreas.length > 0) count++
+  if (localFilters.value.gender) count++
+  if (localFilters.value.ethnicity) count++
+  if (localFilters.value.academicGPA !== null && localFilters.value.academicGPA > 0) count++
+  if (localFilters.value.essayRequired !== null) count++
+  if (localFilters.value.recommendationRequired !== null) count++
+  return count
 })
 
-const themeOptions = [
-  'STEM',
-  'Arts',
-  'Business',
-  'Education',
-  'Healthcare',
-  'Humanities',
-  'Social Sciences',
-  'Sports',
-  'Technology'
-]
+// Watch for changes in props
+watch(() => props.filters, (newFilters) => {
+  localFilters.value = { ...newFilters }
+}, { deep: true, immediate: true })
 
-const emit = defineEmits(['search'])
+// Watch for changes in local filters
+watch(localFilters, (newValue) => {
+  emit('update:filters', newValue)
+}, { deep: true })
 
-// Debounce function
-const debounce = <T extends (...args: unknown[]) => void>(fn: T, delay: number): ((...args: Parameters<T>) => void) => {
-  let timeoutId: ReturnType<typeof setTimeout>
-  return (...args: Parameters<T>) => {
-    clearTimeout(timeoutId)
-    timeoutId = setTimeout(() => fn(...args), delay)
+const clearAllFilters = () => {
+  localFilters.value = {
+    searchQuery: '',
+    educationLevel: null,
+    educationYear: null,
+    targetType: null,
+    subjectAreas: [],
+    gender: null,
+    ethnicity: null,
+    academicGPA: null,
+    essayRequired: null,
+    recommendationRequired: null
+  }
+}
+</script>
+
+<style scoped>
+.filters-sidebar {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.filters-collapsed {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.filters-collapsed:hover {
+  background: #f5f5f5;
+}
+
+.filters-text {
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #333;
+}
+
+.filters-count {
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  color: white;
+  border-radius: 50%;
+  padding: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  min-width: 18px;
+  height: 18px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 4px rgba(30, 64, 175, 0.3);
+  transition: all 0.2s ease;
+}
+
+.filters-count:hover {
+  transform: scale(1.1);
+  box-shadow: 0 3px 6px rgba(30, 64, 175, 0.4);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.filters-expanded {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 280px;
+  max-width: 320px;
+  z-index: 1000;
+}
+
+.filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.filters-title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+}
+
+.filters-content {
+  padding: 16px;
+}
+
+.filter-section {
+  margin-bottom: 20px;
+}
+
+.filter-section:last-child {
+  margin-bottom: 0;
+}
+
+.filter-label {
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+  .filters-expanded {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    max-width: 90vw;
+    max-height: 80vh;
+    overflow-y: auto;
   }
 }
 
-// Debounced search function
-const debouncedSearch = debounce(() => {
-  emit('search', {
-    query: searchQuery.value,
-    ...filters.value
-  })
-}, 300)
+.reset-btn {
+  background-color: #f5f5f5;
+  transition: all 0.2s ease;
+}
 
-// Watch for changes in search query and filters
-watch([searchQuery, () => filters.value], () => {
-  debouncedSearch()
-}, { deep: true })
-
-// Remove the onSearch function since we're using watchers now
-</script> 
+.reset-btn:hover {
+  background-color: #e0e0e0;
+  transform: scale(1.1);
+  color: #666;
+}
+</style> 

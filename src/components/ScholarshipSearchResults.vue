@@ -1,24 +1,5 @@
 <template>
   <div>
-    <!-- Recommended Scholarships -->
-    <div class="text-h6 q-mb-md">Recommended for You</div>
-    <q-table
-      :rows="recommendedScholarships"
-      :columns="scholarshipColumns"
-      row-key="id"
-      flat
-      bordered
-      :pagination="{ rowsPerPage: 0 }"
-      class="q-mb-xl"
-    >
-      <template v-slot:body-cell-amount="props">
-        <q-td :props="props">
-          ${{ props.row.amount.toLocaleString() }}
-        </q-td>
-      </template>
-
-    </q-table>
-
     <!-- Search Results -->
     <div v-if="searchResults.length > 0" class="text-h6 q-mb-md">Search Results</div>
     <q-table
@@ -37,16 +18,21 @@
       </template>
 
     </q-table>
+
+    <!-- No Results Message -->
+    <div v-else class="text-center q-pa-lg">
+      <q-icon name="search_off" size="4rem" color="grey-4" />
+      <div class="text-h6 q-mt-md text-grey-6">No scholarships found</div>
+      <div class="text-body2 text-grey-5 q-mt-sm">Try adjusting your search filters</div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import type { Scholarship } from 'src/types'
-import mockRecommendations from 'src/mocks/mockScholarshipRecommendationsData.json'
 
 const searchResults = ref<Scholarship[]>([])
-const recommendedScholarships = ref<Scholarship[]>([])
 
 const scholarshipColumns = [
   {
@@ -75,38 +61,11 @@ const scholarshipColumns = [
   }
 ]
 
-const onSearch = () => {
-  // TODO: Implement actual search logic
-  // For now, using mock data
-  searchResults.value = [
-
-  ]
+const setResults = (results: Scholarship[]) => {
+  searchResults.value = results
 }
 
-onMounted(() => {
-  // TODO: Implement actual API call
-  // For now, using mock data
-  recommendedScholarships.value = mockRecommendations.map(item => ({
-    name: item.name,
-    organization: item.organization,
-    description: item.description,
-    amount: item.amount,
-    targetType: item.targetType,
-    requirements: item.requirements,
-    ethnicity: 'Any',
-    gender: 'Any',
-    educationLevel: 'Any',
-    educationYear: 'Any',
-    area: item.theme,
-    academicGPA: 3.0,
-    essay: false,
-    recommendation: false,
-    url: item.url,
-    isActive: item.isActive
-  })) as Scholarship[]
-})
-
 defineExpose({
-  onSearch
+  setResults
 })
 </script> 
