@@ -71,6 +71,9 @@
                 icon="close"
                 @click="closeForm"
                 size="sm"
+                color="grey-7"
+                class="close-btn"
+                style="background-color: #f5f5f5; transition: all 0.2s ease;"
               />
             </div>
           </q-card-section>
@@ -264,4 +267,16 @@ const confirmDeleteRecommendation = (recommendation: Recommendation) => {
 onMounted(() => {
   loadRecommendations()
 })
-</script> 
+</script>
+
+<style scoped>
+.close-btn:hover {
+  background-color: #e0e0e0 !important;
+  transform: scale(1.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.close-btn:active {
+  transform: scale(0.95);
+}
+</style> 

@@ -49,8 +49,10 @@
                 dense
                 icon="close"
                 @click="handleCancel"
-                class="q-mr-sm"
+                class="q-mr-sm close-btn"
                 size="sm"
+                color="grey-7"
+                style="background-color: #f5f5f5; transition: all 0.2s ease;"
               />
               <q-btn
                 label="Cancel"
@@ -345,5 +347,15 @@ onUnmounted(() => {
 .profile-container {
   max-width: 600px;
   margin: 0 auto;
+}
+
+.close-btn:hover {
+  background-color: #e0e0e0 !important;
+  transform: scale(1.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.close-btn:active {
+  transform: scale(0.95);
 }
 </style> 
