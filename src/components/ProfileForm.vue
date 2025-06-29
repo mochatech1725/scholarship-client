@@ -25,7 +25,7 @@
     <q-card class="q-pa-md" style="background-color: white;">
       <q-card-section>
         <div class="row items-center justify-between q-mb-md">
-          <div class="text-h6">Search Preferences</div>
+          <div class="text-h6">Profile</div>
           <q-btn
             v-if="!isEdit"
             label="Edit"
@@ -36,6 +36,39 @@
         </div>
 
         <q-form v-if="isEdit" @submit="onSubmit" class="q-gutter-md">
+          <div class="row items-center justify-between q-mb-md">
+            <div class="text-h6">Search Preferences</div>
+            <div class="row items-center">
+              <div v-if="isFormDirty" class="text-caption text-orange q-mr-md">
+                <q-icon name="warning" size="sm" class="q-mr-xs" />
+                Unsaved changes
+              </div>
+              <q-btn
+                flat
+                round
+                dense
+                icon="close"
+                @click="handleCancel"
+                class="q-mr-sm"
+                size="sm"
+              />
+              <q-btn
+                label="Cancel"
+                color="grey-6"
+                flat
+                @click="handleCancel"
+                class="q-mr-sm"
+                size="md"
+              />
+              <q-btn
+                label="Save"
+                type="submit"
+                :style="{ backgroundColor: 'var(--q-button-primary)', color: 'white' }"
+                size="md"
+              />
+            </div>
+          </div>
+
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-6">
               <div class="form-label">Education Level</div>
@@ -125,36 +158,6 @@
                 class="q-mb-sm"
               />
             </div>
-          </div>
-
-          <div class="row justify-end q-mt-md">
-            <div v-if="isFormDirty" class="text-caption text-orange q-mr-md">
-              <q-icon name="warning" size="sm" class="q-mr-xs" />
-              Unsaved changes
-            </div>
-            <q-btn
-              flat
-              round
-              dense
-              icon="close"
-              @click="handleCancel"
-              class="q-mr-sm"
-              size="sm"
-            />
-            <q-btn
-              label="Cancel"
-              color="grey"
-              flat
-              class="q-mr-sm"
-              @click="handleCancel"
-              dense
-            />
-            <q-btn
-              label="Save"
-              type="submit"
-              :style="{ backgroundColor: 'var(--q-button-primary)', color: 'white' }"
-              dense
-            />
           </div>
         </q-form>
 
