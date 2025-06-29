@@ -253,7 +253,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, onMounted, watch, computed, onUnmounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'stores/application.store'
 import type { Application, Recommender, Essay, Recommendation } from 'src/types'
@@ -445,11 +445,6 @@ const handleCancel = () => {
   }
 }
 
-onMounted(async () => {
-  await loadRecommenders()
-  initializeForm()
-})
-
 const handleRecommendationsUpdated = (updatedRecommendations: Recommendation[]) => {
   // Update the application form data with the new recommendations
   form.value.recommendations = updatedRecommendations
@@ -459,6 +454,27 @@ const handleEssaysUpdated = (updatedEssays: Essay[]) => {
   // Update the application form data with the new essays
   form.value.essays = updatedEssays
 }
+
+// Handle ESC key press
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape') {
+    event.preventDefault()
+    handleCancel()
+  }
+}
+
+onMounted(async () => {
+  await loadRecommenders()
+  initializeForm()
+  
+  // Add ESC key listener
+  document.addEventListener('keydown', handleKeydown)
+})
+
+onUnmounted(() => {
+  // Remove ESC key listener
+  document.removeEventListener('keydown', handleKeydown)
+})
 
 </script>
 

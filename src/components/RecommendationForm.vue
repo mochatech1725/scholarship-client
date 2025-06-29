@@ -94,7 +94,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
+import { ref, onMounted, computed, onBeforeUnmount, onUnmounted } from 'vue'
 import { useQuasar } from 'quasar'
 import type { Recommendation, Application, Recommender } from 'src/types'
 import { formatDateForInput } from 'src/utils/helper'
@@ -203,6 +203,14 @@ const onSubmit = () => {
   emit('submit', form.value)
 }
 
+// Handle ESC key press
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape') {
+    event.preventDefault()
+    handleCancel()
+  }
+}
+
 const initializeForm = () => {
   if (props.recommendation) {
     const { recommender } = props.recommendation
@@ -254,10 +262,18 @@ const initializeForm = () => {
 
 onMounted(() => {
   initializeForm()
+  
+  // Add ESC key listener
+  document.addEventListener('keydown', handleKeydown)
 })
 
 onBeforeUnmount(() => {
   // No scholarship context logic to clear
+})
+
+onUnmounted(() => {
+  // Remove ESC key listener
+  document.removeEventListener('keydown', handleKeydown)
 })
 </script>
 

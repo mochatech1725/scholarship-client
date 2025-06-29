@@ -91,7 +91,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, onUnmounted } from 'vue'
 import { useQuasar } from 'quasar'
 import type { Recommender, User } from 'src/types'
 
@@ -201,8 +201,24 @@ const onSubmit = () => {
   emit('submit', form.value)
 }
 
+// Handle ESC key press
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape') {
+    event.preventDefault()
+    handleCancel()
+  }
+}
+
 onMounted(() => {
   void loadData()
+  
+  // Add ESC key listener
+  document.addEventListener('keydown', handleKeydown)
+})
+
+onUnmounted(() => {
+  // Remove ESC key listener
+  document.removeEventListener('keydown', handleKeydown)
 })
 </script>
 

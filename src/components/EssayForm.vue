@@ -79,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, onUnmounted } from 'vue'
 import { useQuasar } from 'quasar'
 import type { Essay, Application } from 'src/types'
 import ScholarshipBanner from 'components/ScholarshipBanner.vue'
@@ -168,15 +168,31 @@ const handleCancel = () => {
   }
 }
 
-onMounted(() => {
-  initializeForm()
-})
-
 const onSubmit = () => {
   // Reset dirty state after successful submission
   originalFormData.value = { ...form.value }
   emit('submit', form.value)
 }
+
+// Handle ESC key press
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape') {
+    event.preventDefault()
+    handleCancel()
+  }
+}
+
+onMounted(() => {
+  initializeForm()
+  
+  // Add ESC key listener
+  document.addEventListener('keydown', handleKeydown)
+})
+
+onUnmounted(() => {
+  // Remove ESC key listener
+  document.removeEventListener('keydown', handleKeydown)
+})
 </script>
 
 <style scoped>
