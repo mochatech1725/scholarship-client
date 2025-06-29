@@ -8,7 +8,7 @@
     "preferences": {
       "educationLevel": "College Freshman",
       "targetType":"Both",
-      "areas": ["STEM", "Computer Science"],
+      "subjectAreas": ["STEM", "Computer Science"],
       "minAmount": 1000
     }
   }

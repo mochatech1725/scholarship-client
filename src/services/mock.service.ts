@@ -1,7 +1,7 @@
-import type { Recommender, Profile, User, EducationLevel, TargetType, Area } from 'src/types'
+import type { Recommender, Profile, User, EducationLevel, TargetType, SubjectArea } from 'src/types'
 import mockUserData from '../mocks/mockUserData.json'
 import recommenderData from '../mocks/mockRecommenderData.json'
-import { educationLevelOptions, targetTypeOptions, areaOptions } from 'src/types'
+import { educationLevelOptions, targetTypeOptions, subjectAreaOptions } from 'src/types'
 
 function castEducationLevel(val: string): EducationLevel {
   return educationLevelOptions.find(opt => opt === val) as EducationLevel
@@ -12,8 +12,8 @@ function castTargetType(val: string): TargetType {
   return found || 'Both'
 }
 
-function castAreas(arr: string[]): Area[] {
-  return arr.filter(val => areaOptions.includes(val as Area)) as Area[]
+function castSubjectAreas(arr: string[]): SubjectArea[] {
+  return arr.filter(val => subjectAreaOptions.includes(val as SubjectArea)) as SubjectArea[]
 }
 
 class MockService {
@@ -73,7 +73,7 @@ class MockService {
         searchPreferences: {
           educationLevel: castEducationLevel(mockUserData.profile.preferences.educationLevel),
           targetType: castTargetType(mockUserData.profile.preferences.targetType),
-          areas: castAreas(mockUserData.profile.preferences.areas),
+          subjectAreas: castSubjectAreas(mockUserData.profile.preferences.subjectAreas),
           educationYear: 'College Freshman',
           gender: 'Male',
           ethnicity: 'White/Caucasian',
@@ -110,7 +110,7 @@ class MockService {
           searchPreferences: {
             educationLevel: castEducationLevel(mockUserData.profile.preferences.educationLevel),
             targetType: castTargetType(mockUserData.profile.preferences.targetType),
-            areas: castAreas(mockUserData.profile.preferences.areas),
+            subjectAreas: castSubjectAreas(mockUserData.profile.preferences.subjectAreas),
             educationYear: 'College Freshman',
             gender: 'Male',
             ethnicity: 'White/Caucasian',

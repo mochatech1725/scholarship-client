@@ -40,7 +40,7 @@ export const targetTypeOptions = [
   'Both',
 ] as const
 
-export const areaOptions = [
+export const subjectAreaOptions = [
   'Agriculture',
   'Arts',
   'Architecture',
@@ -104,7 +104,7 @@ export const applicationStatusOptions = [
 
 export type EducationLevel = typeof educationLevelOptions[number]
 export type TargetType = typeof targetTypeOptions[number]
-export type Area = typeof areaOptions[number]
+export type SubjectArea = typeof subjectAreaOptions[number]
 export type Gender = typeof genderOptions[number]
 export type Ethnicity = typeof ethnicityOptions[number]
 export type EducationYear = typeof educationYearOptions[number]
@@ -217,7 +217,7 @@ export interface SearchPreferences {
   educationLevel: EducationLevel
   educationYear: EducationYear
   targetType: TargetType
-  areas: Area[]
+  subjectAreas: SubjectArea[]
   gender: Gender
   ethnicity: Ethnicity
   academicGPA: number

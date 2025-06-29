@@ -70,8 +70,8 @@
             <div class="col-12 col-md-6">
               <div class="form-label">Areas of Interest</div>
               <q-select
-                v-model="form.userPreferences.searchPreferences.areas"
-                :options="areaOptions"
+                v-model="form.userPreferences.searchPreferences.subjectAreas"
+                :options="subjectAreaOptions"
                 multiple
                 flat
                 dense
@@ -163,7 +163,7 @@
             </div>
             <div class="col-12 col-md-6">
               <div class="form-label">Areas of Interest</div>
-              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.areas?.join(', ') || 'Not set' }}</div>
+              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.subjectAreas?.join(', ') || 'Not set' }}</div>
             </div>
             <div class="col-12 col-md-6">
               <div class="form-label">Gender</div>
@@ -199,7 +199,7 @@ import {
   educationLevelOptions, 
   educationYearOptions, 
   targetTypeOptions, 
-  areaOptions, 
+  subjectAreaOptions, 
   genderOptions, 
   ethnicityOptions 
 } from 'src/types'
@@ -222,7 +222,7 @@ const form = ref<Profile>({
       educationLevel: 'Undergraduate',
       educationYear: 'College Freshman',
       targetType: 'Both',
-      areas: [],
+      subjectAreas: [],
       gender: 'Male',
       ethnicity: 'White/Caucasian',
       academicGPA: 3.0,
