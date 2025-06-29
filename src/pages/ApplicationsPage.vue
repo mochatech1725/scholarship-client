@@ -71,7 +71,17 @@
     <q-dialog v-model="showForm" persistent>
       <q-card style="min-width: 800px; max-width: 90vw">
         <q-card-section>
-          <div class="text-h6">{{ dialogTitle }}</div>
+          <div class="row items-center justify-between">
+            <div class="text-h6">{{ dialogTitle }}</div>
+            <q-btn
+              flat
+              round
+              dense
+              icon="close"
+              @click="handleFormCancel"
+              size="sm"
+            />
+          </div>
         </q-card-section>
 
         <q-card-section>

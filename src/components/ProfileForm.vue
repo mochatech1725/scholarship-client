@@ -133,6 +133,15 @@
               Unsaved changes
             </div>
             <q-btn
+              flat
+              round
+              dense
+              icon="close"
+              @click="handleCancel"
+              class="q-mr-sm"
+              size="sm"
+            />
+            <q-btn
               label="Cancel"
               color="grey"
               flat

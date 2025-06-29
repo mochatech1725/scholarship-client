@@ -42,7 +42,17 @@
     <q-dialog v-model="showForm" persistent>
       <q-card style="min-width: 350px">
         <q-card-section>
-          <div class="text-h6">{{ editingEssay ? 'Edit Essay' : 'Add Essay' }}</div>
+          <div class="row items-center justify-between">
+            <div class="text-h6">{{ editingEssay ? 'Edit Essay' : 'Add Essay' }}</div>
+            <q-btn
+              flat
+              round
+              dense
+              icon="close"
+              @click="closeForm"
+              size="sm"
+            />
+          </div>
         </q-card-section>
 
         <q-card-section>
