@@ -15,7 +15,7 @@
 
       <q-slide-transition>
         <q-card-section v-show="isExpanded" class="q-pt-sm">
-          <div class="row items-end q-gutter-sm">
+          <div class="row items-start q-gutter-sm">
             <div class="col-auto">
               <div class="form-label text-caption">Status</div>
               <q-select
@@ -28,6 +28,9 @@
                 map-options
                 style="min-width: 160px"
               />
+              <div v-if="localFilters.status" class="selected-value">
+                {{ localFilters.status }}
+              </div>
             </div>
 
             <div class="col-auto">
@@ -42,6 +45,9 @@
                 map-options
                 style="min-width: 160px"
               />
+              <div v-if="localFilters.targetType" class="selected-value">
+                {{ localFilters.targetType }}
+              </div>
             </div>
 
             <div class="col-auto">
@@ -56,6 +62,9 @@
                 map-options
                 style="min-width: 200px"
               />
+              <div v-if="localFilters.currentAction" class="selected-value">
+                {{ localFilters.currentAction }}
+              </div>
             </div>
 
             <div class="col-auto">
@@ -67,6 +76,9 @@
                 dense
                 style="min-width: 220px"
               />
+              <div v-if="localFilters.company" class="selected-value">
+                {{ localFilters.company }}
+              </div>
             </div>
 
             <div class="col">
@@ -93,6 +105,9 @@
                   </q-icon>
                 </template>
               </q-input>
+              <div v-if="dateRangeDisplay" class="selected-value">
+                {{ dateRangeDisplay }}
+              </div>
             </div>
 
             <div class="col-auto">
@@ -215,5 +230,12 @@ const clearAllFilters = () => {
 .form-label {
   margin-bottom: 2px;
   font-weight: 500;
+}
+
+.selected-value {
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: #666;
+  font-style: italic;
 }
 </style> 
