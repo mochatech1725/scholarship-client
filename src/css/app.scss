@@ -45,12 +45,54 @@
   --table-header-hover-bg: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
 }
 
-// Reusable form label class - changed to black
+// Reusable form label class - enhanced styling
 .form-label {
-  color: #000000;
-  font-weight: 500;
+  color: #1e40af;
+  font-weight: 600;
   font-size: 0.875rem;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-label::after {
+  display: none;
+}
+
+// Enhanced filter component styling
+.application-filters .form-label {
+  color: #1e40af;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 0.75rem;
+  padding: 4px 8px;
+  background: linear-gradient(135deg, rgba(30, 64, 175, 0.05) 0%, rgba(30, 64, 175, 0.02) 100%);
+  border-radius: 4px;
+}
+
+.application-filters .form-label::after {
+  display: none;
+}
+
+// Enhanced filter card styling
+.application-filters .q-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+  border: 2px solid rgba(30, 64, 175, 0.1) !important;
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.08) !important;
+}
+
+.application-filters .q-card-section {
+  background: transparent !important;
+}
+
+// Enhanced filter header
+.application-filters .text-h6 {
+  color: #1e40af !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
 }
 
 // Reusable table header class
