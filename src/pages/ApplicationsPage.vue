@@ -291,9 +291,9 @@ onMounted(() => {
 }
 
 .filters-section {
-  flex-shrink: 0;
-  width: 280px;
-  max-width: 280px;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
 }
 
 @media (max-width: 768px) {

@@ -206,6 +206,8 @@ const clearAllFilters = () => {
 <style scoped>
 .filters-sidebar {
   position: relative;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .filters-collapsed {
@@ -214,7 +216,6 @@ const clearAllFilters = () => {
   gap: 8px;
   padding: 8px 12px;
   background: white;
-  border: 1px solid #e0e0e0;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -223,7 +224,6 @@ const clearAllFilters = () => {
 
 .filters-collapsed:hover {
   background: #f5f5f5;
-  border-color: #ccc;
 }
 
 .filters-text {
@@ -233,14 +233,27 @@ const clearAllFilters = () => {
 }
 
 .filters-count {
-  background: #1e40af;
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
   color: white;
-  border-radius: 12px;
-  padding: 2px 8px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  min-width: 20px;
+  border-radius: 50%;
+  padding: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  min-width: 18px;
+  height: 18px;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 4px rgba(30, 64, 175, 0.3);
+  transition: all 0.2s ease;
+}
+
+.filters-count:hover {
+  transform: scale(1.1);
+  box-shadow: 0 3px 6px rgba(30, 64, 175, 0.4);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 .filters-expanded {
