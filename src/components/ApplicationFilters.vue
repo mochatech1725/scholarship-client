@@ -137,7 +137,7 @@ const props = defineProps<{
   filters: {
     status: string | null
     targetType: string | null
-    currentAction: string
+    currentAction: string | null
     company: string
     dueDateFrom: string | null
     dueDateTo: string | null
@@ -191,7 +191,7 @@ const clearAllFilters = () => {
   localFilters.value = {
     status: null,
     targetType: null,
-    currentAction: '',
+    currentAction: null,
     company: '',
     dueDateFrom: null,
     dueDateTo: null
