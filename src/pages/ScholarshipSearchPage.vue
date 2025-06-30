@@ -29,6 +29,37 @@
         <ScholarshipSearchResults ref="searchResultsRef" />
       </div>
     </div>
+
+    <!-- Empty State Table -->
+    <div v-else class="row">
+      <div class="col-12">
+        <q-card>
+          <q-card-section>
+            <div class="text-h6 q-mb-md">Scholarship Results</div>
+            <q-table
+              :rows="[]"
+              :columns="tableColumns"
+              row-key="name"
+              flat
+              bordered
+              class="empty-table"
+            >
+              <template v-slot:no-data>
+                <div class="full-width row flex-center q-pa-md">
+                  <div class="text-center">
+                    <q-icon name="search" size="48px" color="grey-4" class="q-mb-md" />
+                    <div class="text-h6 text-grey-6">No search performed yet</div>
+                    <div class="text-caption text-grey-5 q-mt-sm">
+                      Use the filters above and click "Search" to find scholarships
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </q-table>
+          </q-card-section>
+        </q-card>
+      </div>
+    </div>
   </q-page>
 </template>
 
@@ -42,6 +73,14 @@ const searchResultsRef = ref()
 const filterRef = ref()
 const searching = ref(false)
 const hasSearched = ref(false)
+
+const tableColumns = [
+  { name: 'name', label: 'Scholarship Name', field: 'name', align: 'left' as const },
+  { name: 'organization', label: 'Organization', field: 'organization', align: 'left' as const },
+  { name: 'amount', label: 'Amount', field: 'amount', align: 'right' as const },
+  { name: 'deadline', label: 'Deadline', field: 'deadline', align: 'center' as const },
+  { name: 'targetType', label: 'Type', field: 'targetType', align: 'center' as const }
+]
 
 const defaultFilters = {
   searchQuery: '',
