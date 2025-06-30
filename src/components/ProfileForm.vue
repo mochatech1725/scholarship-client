@@ -74,6 +74,17 @@
 
             <div class="row q-col-gutter-md">
               <div class="col-12 col-md-6">
+                <div class="form-label">Search Areas</div>
+                <q-select
+                  v-model="form.userPreferences.searchPreferences.subjectAreas"
+                  :options="subjectAreaOptions"
+                  multiple
+                  flat
+                  dense
+                  class="q-mb-sm"
+                />
+              </div>
+              <div class="col-12 col-md-6">
                 <div class="form-label">Education Level</div>
                 <q-select
                   v-model="form.userPreferences.searchPreferences.educationLevel"
@@ -169,6 +180,10 @@
           <div class="text-h6 q-mb-md">Search Preferences</div>
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-6">
+              <div class="form-label">Search Areas</div>
+              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.subjectAreas?.join(', ') || 'Not set' }}</div>
+            </div>
+            <div class="col-12 col-md-6">
               <div class="form-label">Education Level</div>
               <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.educationLevel || 'Not set' }}</div>
             </div>
@@ -181,10 +196,6 @@
               <div class="q-pa-sm">{{ 
                   profile?.userPreferences?.searchPreferences?.targetType || 'Not set' 
               }}</div>
-            </div>
-            <div class="col-12 col-md-6">
-              <div class="form-label">Areas of Interest</div>
-              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.subjectAreas?.join(', ') || 'Not set' }}</div>
             </div>
             <div class="col-12 col-md-6">
               <div class="form-label">Gender</div>
@@ -243,10 +254,10 @@ const emit = defineEmits<{
 const form = ref<Profile>({
   userPreferences: {
     searchPreferences: {
+      subjectAreas: [],
       educationLevel: 'Undergraduate',
       educationYear: 'College Freshman',
       targetType: 'Both',
-      subjectAreas: [],
       gender: 'Male',
       ethnicity: 'White/Caucasian',
       academicGPA: 3.0,

@@ -63,6 +63,21 @@
           </q-input>
         </div>
 
+        <!-- Subject Areas Filter -->
+        <div class="filter-section">
+          <div class="filter-label">Subject Areas</div>
+          <q-select
+            v-model="localFilters.subjectAreas"
+            :options="subjectAreaOptions"
+            multiple
+            outlined
+            dense
+            emit-value
+            map-options
+            placeholder="All Subject Areas"
+          />
+        </div>
+
         <!-- Education Level Filter -->
         <div class="filter-section">
           <div class="filter-label">Education Level</div>
@@ -105,21 +120,6 @@
             emit-value
             map-options
             placeholder="All Types"
-          />
-        </div>
-
-        <!-- Subject Areas Filter -->
-        <div class="filter-section">
-          <div class="filter-label">Subject Areas</div>
-          <q-select
-            v-model="localFilters.subjectAreas"
-            :options="subjectAreaOptions"
-            multiple
-            outlined
-            dense
-            emit-value
-            map-options
-            placeholder="All Subject Areas"
           />
         </div>
 
@@ -225,10 +225,10 @@ const userStore = useUserStore()
 const props = defineProps<{
   filters: {
     searchQuery: string
+    subjectAreas: string[]
     educationLevel: string | null
     educationYear: string | null
     targetType: string | null
-    subjectAreas: string[]
     gender: string | null
     ethnicity: string | null
     academicGPA: number | null
@@ -246,10 +246,10 @@ const localFilters = ref({ ...props.filters })
 const activeFiltersCount = computed(() => {
   let count = 0
   if (localFilters.value.searchQuery) count++
+  if (localFilters.value.subjectAreas && localFilters.value.subjectAreas.length > 0) count++
   if (localFilters.value.educationLevel) count++
   if (localFilters.value.educationYear) count++
   if (localFilters.value.targetType) count++
-  if (localFilters.value.subjectAreas && localFilters.value.subjectAreas.length > 0) count++
   if (localFilters.value.gender) count++
   if (localFilters.value.ethnicity) count++
   if (localFilters.value.academicGPA !== null && localFilters.value.academicGPA > 0) count++
@@ -279,10 +279,10 @@ const handlePopulateFromProfile = (checked: boolean) => {
     // Populate filters from profile
     localFilters.value = {
       ...localFilters.value,
+      subjectAreas: profilePrefs.subjectAreas || [],
       educationLevel: profilePrefs.educationLevel || null,
       educationYear: profilePrefs.educationYear || null,
       targetType: profilePrefs.targetType || null,
-      subjectAreas: profilePrefs.subjectAreas || [],
       gender: profilePrefs.gender || null,
       ethnicity: profilePrefs.ethnicity || null,
       academicGPA: profilePrefs.academicGPA || null,
@@ -298,10 +298,10 @@ const handlePopulateFromProfile = (checked: boolean) => {
 const clearAllFilters = () => {
   localFilters.value = {
     searchQuery: '',
+    subjectAreas: [],
     educationLevel: null,
     educationYear: null,
     targetType: null,
-    subjectAreas: [],
     gender: null,
     ethnicity: null,
     academicGPA: null,

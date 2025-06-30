@@ -45,10 +45,10 @@ const hasSearched = ref(false)
 
 const defaultFilters = {
   searchQuery: '',
+  subjectAreas: [] as string[],
   educationLevel: null as string | null,
   educationYear: null as string | null,
   targetType: null as string | null,
-  subjectAreas: [] as string[],
   gender: null as string | null,
   ethnicity: null as string | null,
   academicGPA: null as number | null,

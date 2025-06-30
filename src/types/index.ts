@@ -221,10 +221,10 @@ export interface UserPreferences {
 }
 
 export interface SearchPreferences {
+  subjectAreas: SubjectArea[]
   educationLevel: EducationLevel
   educationYear: EducationYear
   targetType: TargetType
-  subjectAreas: SubjectArea[]
   gender: Gender
   ethnicity: Ethnicity
   academicGPA: number
@@ -234,10 +234,10 @@ export interface SearchPreferences {
 
 export interface SearchFilters {
   searchQuery: string
+  subjectAreas: string[]
   educationLevel: string | null
   educationYear: string | null
   targetType: string | null
-  subjectAreas: string[]
   gender: string | null
   ethnicity: string | null
   academicGPA: number | null
