@@ -2,25 +2,25 @@
   <q-page padding>
     <div class="text-h5 q-mb-lg">Search Scholarships</div>
 
-    <!-- Search Button -->
-    <div class="row justify-end q-mb-lg">
-      <q-btn
-        label="Search"
-        color="primary"
-        size="md"
-        @click="handleSearch"
-        :loading="searching"
-        :disable="!hasActiveFilters"
-        icon="search"
-      />
-    </div>
-
-    <!-- Filter Section -->
-    <div class="q-mb-lg">
-      <ScholarshipSearchFilter 
-        ref="filterRef"
-        :filters="defaultFilters"
-      />
+    <!-- Search Button and Filter Section -->
+    <div class="row justify-end items-center q-mb-lg q-gutter-md">
+      <div class="col-auto">
+        <ScholarshipSearchFilter 
+          ref="filterRef"
+          :filters="defaultFilters"
+        />
+      </div>
+      <div class="col-auto">
+        <q-btn
+          label="Search"
+          color="primary"
+          size="md"
+          @click="handleSearch"
+          :loading="searching"
+          :disable="!hasActiveFilters"
+          icon="search"
+        />
+      </div>
     </div>
 
     <!-- Results Section -->
