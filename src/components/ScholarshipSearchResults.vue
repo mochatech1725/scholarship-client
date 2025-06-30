@@ -1,9 +1,8 @@
 <template>
   <div>
     <!-- Search Results -->
-    <div v-if="searchResults.length > 0" class="text-h6 q-mb-md">Search Results</div>
+    <div class="text-h6 q-mb-md">Search Results</div>
     <q-table
-      v-if="searchResults.length > 0"
       :rows="searchResults"
       :columns="scholarshipColumns"
       row-key="id"
@@ -17,14 +16,14 @@
         </q-td>
       </template>
 
+      <template v-slot:no-data>
+        <div class="text-center q-pa-lg">
+          <q-icon name="search_off" size="4rem" color="grey-4" />
+          <div class="text-h6 q-mt-md text-grey-6">No scholarships found</div>
+          <div class="text-body2 text-grey-5 q-mt-sm">Try adjusting your search filters</div>
+        </div>
+      </template>
     </q-table>
-
-    <!-- No Results Message -->
-    <div v-else class="text-center q-pa-lg">
-      <q-icon name="search_off" size="4rem" color="grey-4" />
-      <div class="text-h6 q-mt-md text-grey-6">No scholarships found</div>
-      <div class="text-body2 text-grey-5 q-mt-sm">Try adjusting your search filters</div>
-    </div>
   </div>
 </template>
 

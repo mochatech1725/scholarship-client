@@ -24,9 +24,22 @@
     </div>
 
     <!-- Results Section -->
-    <div v-if="hasSearched" class="row">
+    <div v-if="hasSearched && !searching" class="row">
       <div class="col-12">
         <ScholarshipSearchResults ref="searchResultsRef" />
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div v-else-if="searching" class="row">
+      <div class="col-12">
+        <q-card>
+          <q-card-section class="text-center q-pa-xl">
+            <q-spinner-dots size="60px" color="primary" class="q-mb-md" />
+            <div class="text-h6 text-grey-7 q-mb-sm">Searching for scholarships...</div>
+            <div class="text-caption text-grey-5">This might take a while</div>
+          </q-card-section>
+        </q-card>
       </div>
     </div>
 
