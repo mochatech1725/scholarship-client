@@ -10,6 +10,7 @@
         size="md"
         @click="handleSearch"
         :loading="searching"
+        :disable="!hasActiveFilters"
         icon="search"
       />
     </div>
@@ -17,7 +18,8 @@
     <!-- Filter Section -->
     <div class="q-mb-lg">
       <ScholarshipSearchFilter 
-        v-model:filters="filters"
+        ref="filterRef"
+        :filters="defaultFilters"
       />
     </div>
 
@@ -31,16 +33,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import ScholarshipSearchFilter from 'components/ScholarshipSearchFilter.vue'
 import ScholarshipSearchResults from 'components/ScholarshipSearchResults.vue'
 import { apiService } from 'src/services/api.service'
 
 const searchResultsRef = ref()
+const filterRef = ref()
 const searching = ref(false)
 const hasSearched = ref(false)
 
-const filters = ref({
+const defaultFilters = {
   searchQuery: '',
   educationLevel: null as string | null,
   educationYear: null as string | null,
@@ -51,13 +54,18 @@ const filters = ref({
   academicGPA: null as number | null,
   essayRequired: null as boolean | null,
   recommendationRequired: null as boolean | null
+}
+
+const hasActiveFilters = computed(() => {
+  return filterRef.value?.getActiveFiltersCount() > 0
 })
 
 const handleSearch = async () => {
   searching.value = true
   hasSearched.value = true
   try {
-    const results = await apiService.findScholarships(filters.value)
+    const filters = filterRef.value?.localFilters || defaultFilters
+    const results = await apiService.findScholarships(filters)
     searchResultsRef.value?.setResults(results)
   } catch (error) {
     console.error('Search failed:', error)

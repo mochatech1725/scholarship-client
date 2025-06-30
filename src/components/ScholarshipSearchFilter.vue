@@ -20,6 +20,16 @@
       </div>
 
       <div class="filters-content">
+        <!-- Populate from Profile Checkbox -->
+        <div class="filter-section">
+          <q-checkbox
+            v-model="populateFromProfile"
+            label="Populate from Profile"
+            @update:model-value="handlePopulateFromProfile"
+            color="primary"
+          />
+        </div>
+
         <!-- Clear All Button -->
         <div class="filter-section">
           <div class="row justify-end">
@@ -197,7 +207,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, defineExpose } from 'vue'
+import { useUserStore } from 'src/stores/user.store'
 import { 
   educationLevelOptions, 
   educationYearOptions, 
@@ -208,6 +219,8 @@ import {
 } from 'src/types'
 
 const isExpanded = ref(false)
+const populateFromProfile = ref(false)
+const userStore = useUserStore()
 
 const props = defineProps<{
   filters: {
@@ -242,6 +255,10 @@ const activeFiltersCount = computed(() => {
   if (localFilters.value.academicGPA !== null && localFilters.value.academicGPA > 0) count++
   if (localFilters.value.essayRequired !== null) count++
   if (localFilters.value.recommendationRequired !== null) count++
+  
+  // Debug logging
+  console.log('Active filters count:', count, 'Filters:', localFilters.value)
+  
   return count
 })
 
@@ -254,6 +271,29 @@ watch(() => props.filters, (newFilters) => {
 watch(localFilters, (newValue) => {
   emit('update:filters', newValue)
 }, { deep: true })
+
+const handlePopulateFromProfile = (checked: boolean) => {
+  if (checked && userStore.user?.profile?.userPreferences?.searchPreferences) {
+    const profilePrefs = userStore.user.profile.userPreferences.searchPreferences
+    
+    // Populate filters from profile
+    localFilters.value = {
+      ...localFilters.value,
+      educationLevel: profilePrefs.educationLevel || null,
+      educationYear: profilePrefs.educationYear || null,
+      targetType: profilePrefs.targetType || null,
+      subjectAreas: profilePrefs.subjectAreas || [],
+      gender: profilePrefs.gender || null,
+      ethnicity: profilePrefs.ethnicity || null,
+      academicGPA: profilePrefs.academicGPA || null,
+      essayRequired: profilePrefs.essayRequired,
+      recommendationRequired: profilePrefs.recommendationRequired
+    }
+  } else if (!checked) {
+    // Clear all filters when unchecked
+    clearAllFilters()
+  }
+}
 
 const clearAllFilters = () => {
   localFilters.value = {
@@ -268,7 +308,15 @@ const clearAllFilters = () => {
     essayRequired: null,
     recommendationRequired: null
   }
+  populateFromProfile.value = false
 }
+
+// Expose methods and computed properties to parent components
+defineExpose({
+  activeFiltersCount,
+  getActiveFiltersCount: () => activeFiltersCount.value,
+  localFilters
+})
 </script>
 
 <style scoped>
