@@ -149,7 +149,7 @@ class ApiService {
   }
 
   async findScholarships(filters: SearchFilters) {
-    return this.makeRequest('/api/scholarships/search', {
+    return this.makeRequest('/api/scholarships/find', {
       method: 'POST',
       data: filters
     })
