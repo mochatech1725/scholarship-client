@@ -1,5 +1,6 @@
 <template>
   <q-page padding>
+    <div class="text-h5 q-mb-lg">Search Preferences</div>
     <ProfileForm
       :is-edit="isEdit"
       :profile="userStore.user?.profile ?? null"

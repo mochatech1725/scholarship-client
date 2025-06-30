@@ -35,135 +35,138 @@
           />
         </div>
 
-        <q-form v-if="isEdit" @submit="onSubmit" class="q-gutter-md">
-          <div class="row items-center justify-between q-mb-md">
-            <div class="text-h6">Search Preferences</div>
-            <div class="row items-center">
-              <div v-if="isFormDirty" class="text-caption text-orange q-mr-md">
-                <q-icon name="warning" size="sm" class="q-mr-xs" />
-                Unsaved changes
+        <div v-if="isEdit">
+          <q-form @submit="onSubmit" class="q-gutter-md">
+            <div class="row items-center justify-between q-mb-md">
+              <div class="text-h6">Search Preferences</div>
+              <div class="row items-center">
+                <div v-if="isFormDirty" class="text-caption text-orange q-mr-md">
+                  <q-icon name="warning" size="sm" class="q-mr-xs" />
+                  Unsaved changes
+                </div>
+                <q-btn
+                  flat
+                  round
+                  dense
+                  icon="close"
+                  @click="handleCancel"
+                  class="q-mr-sm close-btn"
+                  size="sm"
+                  color="grey-7"
+                  style="background-color: #f5f5f5; transition: all 0.2s ease;"
+                />
+                <q-btn
+                  label="Cancel"
+                  color="grey-6"
+                  flat
+                  @click="handleCancel"
+                  class="q-mr-sm"
+                  size="md"
+                />
+                <q-btn
+                  label="Save"
+                  type="submit"
+                  :style="{ backgroundColor: 'var(--q-button-primary)', color: 'white' }"
+                  size="md"
+                />
               </div>
-              <q-btn
-                flat
-                round
-                dense
-                icon="close"
-                @click="handleCancel"
-                class="q-mr-sm close-btn"
-                size="sm"
-                color="grey-7"
-                style="background-color: #f5f5f5; transition: all 0.2s ease;"
-              />
-              <q-btn
-                label="Cancel"
-                color="grey-6"
-                flat
-                @click="handleCancel"
-                class="q-mr-sm"
-                size="md"
-              />
-              <q-btn
-                label="Save"
-                type="submit"
-                :style="{ backgroundColor: 'var(--q-button-primary)', color: 'white' }"
-                size="md"
-              />
             </div>
-          </div>
 
-          <div class="row q-col-gutter-md">
-            <div class="col-12 col-md-6">
-              <div class="form-label">Education Level</div>
-              <q-select
-                v-model="form.userPreferences.searchPreferences.educationLevel"
-                :options="educationLevelOptions"
-                flat
-                dense
-                class="q-mb-sm"
-              />
+            <div class="row q-col-gutter-md">
+              <div class="col-12 col-md-6">
+                <div class="form-label">Education Level</div>
+                <q-select
+                  v-model="form.userPreferences.searchPreferences.educationLevel"
+                  :options="educationLevelOptions"
+                  flat
+                  dense
+                  class="q-mb-sm"
+                />
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-label">Education Year</div>
+                <q-select
+                  v-model="form.userPreferences.searchPreferences.educationYear"
+                  :options="educationYearOptions"
+                  flat
+                  dense
+                  class="q-mb-sm"
+                />
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-label">Target Type</div>
+                <q-select
+                  v-model="form.userPreferences.searchPreferences.targetType"
+                  :options="targetTypeOptions"
+                  flat
+                  dense
+                  class="q-mb-sm"
+                />
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-label">Areas of Interest</div>
+                <q-select
+                  v-model="form.userPreferences.searchPreferences.subjectAreas"
+                  :options="subjectAreaOptions"
+                  multiple
+                  flat
+                  dense
+                  class="q-mb-sm"
+                />
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-label">Gender</div>
+                <q-select
+                  v-model="form.userPreferences.searchPreferences.gender"
+                  :options="genderOptions"
+                  flat
+                  dense
+                  class="q-mb-sm"
+                />
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-label">Ethnicity</div>
+                <q-select
+                  v-model="form.userPreferences.searchPreferences.ethnicity"
+                  :options="ethnicityOptions"
+                  flat
+                  dense
+                  class="q-mb-sm"
+                />
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="form-label">Academic GPA</div>
+                <q-input
+                  v-model.number="form.userPreferences.searchPreferences.academicGPA"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  max="4.0"
+                  flat
+                  dense
+                  class="q-mb-sm"
+                />
+              </div>
+              <div class="col-12 col-md-6">
+                <q-checkbox
+                  v-model="form.userPreferences.searchPreferences.essayRequired"
+                  label="Essay Required"
+                  class="q-mb-sm"
+                />
+              </div>
+              <div class="col-12 col-md-6">
+                <q-checkbox
+                  v-model="form.userPreferences.searchPreferences.recommendationRequired"
+                  label="Recommendation Required"
+                  class="q-mb-sm"
+                />
+              </div>
             </div>
-            <div class="col-12 col-md-6">
-              <div class="form-label">Education Year</div>
-              <q-select
-                v-model="form.userPreferences.searchPreferences.educationYear"
-                :options="educationYearOptions"
-                flat
-                dense
-                class="q-mb-sm"
-              />
-            </div>
-            <div class="col-12 col-md-6">
-              <div class="form-label">Target Type</div>
-              <q-select
-                v-model="form.userPreferences.searchPreferences.targetType"
-                :options="targetTypeOptions"
-                flat
-                dense
-                class="q-mb-sm"
-              />
-            </div>
-            <div class="col-12 col-md-6">
-              <div class="form-label">Areas of Interest</div>
-              <q-select
-                v-model="form.userPreferences.searchPreferences.subjectAreas"
-                :options="subjectAreaOptions"
-                multiple
-                flat
-                dense
-                class="q-mb-sm"
-              />
-            </div>
-            <div class="col-12 col-md-6">
-              <div class="form-label">Gender</div>
-              <q-select
-                v-model="form.userPreferences.searchPreferences.gender"
-                :options="genderOptions"
-                flat
-                dense
-                class="q-mb-sm"
-              />
-            </div>
-            <div class="col-12 col-md-6">
-              <div class="form-label">Ethnicity</div>
-              <q-select
-                v-model="form.userPreferences.searchPreferences.ethnicity"
-                :options="ethnicityOptions"
-                flat
-                dense
-                class="q-mb-sm"
-              />
-            </div>
-            <div class="col-12 col-md-6">
-              <div class="form-label">Academic GPA</div>
-              <q-input
-                v-model.number="form.userPreferences.searchPreferences.academicGPA"
-                type="number"
-                step="0.01"
-                min="0"
-                max="4.0"
-                flat
-                dense
-                class="q-mb-sm"
-              />
-            </div>
-            <div class="col-12 col-md-6">
-              <q-checkbox
-                v-model="form.userPreferences.searchPreferences.essayRequired"
-                label="Essay Required"
-                class="q-mb-sm"
-              />
-            </div>
-            <div class="col-12 col-md-6">
-              <q-checkbox
-                v-model="form.userPreferences.searchPreferences.recommendationRequired"
-                label="Recommendation Required"
-                class="q-mb-sm"
-              />
-            </div>
-          </div>
-        </q-form>
+          </q-form>
+        </div>
 
         <div v-else>
+          <div class="text-h6 q-mb-md">Search Preferences</div>
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-6">
               <div class="form-label">Education Level</div>
