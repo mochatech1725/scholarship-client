@@ -6,8 +6,8 @@
     <div class="row justify-end items-center q-mb-lg q-gutter-md">
       <div class="col-auto">
         <ScholarshipSearchFilter 
-          ref="filterRef"
-          :filters="defaultFilters"
+          ref="searchCriteriaRef"
+          :search-criteria="defaultSearchCriteria"
         />
       </div>
       <div class="col-auto">
@@ -17,7 +17,7 @@
           size="md"
           @click="handleSearch"
           :loading="searching"
-          :disable="!hasActiveFilters"
+          :disable="!hasActiveSearchCriteria"
           icon="search"
         />
       </div>
@@ -83,7 +83,7 @@ import ScholarshipSearchResults from 'components/ScholarshipSearchResults.vue'
 import { apiService } from 'src/services/api.service'
 
 const searchResultsRef = ref()
-const filterRef = ref()
+const searchCriteriaRef = ref()
 const searching = ref(false)
 const hasSearched = ref(false)
 
@@ -95,8 +95,8 @@ const tableColumns = [
   { name: 'targetType', label: 'Type', field: 'targetType', align: 'center' as const }
 ]
 
-const defaultFilters = {
-  searchQuery: '',
+const defaultSearchCriteria = {
+  keywords: '',
   subjectAreas: [] as string[],
   educationLevel: null as string | null,
   educationYear: null as string | null,
@@ -104,21 +104,22 @@ const defaultFilters = {
   gender: null as string | null,
   ethnicity: null as string | null,
   academicGPA: null as number | null,
+  state: null as string | null,
   essayRequired: null as boolean | null,
   recommendationRequired: null as boolean | null,
   deadlineRange: null as { startDate?: string; endDate?: string } | null,
   deadlineWithinDays: null as number | null
 }
 
-const hasActiveFilters = computed(() => {
-  return filterRef.value?.getActiveFiltersCount() > 0
+const hasActiveSearchCriteria = computed(() => {
+  return searchCriteriaRef.value?.getActiveFiltersCount() > 0
 })
 
 const handleSearch = async () => {
   searching.value = true
   hasSearched.value = true
   try {
-    const filters = filterRef.value?.localFilters || defaultFilters
+    const filters = searchCriteriaRef.value?.localFilters || defaultSearchCriteria
     const results = await apiService.findScholarships(filters)
     searchResultsRef.value?.setResults(results)
   } catch (error) {

@@ -49,9 +49,9 @@
 
         <!-- Search Query Filter -->
         <div class="filter-section">
-          <div class="filter-label">Search</div>
+          <div class="filter-label">Keywords</div>
           <q-input
-            v-model="localFilters.searchQuery"
+            v-model="localFilters.keywords"
             clearable
             outlined
             dense
@@ -168,6 +168,21 @@
           />
         </div>
 
+        <!-- State Filter -->
+        <div class="filter-section">
+          <div class="filter-label">State</div>
+          <q-select
+            v-model="localFilters.state"
+            :options="stateOptions"
+            clearable
+            outlined
+            dense
+            emit-value
+            map-options
+            placeholder="All States"
+          />
+        </div>
+
         <!-- Essay Required Filter -->
         <div class="filter-section">
           <div class="filter-label">Essay Required</div>
@@ -215,16 +230,28 @@ import {
   targetTypeOptions, 
   subjectAreaOptions, 
   genderOptions, 
-  ethnicityOptions 
+  ethnicityOptions
 } from 'src/types'
+
+// State options for the filter
+const stateOptions = [
+  'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut',
+  'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa',
+  'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan',
+  'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
+  'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio',
+  'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota',
+  'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia',
+  'Wisconsin', 'Wyoming'
+].map(state => ({ label: state, value: state }))
 
 const isExpanded = ref(false)
 const populateFromProfile = ref(false)
 const userStore = useUserStore()
 
 const props = defineProps<{
-  filters: {
-    searchQuery: string
+  searchCriteria: {
+    keywords: string
     subjectAreas: string[]
     educationLevel: string | null
     educationYear: string | null
@@ -232,6 +259,7 @@ const props = defineProps<{
     gender: string | null
     ethnicity: string | null
     academicGPA: number | null
+    state: string | null
     essayRequired: boolean | null
     recommendationRequired: boolean | null
     deadlineRange?: {
@@ -243,14 +271,14 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  'update:filters': [value: typeof props.filters]
+  'update:searchCriteria': [value: typeof props.searchCriteria]
 }>()
 
-const localFilters = ref({ ...props.filters })
+const localFilters = ref({ ...props.searchCriteria })
 
 const activeFiltersCount = computed(() => {
   let count = 0
-  if (localFilters.value.searchQuery) count++
+  if (localFilters.value.keywords) count++
   if (localFilters.value.subjectAreas && localFilters.value.subjectAreas.length > 0) count++
   if (localFilters.value.educationLevel) count++
   if (localFilters.value.educationYear) count++
@@ -258,6 +286,7 @@ const activeFiltersCount = computed(() => {
   if (localFilters.value.gender) count++
   if (localFilters.value.ethnicity) count++
   if (localFilters.value.academicGPA !== null && localFilters.value.academicGPA > 0) count++
+  if (localFilters.value.state) count++
   if (localFilters.value.essayRequired !== null) count++
   if (localFilters.value.recommendationRequired !== null) count++
   
@@ -268,13 +297,13 @@ const activeFiltersCount = computed(() => {
 })
 
 // Watch for changes in props
-watch(() => props.filters, (newFilters) => {
+watch(() => props.searchCriteria, (newFilters) => {
   localFilters.value = { ...newFilters }
 }, { deep: true, immediate: true })
 
 // Watch for changes in local filters
 watch(localFilters, (newValue) => {
-  emit('update:filters', newValue)
+  emit('update:searchCriteria', newValue)
 }, { deep: true })
 
 const handlePopulateFromProfile = (checked: boolean) => {
@@ -291,6 +320,7 @@ const handlePopulateFromProfile = (checked: boolean) => {
       gender: profilePrefs.gender || null,
       ethnicity: profilePrefs.ethnicity || null,
       academicGPA: profilePrefs.academicGPA || null,
+      state: null, // State is not in profile preferences, so keep as null
       essayRequired: profilePrefs.essayRequired,
       recommendationRequired: profilePrefs.recommendationRequired
     }
@@ -302,7 +332,7 @@ const handlePopulateFromProfile = (checked: boolean) => {
 
 const clearAllFilters = () => {
   localFilters.value = {
-    searchQuery: '',
+    keywords: '',
     subjectAreas: [],
     educationLevel: null,
     educationYear: null,
@@ -310,6 +340,7 @@ const clearAllFilters = () => {
     gender: null,
     ethnicity: null,
     academicGPA: null,
+    state: null,
     essayRequired: null,
     recommendationRequired: null,
     deadlineRange: null,

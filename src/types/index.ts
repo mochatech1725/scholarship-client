@@ -233,7 +233,7 @@ export interface SearchPreferences {
 }
 
 export interface SearchFilters {
-  searchQuery: string
+  keywords: string
   subjectAreas: string[]
   educationLevel: string | null
   educationYear: string | null
@@ -241,6 +241,7 @@ export interface SearchFilters {
   gender: string | null
   ethnicity: string | null
   academicGPA: number | null
+  state: string | null
   essayRequired: boolean | null
   recommendationRequired: boolean | null
   deadlineRange?: {
