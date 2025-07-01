@@ -105,7 +105,9 @@ const defaultFilters = {
   ethnicity: null as string | null,
   academicGPA: null as number | null,
   essayRequired: null as boolean | null,
-  recommendationRequired: null as boolean | null
+  recommendationRequired: null as boolean | null,
+  deadlineRange: null as { startDate?: string; endDate?: string } | null,
+  deadlineWithinDays: null as number | null
 }
 
 const hasActiveFilters = computed(() => {

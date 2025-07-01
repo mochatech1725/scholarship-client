@@ -234,6 +234,11 @@ const props = defineProps<{
     academicGPA: number | null
     essayRequired: boolean | null
     recommendationRequired: boolean | null
+    deadlineRange?: {
+      startDate?: string
+      endDate?: string
+    } | null
+    deadlineWithinDays?: number | null
   }
 }>()
 
@@ -306,7 +311,9 @@ const clearAllFilters = () => {
     ethnicity: null,
     academicGPA: null,
     essayRequired: null,
-    recommendationRequired: null
+    recommendationRequired: null,
+    deadlineRange: null,
+    deadlineWithinDays: null
   }
   populateFromProfile.value = false
 }
