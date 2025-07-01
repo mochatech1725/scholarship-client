@@ -185,35 +185,23 @@
 
         <!-- Essay Required Filter -->
         <div class="filter-section">
-          <div class="filter-label">Essay Required</div>
-          <q-select
+          <q-checkbox
             v-model="localFilters.essayRequired"
-            :options="[
-              { label: 'Any', value: null },
-              { label: 'Required', value: true },
-              { label: 'Not Required', value: false }
-            ]"
-            outlined
-            dense
-            emit-value
-            map-options
+            label="Essay Required"
+            :true-value="true"
+            :false-value="null"
+            color="primary"
           />
         </div>
 
         <!-- Recommendation Required Filter -->
         <div class="filter-section">
-          <div class="filter-label">Recommendation Required</div>
-          <q-select
+          <q-checkbox
             v-model="localFilters.recommendationRequired"
-            :options="[
-              { label: 'Any', value: null },
-              { label: 'Required', value: true },
-              { label: 'Not Required', value: false }
-            ]"
-            outlined
-            dense
-            emit-value
-            map-options
+            label="Recommendation Required"
+            :true-value="true"
+            :false-value="null"
+            color="primary"
           />
         </div>
       </div>
@@ -287,8 +275,8 @@ const activeFiltersCount = computed(() => {
   if (localFilters.value.ethnicity) count++
   if (localFilters.value.academicGPA !== null && localFilters.value.academicGPA > 0) count++
   if (localFilters.value.state) count++
-  if (localFilters.value.essayRequired !== null) count++
-  if (localFilters.value.recommendationRequired !== null) count++
+  if (localFilters.value.essayRequired === true) count++
+  if (localFilters.value.recommendationRequired === true) count++
   
   // Debug logging
   console.log('Active filters count:', count, 'Filters:', localFilters.value)
@@ -427,7 +415,7 @@ defineExpose({
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
+  padding: 12px 16px;
   border-bottom: 1px solid #e0e0e0;
 }
 
@@ -438,11 +426,11 @@ defineExpose({
 }
 
 .filters-content {
-  padding: 16px;
+  padding: 12px;
 }
 
 .filter-section {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .filter-section:last-child {
@@ -453,7 +441,7 @@ defineExpose({
   font-weight: 500;
   font-size: 0.875rem;
   color: #666;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 @media (max-width: 768px) {
@@ -478,5 +466,28 @@ defineExpose({
   background-color: #e0e0e0;
   transform: scale(1.1);
   color: #666;
+}
+
+/* Make dropdowns more compact */
+:deep(.q-select) {
+  .q-field__control {
+    min-height: 36px;
+  }
+  
+  .q-field__control-container {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+}
+
+:deep(.q-input) {
+  .q-field__control {
+    min-height: 36px;
+  }
+  
+  .q-field__control-container {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
 }
 </style> 

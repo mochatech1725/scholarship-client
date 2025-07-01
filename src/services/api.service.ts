@@ -1,5 +1,5 @@
 import { useAuthStore } from 'src/stores/auth.store'
-import type { Profile, Application, RegisterData, Recommender, SearchFilters } from 'src/types'
+import type { Profile, Application, RegisterData, Recommender, SearchCriteria } from 'src/types'
 import { api } from 'src/boot/axios'
 import type { AxiosRequestConfig } from 'axios'
 
@@ -148,10 +148,15 @@ class ApiService {
     })
   }
 
-  async findScholarships(filters: SearchFilters) {
+  // Scholarship endpoints
+  async findScholarships(searchCriteria: SearchCriteria) {
     return this.makeRequest('/api/scholarships/find', {
       method: 'POST',
-      data: filters
+      data: {
+        searchCriteria,
+        // Change this to make it a saved parameter in the profile
+        maxResults: 25
+      }
     })
   }
 }

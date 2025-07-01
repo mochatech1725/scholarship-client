@@ -232,7 +232,7 @@ export interface SearchPreferences {
   recommendationRequired: boolean
 }
 
-export interface SearchFilters {
+export interface SearchCriteria {
   keywords: string
   subjectAreas: string[]
   educationLevel: string | null
