@@ -12,7 +12,7 @@
     >
       <template v-slot:body-cell-amount="props">
         <q-td :props="props">
-          {{ props.row.amount ? `$${props.row.amount}` : 'Amount varies' }}
+          {{ props.row.amount ? `${props.row.amount}` : 'Amount varies' }}
         </q-td>
       </template>
 

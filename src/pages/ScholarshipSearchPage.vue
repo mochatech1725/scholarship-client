@@ -111,8 +111,14 @@ const hasActiveSearchCriteria = computed(() => {
 })
 
 const handleSearch = async () => {
+  // Clear previous results and close search criteria
+  searchResults.value = []
   searching.value = true
   hasSearched.value = true
+  
+  // Close the search criteria component
+  searchCriteriaRef.value?.close()
+  
   try {
     const searchCriteria = searchCriteriaRef.value?.localSearchCriteria || defaultSearchCriteria
     const results = await apiService.findScholarships(searchCriteria, maxSearchResults.value)

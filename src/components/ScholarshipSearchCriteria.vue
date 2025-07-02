@@ -318,7 +318,8 @@ const clearAllFilters = () => {
 defineExpose({
   activeFiltersCount,
   getActiveFiltersCount: () => activeFiltersCount.value,
-  localSearchCriteria
+  localSearchCriteria,
+  close: () => { isExpanded.value = false }
 })
 </script>
 
