@@ -2,7 +2,6 @@
   <q-page padding>
     <div class="text-h5 q-mb-lg">Search Scholarships</div>
 
-    <!-- Search Button and Filter Section -->
     <div class="row justify-end items-center q-mb-lg q-gutter-md">
       <div class="col-auto">
         <ScholarshipSearchFilter 
@@ -91,8 +90,6 @@ const searchCriteriaRef = ref()
 const searching = ref(false)
 const hasSearched = ref(false)
 const maxSearchResults = ref(25)
-
-
 
 const defaultSearchCriteria = {
   keywords: '',
