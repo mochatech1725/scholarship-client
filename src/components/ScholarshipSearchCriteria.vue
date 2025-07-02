@@ -260,9 +260,6 @@ const activeFiltersCount = computed(() => {
   if (localSearchCriteria.value.essayRequired === true) count++
   if (localSearchCriteria.value.recommendationRequired === true) count++
   
-  // Debug logging
-  console.log('Active filters count:', count, 'Filters:', localSearchCriteria.value)
-  
   return count
 })
 

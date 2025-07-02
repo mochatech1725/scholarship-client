@@ -22,13 +22,9 @@ export const useUserStore = defineStore('user', {
 
     setUser(backendUser: User) {
       try {
-        console.log('setUser called with backendUser:', backendUser)
-        
         const user: User = {
           ...backendUser
         }
-        
-        console.log('Transformed user object:', user)
         
         this.user = user
         return user

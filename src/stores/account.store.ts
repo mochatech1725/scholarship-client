@@ -12,7 +12,6 @@ export const useAccountStore = defineStore('account', () => {
     try {
       isLoading.value = true
       const response = await apiService.login()
-      console.log('Login response:', response)
       
       return userStore.setUser(response.user)
     } catch (err) {

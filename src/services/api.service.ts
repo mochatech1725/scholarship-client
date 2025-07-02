@@ -156,6 +156,9 @@ class ApiService {
         searchCriteria,
         maxResults
       }
+    }).then(data => {
+      console.log('Scholarships found:', data.data.scholarships)
+      return data.data.scholarships
     })
   }
 }

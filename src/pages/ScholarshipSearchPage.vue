@@ -45,7 +45,7 @@
     <!-- Results Section -->
     <div v-if="hasSearched && !searching" class="row">
       <div class="col-12">
-        <ScholarshipSearchResults ref="searchResultsRef" />
+        <ScholarshipSearchResults :results="searchResults" />
       </div>
     </div>
 
@@ -85,11 +85,11 @@ import ScholarshipSearchCriteria from 'components/ScholarshipSearchCriteria.vue'
 import ScholarshipSearchResults from 'components/ScholarshipSearchResults.vue'
 import { apiService } from 'src/services/api.service'
 
-const searchResultsRef = ref()
 const searchCriteriaRef = ref()
 const searching = ref(false)
 const hasSearched = ref(false)
 const maxSearchResults = ref(25)
+const searchResults = ref([])
 
 const defaultSearchCriteria = {
   keywords: '',
@@ -116,11 +116,11 @@ const handleSearch = async () => {
   try {
     const searchCriteria = searchCriteriaRef.value?.localSearchCriteria || defaultSearchCriteria
     const results = await apiService.findScholarships(searchCriteria, maxSearchResults.value)
-    searchResultsRef.value?.setResults(results)
+    searchResults.value = results
+    searching.value = false
   } catch (error) {
     console.error('Search failed:', error)
     // Handle error - could show notification here
-  } finally {
     searching.value = false
   }
 }

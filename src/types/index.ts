@@ -191,15 +191,12 @@ export interface RegisterData {
 }
 
 export interface Scholarship {
-  name: string
-  organization: string
+  title: string
   description: string
   amount: number
   deadline: string
-  targetType: string
-  requirements: string
+  eligibility: string
   ethnicity: string
-  gender: string
   educationLevel: string
   area: string
   academicGPA: number

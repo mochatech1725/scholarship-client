@@ -3,16 +3,16 @@
     <!-- Search Results -->
     <div class="text-h6 q-mb-md">Search Results</div>
     <q-table
-      :rows="searchResults"
+      :rows="results"
       :columns="scholarshipColumns"
-      row-key="id"
+      row-key="title"
       flat
       bordered
       :pagination="{ rowsPerPage: 0 }"
     >
       <template v-slot:body-cell-amount="props">
         <q-td :props="props">
-          ${{ props.row.amount.toLocaleString() }}
+          {{ props.row.amount ? `$${props.row.amount}` : 'Amount varies' }}
         </q-td>
       </template>
 
@@ -28,55 +28,61 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import type { Scholarship } from 'src/types'
 
-const searchResults = ref<Scholarship[]>([])
+
+// Define the interface to match the server's ScholarshipResult
+interface ScholarshipResult {
+  title: string;
+  description: string;
+  amount?: string;
+  deadline?: string;
+  eligibility?: string;
+  gender?: string;
+  ethnicity?: string;
+  academicLevel?: string;
+  academicGPA?: number;
+  essayRequired?: boolean;
+  recommendationRequired?: boolean;
+  source: string;
+  url?: string;
+  relevanceScore: number;
+}
+
+defineProps<{
+  results: ScholarshipResult[]
+}>()
 
 const scholarshipColumns = [
   {
-    name: 'name',
+    name: 'title',
     label: 'Scholarship Name',
-    field: (row: Scholarship) => row.name,
-    align: 'left' as const
-  },
-  {
-    name: 'organization',
-    label: 'Organization',
-    field: (row: Scholarship) => row.organization,
+    field: (row: ScholarshipResult) => row.title,
     align: 'left' as const
   },
   {
     name: 'amount',
     label: 'Amount',
-    field: (row: Scholarship) => row.amount,
+    field: (row: ScholarshipResult) => row.amount,
     align: 'right' as const
   },
   {
     name: 'deadline',
     label: 'Deadline',
-    field: (row: Scholarship) => row.deadline,
+    field: (row: ScholarshipResult) => row.deadline,
     align: 'center' as const
   },
   {
-    name: 'targetType',
-    label: 'Type',
-    field: (row: Scholarship) => row.targetType,
-    align: 'center' as const
+    name: 'eligibility',
+    label: 'Eligibility',
+    field: (row: ScholarshipResult) => row.eligibility,
+    align: 'left' as const
   },
   {
     name: 'url',
     label: 'Website',
-    field: (row: Scholarship) => row.url,
+    field: (row: ScholarshipResult) => row.url,
     align: 'left' as const
   }
 ]
 
-const setResults = (results: Scholarship[]) => {
-  searchResults.value = results
-}
-
-defineExpose({
-  setResults
-})
 </script> 
