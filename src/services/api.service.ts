@@ -149,13 +149,12 @@ class ApiService {
   }
 
   // Scholarship endpoints
-  async findScholarships(searchCriteria: SearchCriteria) {
+  async findScholarships(searchCriteria: SearchCriteria, maxResults: number = 25) {
     return this.makeRequest('/api/scholarships/find', {
       method: 'POST',
       data: {
         searchCriteria,
-        // Change this to make it a saved parameter in the profile
-        maxResults: 25
+        maxResults
       }
     })
   }

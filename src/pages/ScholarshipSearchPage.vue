@@ -11,6 +11,26 @@
         />
       </div>
       <div class="col-auto">
+        <div class="row items-center q-gutter-sm">
+          <div class="col-auto">
+            <div class="max-results-label">Max Results:</div>
+          </div>
+          <div class="col-auto">
+            <q-input
+              v-model.number="maxSearchResults"
+              type="number"
+              :min="1"
+              :max="50"
+              :step="5"
+              outlined
+              dense
+              style="width: 80px"
+              class="max-results-input"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="col-auto">
         <q-btn
           label="Search"
           color="primary"
@@ -86,6 +106,7 @@ const searchResultsRef = ref()
 const searchCriteriaRef = ref()
 const searching = ref(false)
 const hasSearched = ref(false)
+const maxSearchResults = ref(25)
 
 const tableColumns = [
   { name: 'name', label: 'Scholarship Name', field: 'name', align: 'left' as const },
@@ -118,8 +139,8 @@ const handleSearch = async () => {
   searching.value = true
   hasSearched.value = true
   try {
-    const filters = searchCriteriaRef.value?.localFilters || defaultSearchCriteria
-    const results = await apiService.findScholarships(filters)
+    const searchCriteria = searchCriteriaRef.value?.localsearchCriteria || defaultSearchCriteria
+    const results = await apiService.findScholarships(searchCriteria, maxSearchResults.value)
     searchResultsRef.value?.setResults(results)
   } catch (error) {
     console.error('Search failed:', error)
@@ -139,5 +160,11 @@ const handleSearch = async () => {
   .q-card-section {
     flex: 1;
   }
+}
+
+.max-results-label {
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #333;
 }
 </style> 
