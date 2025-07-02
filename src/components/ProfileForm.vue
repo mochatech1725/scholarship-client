@@ -85,10 +85,10 @@
                 />
               </div>
               <div class="col-12 col-md-6">
-                <div class="form-label">Education Level</div>
+                <div class="form-label">Academic Level</div>
                 <q-select
-                  v-model="form.userPreferences.searchPreferences.educationLevel"
-                  :options="educationLevelOptions"
+                  v-model="form.userPreferences.searchPreferences.academicLevel"
+                  :options="academicLevelOptions"
                   flat
                   dense
                   class="q-mb-sm"
@@ -174,8 +174,8 @@
               <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.subjectAreas?.join(', ') || 'Not set' }}</div>
             </div>
             <div class="col-12 col-md-6">
-              <div class="form-label">Education Level</div>
-              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.educationLevel || 'Not set' }}</div>
+              <div class="form-label">Academic Level</div>
+              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.academicLevel || 'Not set' }}</div>
             </div>
             <div class="col-12 col-md-6">
               <div class="form-label">Target Type</div>
@@ -215,7 +215,7 @@ import { ref, watch, computed, onUnmounted, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import type { Profile, User } from 'src/types'
 import { 
-  educationLevelOptions, 
+  academicLevelOptions, 
   targetTypeOptions, 
   subjectAreaOptions, 
   genderOptions, 
@@ -240,7 +240,7 @@ const form = ref<Profile>({
   userPreferences: {
     searchPreferences: {
       subjectAreas: [],
-      educationLevel: 'Undergraduate',
+      academicLevel: 'Undergraduate',
       targetType: 'Both',
       gender: 'Male',
       ethnicity: 'White/Caucasian',

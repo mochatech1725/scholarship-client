@@ -6,7 +6,7 @@
   "phoneNumber": "1234567890",
   "profile": {
     "preferences": {
-      "educationLevel": "College Freshman",
+      "academicLevel": "College Freshman",
       "targetType":"Both",
       "subjectAreas": ["STEM", "Computer Science"],
       "minAmount": 1000

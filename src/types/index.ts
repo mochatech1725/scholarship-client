@@ -18,7 +18,7 @@ export const genderOptions = [
   'Non-Binary'
 ] as const
 
-export const educationLevelOptions = [
+export const academicLevelOptions = [
   'Undergraduate',
   'Graduate',
   'High School',
@@ -104,7 +104,7 @@ export const currentActionOptions = [
   'N/A'
 ] as const
 
-export type EducationLevel = typeof educationLevelOptions[number]
+export type AcademicLevel = typeof academicLevelOptions[number]
 export type TargetType = typeof targetTypeOptions[number]
 export type SubjectArea = typeof subjectAreaOptions[number]
 export type Gender = typeof genderOptions[number]
@@ -190,7 +190,7 @@ export interface RegisterData {
   emailAddress: string
 }
 
-export interface Scholarship {
+export interface ScholarshipResult {
   title: string
   description: string
   amount: number
@@ -204,6 +204,8 @@ export interface Scholarship {
   recommendation: boolean
   url: string
   isActive: boolean
+  renewable: boolean
+  geographicRestrictions: string
 }
 
 export interface UserPreferences {
@@ -212,7 +214,7 @@ export interface UserPreferences {
 
 export interface SearchPreferences {
   subjectAreas: SubjectArea[]
-  educationLevel: EducationLevel
+  academicLevel: AcademicLevel
   targetType: TargetType
   gender: Gender
   ethnicity: Ethnicity
@@ -224,12 +226,12 @@ export interface SearchPreferences {
 export interface SearchCriteria {
   keywords: string
   subjectAreas: string[]
-  educationLevel: string | null
+  academicLevel: string | null
   targetType: string | null
   gender: string | null
   ethnicity: string | null
   academicGPA: number | null
-  state: string | null
+  geographicRestrictions: string | null
   essayRequired: boolean | null
   recommendationRequired: boolean | null
   deadlineRange?: {

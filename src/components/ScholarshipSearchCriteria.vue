@@ -78,18 +78,18 @@
           />
         </div>
 
-        <!-- Education Level Filter -->
+        <!-- Academic Level Filter -->
         <div class="filter-section">
-          <div class="filter-label">Education Level</div>
+          <div class="filter-label">Academic Level</div>
           <q-select
-            v-model="localSearchCriteria.educationLevel"
-            :options="educationLevelOptions"
+            v-model="localSearchCriteria.academicLevel"
+            :options="academicLevelOptions"
             clearable
             outlined
             dense
             emit-value
             map-options
-            placeholder="All Education Levels"
+            placeholder="All Academic Levels"
           />
         </div>
 
@@ -153,11 +153,11 @@
           />
         </div>
 
-        <!-- State Filter -->
+        <!-- Geographic Restrictions Filter -->
         <div class="filter-section">
-          <div class="filter-label">State</div>
+          <div class="filter-label">Geographic Restrictions</div>
           <q-select
-            v-model="localSearchCriteria.state"
+            v-model="localSearchCriteria.geographicRestrictions"
             :options="stateOptions"
             clearable
             outlined
@@ -198,7 +198,7 @@
 import { ref, watch, computed, defineExpose } from 'vue'
 import { useUserStore } from 'src/stores/user.store'
 import { 
-  educationLevelOptions, 
+  academicLevelOptions, 
   targetTypeOptions, 
   subjectAreaOptions, 
   genderOptions, 
@@ -225,12 +225,12 @@ const props = defineProps<{
   searchCriteria: {
     keywords: string
     subjectAreas: string[]
-    educationLevel: string | null
+    academicLevel: string | null
     targetType: string | null
     gender: string | null
     ethnicity: string | null
     academicGPA: number | null
-    state: string | null
+    geographicRestrictions: string | null
     essayRequired: boolean | null
     recommendationRequired: boolean | null
     deadlineRange?: {
@@ -251,12 +251,12 @@ const activeFiltersCount = computed(() => {
   let count = 0
   if (localSearchCriteria.value.keywords) count++
   if (localSearchCriteria.value.subjectAreas && localSearchCriteria.value.subjectAreas.length > 0) count++
-  if (localSearchCriteria.value.educationLevel) count++
+  if (localSearchCriteria.value.academicLevel) count++
   if (localSearchCriteria.value.targetType) count++
   if (localSearchCriteria.value.gender) count++
   if (localSearchCriteria.value.ethnicity) count++
   if (localSearchCriteria.value.academicGPA !== null && localSearchCriteria.value.academicGPA > 0) count++
-  if (localSearchCriteria.value.state) count++
+  if (localSearchCriteria.value.geographicRestrictions) count++
   if (localSearchCriteria.value.essayRequired === true) count++
   if (localSearchCriteria.value.recommendationRequired === true) count++
   
@@ -281,12 +281,12 @@ const handlePopulateFromProfile = (checked: boolean) => {
     localSearchCriteria.value = {
       ...localSearchCriteria.value,
       subjectAreas: profilePrefs.subjectAreas || [],
-      educationLevel: profilePrefs.educationLevel || null,
+      academicLevel: profilePrefs.academicLevel || null,
       targetType: profilePrefs.targetType || null,
       gender: profilePrefs.gender || null,
       ethnicity: profilePrefs.ethnicity || null,
       academicGPA: profilePrefs.academicGPA || null,
-      state: null, // State is not in profile preferences, so keep as null
+      geographicRestrictions: null, // Geographic restrictions are not in profile preferences, so keep as null
       essayRequired: profilePrefs.essayRequired,
       recommendationRequired: profilePrefs.recommendationRequired
     }
@@ -300,12 +300,12 @@ const clearAllFilters = () => {
   localSearchCriteria.value = {
     keywords: '',
     subjectAreas: [],
-    educationLevel: null,
+    academicLevel: null,
     targetType: null,
     gender: null,
     ethnicity: null,
     academicGPA: null,
-    state: null,
+    geographicRestrictions: null,
     essayRequired: null,
     recommendationRequired: null,
     deadlineRange: null,

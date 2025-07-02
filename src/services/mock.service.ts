@@ -1,10 +1,10 @@
-import type { Recommender, Profile, User, EducationLevel, TargetType, SubjectArea } from 'src/types'
+import type { Recommender, Profile, User, AcademicLevel, TargetType, SubjectArea } from 'src/types'
 import mockUserData from '../mocks/mockUserData.json'
 import recommenderData from '../mocks/mockRecommenderData.json'
-import { educationLevelOptions, targetTypeOptions, subjectAreaOptions } from 'src/types'
+import { academicLevelOptions, targetTypeOptions, subjectAreaOptions } from 'src/types'
 
-function castEducationLevel(val: string): EducationLevel {
-  return educationLevelOptions.find(opt => opt === val) as EducationLevel
+function castAcademicLevel(val: string): AcademicLevel {
+  return academicLevelOptions.find(opt => opt === val) as AcademicLevel
 }
 
 function castTargetType(val: string): TargetType {
@@ -71,7 +71,7 @@ class MockService {
     return {
       userPreferences: {
         searchPreferences: {
-          educationLevel: castEducationLevel(mockUserData.profile.preferences.educationLevel),
+          academicLevel: castAcademicLevel(mockUserData.profile.preferences.academicLevel),
           targetType: castTargetType(mockUserData.profile.preferences.targetType),
           subjectAreas: castSubjectAreas(mockUserData.profile.preferences.subjectAreas),
           gender: 'Male',
@@ -104,20 +104,20 @@ class MockService {
       lastName: mockUserData.lastName,
       emailAddress: mockUserData.emailAddress,
       phoneNumber: mockUserData.phoneNumber,
-      profile: {
-        userPreferences: {
-          searchPreferences: {
-            educationLevel: castEducationLevel(mockUserData.profile.preferences.educationLevel),
-            targetType: castTargetType(mockUserData.profile.preferences.targetType),
-            subjectAreas: castSubjectAreas(mockUserData.profile.preferences.subjectAreas),
-            gender: 'Male',
-            ethnicity: 'White/Caucasian',
-            academicGPA: 3.0,
-            essayRequired: false,
-            recommendationRequired: false
+              profile: {
+          userPreferences: {
+            searchPreferences: {
+              academicLevel: castAcademicLevel(mockUserData.profile.preferences.academicLevel),
+              targetType: castTargetType(mockUserData.profile.preferences.targetType),
+              subjectAreas: castSubjectAreas(mockUserData.profile.preferences.subjectAreas),
+              gender: 'Male',
+              ethnicity: 'White/Caucasian',
+              academicGPA: 3.0,
+              essayRequired: false,
+              recommendationRequired: false
+            }
           }
         }
-      }
     }
   }
 }

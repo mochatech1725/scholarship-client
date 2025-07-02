@@ -30,23 +30,8 @@
 <script setup lang="ts">
 
 
-// Define the interface to match the server's ScholarshipResult
-interface ScholarshipResult {
-  title: string;
-  description: string;
-  amount?: string;
-  deadline?: string;
-  eligibility?: string;
-  gender?: string;
-  ethnicity?: string;
-  academicLevel?: string;
-  academicGPA?: number;
-  essayRequired?: boolean;
-  recommendationRequired?: boolean;
-  source: string;
-  url?: string;
-  relevanceScore: number;
-}
+// Import the interface from types
+import type { ScholarshipResult } from 'src/types'
 
 defineProps<{
   results: ScholarshipResult[]
@@ -56,7 +41,7 @@ const scholarshipColumns = [
   {
     name: 'title',
     label: 'Scholarship Name',
-    field: (row: ScholarshipResult) => row.title,
+    field: (row: ScholarshipResult) => row.title.length > 50 ? row.title.substring(0, 50) + '...' : row.title,
     align: 'left' as const
   },
   {
@@ -78,9 +63,21 @@ const scholarshipColumns = [
     align: 'left' as const
   },
   {
+    name: 'renewable',
+    label: 'Renewable',
+    field: (row: ScholarshipResult) => row.renewable ? 'Yes' : 'No',
+    align: 'center' as const
+  },
+  {
     name: 'url',
     label: 'Website',
     field: (row: ScholarshipResult) => row.url,
+    align: 'left' as const
+  },
+  {
+    name: 'geographicRestrictions',
+    label: 'Geographic Restrictions',
+    field: (row: ScholarshipResult) => row.geographicRestrictions,
     align: 'left' as const
   }
 ]
