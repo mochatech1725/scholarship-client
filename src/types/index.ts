@@ -19,14 +19,9 @@ export const genderOptions = [
 ] as const
 
 export const educationLevelOptions = [
-  'High School',
   'Undergraduate',
-  'Graduate'
-] as const
-
-export const educationYearOptions = [
-  'High School Junior',
-  'High School Senior',
+  'Graduate',
+  'High School',
   'College Freshman',
   'College Sophomore',
   'College Junior',
@@ -114,7 +109,6 @@ export type TargetType = typeof targetTypeOptions[number]
 export type SubjectArea = typeof subjectAreaOptions[number]
 export type Gender = typeof genderOptions[number]
 export type Ethnicity = typeof ethnicityOptions[number]
-export type EducationYear = typeof educationYearOptions[number]
 export type ApplicationStatus = typeof applicationStatusOptions[number]
 export type RecommendationStatus = typeof recomendationOptions[number]
 export type SubmissionMethod = typeof submissionMethodOptions[number]
@@ -207,7 +201,6 @@ export interface Scholarship {
   ethnicity: string
   gender: string
   educationLevel: string
-  educationYear: string
   area: string
   academicGPA: number
   essay: boolean
@@ -223,7 +216,6 @@ export interface UserPreferences {
 export interface SearchPreferences {
   subjectAreas: SubjectArea[]
   educationLevel: EducationLevel
-  educationYear: EducationYear
   targetType: TargetType
   gender: Gender
   ethnicity: Ethnicity
@@ -236,7 +228,6 @@ export interface SearchCriteria {
   keywords: string
   subjectAreas: string[]
   educationLevel: string | null
-  educationYear: string | null
   targetType: string | null
   gender: string | null
   ethnicity: string | null

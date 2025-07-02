@@ -93,21 +93,6 @@
           />
         </div>
 
-        <!-- Education Year Filter -->
-        <div class="filter-section">
-          <div class="filter-label">Education Year</div>
-          <q-select
-            v-model="localFilters.educationYear"
-            :options="educationYearOptions"
-            clearable
-            outlined
-            dense
-            emit-value
-            map-options
-            placeholder="All Education Years"
-          />
-        </div>
-
         <!-- Target Type Filter -->
         <div class="filter-section">
           <div class="filter-label">Target Type</div>
@@ -214,7 +199,6 @@ import { ref, watch, computed, defineExpose } from 'vue'
 import { useUserStore } from 'src/stores/user.store'
 import { 
   educationLevelOptions, 
-  educationYearOptions, 
   targetTypeOptions, 
   subjectAreaOptions, 
   genderOptions, 
@@ -242,7 +226,6 @@ const props = defineProps<{
     keywords: string
     subjectAreas: string[]
     educationLevel: string | null
-    educationYear: string | null
     targetType: string | null
     gender: string | null
     ethnicity: string | null
@@ -269,7 +252,6 @@ const activeFiltersCount = computed(() => {
   if (localFilters.value.keywords) count++
   if (localFilters.value.subjectAreas && localFilters.value.subjectAreas.length > 0) count++
   if (localFilters.value.educationLevel) count++
-  if (localFilters.value.educationYear) count++
   if (localFilters.value.targetType) count++
   if (localFilters.value.gender) count++
   if (localFilters.value.ethnicity) count++
@@ -303,7 +285,6 @@ const handlePopulateFromProfile = (checked: boolean) => {
       ...localFilters.value,
       subjectAreas: profilePrefs.subjectAreas || [],
       educationLevel: profilePrefs.educationLevel || null,
-      educationYear: profilePrefs.educationYear || null,
       targetType: profilePrefs.targetType || null,
       gender: profilePrefs.gender || null,
       ethnicity: profilePrefs.ethnicity || null,
@@ -323,7 +304,6 @@ const clearAllFilters = () => {
     keywords: '',
     subjectAreas: [],
     educationLevel: null,
-    educationYear: null,
     targetType: null,
     gender: null,
     ethnicity: null,

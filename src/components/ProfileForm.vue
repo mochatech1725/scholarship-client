@@ -95,16 +95,6 @@
                 />
               </div>
               <div class="col-12 col-md-6">
-                <div class="form-label">Education Year</div>
-                <q-select
-                  v-model="form.userPreferences.searchPreferences.educationYear"
-                  :options="educationYearOptions"
-                  flat
-                  dense
-                  class="q-mb-sm"
-                />
-              </div>
-              <div class="col-12 col-md-6">
                 <div class="form-label">Target Type</div>
                 <q-select
                   v-model="form.userPreferences.searchPreferences.targetType"
@@ -188,10 +178,6 @@
               <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.educationLevel || 'Not set' }}</div>
             </div>
             <div class="col-12 col-md-6">
-              <div class="form-label">Education Year</div>
-              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.educationYear || 'Not set' }}</div>
-            </div>
-            <div class="col-12 col-md-6">
               <div class="form-label">Target Type</div>
               <div class="q-pa-sm">{{ 
                   profile?.userPreferences?.searchPreferences?.targetType || 'Not set' 
@@ -230,7 +216,6 @@ import { useQuasar } from 'quasar'
 import type { Profile, User } from 'src/types'
 import { 
   educationLevelOptions, 
-  educationYearOptions, 
   targetTypeOptions, 
   subjectAreaOptions, 
   genderOptions, 
@@ -256,7 +241,6 @@ const form = ref<Profile>({
     searchPreferences: {
       subjectAreas: [],
       educationLevel: 'Undergraduate',
-      educationYear: 'College Freshman',
       targetType: 'Both',
       gender: 'Male',
       ethnicity: 'White/Caucasian',

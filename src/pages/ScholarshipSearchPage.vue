@@ -99,7 +99,6 @@ const defaultSearchCriteria = {
   keywords: '',
   subjectAreas: [] as string[],
   educationLevel: null as string | null,
-  educationYear: null as string | null,
   targetType: null as string | null,
   gender: null as string | null,
   ethnicity: null as string | null,
