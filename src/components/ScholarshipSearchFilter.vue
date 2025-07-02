@@ -51,7 +51,7 @@
         <div class="filter-section">
           <div class="filter-label">Keywords</div>
           <q-input
-            v-model="localFilters.keywords"
+            v-model="localSearchCriteria.keywords"
             clearable
             outlined
             dense
@@ -67,7 +67,7 @@
         <div class="filter-section">
           <div class="filter-label">Subject Areas</div>
           <q-select
-            v-model="localFilters.subjectAreas"
+            v-model="localSearchCriteria.subjectAreas"
             :options="subjectAreaOptions"
             multiple
             outlined
@@ -82,7 +82,7 @@
         <div class="filter-section">
           <div class="filter-label">Education Level</div>
           <q-select
-            v-model="localFilters.educationLevel"
+            v-model="localSearchCriteria.educationLevel"
             :options="educationLevelOptions"
             clearable
             outlined
@@ -97,7 +97,7 @@
         <div class="filter-section">
           <div class="filter-label">Target Type</div>
           <q-select
-            v-model="localFilters.targetType"
+            v-model="localSearchCriteria.targetType"
             :options="targetTypeOptions"
             clearable
             outlined
@@ -112,7 +112,7 @@
         <div class="filter-section">
           <div class="filter-label">Gender</div>
           <q-select
-            v-model="localFilters.gender"
+            v-model="localSearchCriteria.gender"
             :options="genderOptions"
             clearable
             outlined
@@ -127,7 +127,7 @@
         <div class="filter-section">
           <div class="filter-label">Ethnicity</div>
           <q-select
-            v-model="localFilters.ethnicity"
+            v-model="localSearchCriteria.ethnicity"
             :options="ethnicityOptions"
             clearable
             outlined
@@ -142,7 +142,7 @@
         <div class="filter-section">
           <div class="filter-label">Minimum GPA</div>
           <q-input
-            v-model.number="localFilters.academicGPA"
+            v-model.number="localSearchCriteria.academicGPA"
             type="number"
             step="0.1"
             min="0"
@@ -157,7 +157,7 @@
         <div class="filter-section">
           <div class="filter-label">State</div>
           <q-select
-            v-model="localFilters.state"
+            v-model="localSearchCriteria.state"
             :options="stateOptions"
             clearable
             outlined
@@ -171,7 +171,7 @@
         <!-- Essay Required Filter -->
         <div class="filter-section">
           <q-checkbox
-            v-model="localFilters.essayRequired"
+            v-model="localSearchCriteria.essayRequired"
             label="Essay Required"
             :true-value="true"
             :false-value="null"
@@ -182,7 +182,7 @@
         <!-- Recommendation Required Filter -->
         <div class="filter-section">
           <q-checkbox
-            v-model="localFilters.recommendationRequired"
+            v-model="localSearchCriteria.recommendationRequired"
             label="Recommendation Required"
             :true-value="true"
             :false-value="null"
@@ -245,34 +245,34 @@ const emit = defineEmits<{
   'update:searchCriteria': [value: typeof props.searchCriteria]
 }>()
 
-const localFilters = ref({ ...props.searchCriteria })
+const localSearchCriteria = ref({ ...props.searchCriteria })
 
 const activeFiltersCount = computed(() => {
   let count = 0
-  if (localFilters.value.keywords) count++
-  if (localFilters.value.subjectAreas && localFilters.value.subjectAreas.length > 0) count++
-  if (localFilters.value.educationLevel) count++
-  if (localFilters.value.targetType) count++
-  if (localFilters.value.gender) count++
-  if (localFilters.value.ethnicity) count++
-  if (localFilters.value.academicGPA !== null && localFilters.value.academicGPA > 0) count++
-  if (localFilters.value.state) count++
-  if (localFilters.value.essayRequired === true) count++
-  if (localFilters.value.recommendationRequired === true) count++
+  if (localSearchCriteria.value.keywords) count++
+  if (localSearchCriteria.value.subjectAreas && localSearchCriteria.value.subjectAreas.length > 0) count++
+  if (localSearchCriteria.value.educationLevel) count++
+  if (localSearchCriteria.value.targetType) count++
+  if (localSearchCriteria.value.gender) count++
+  if (localSearchCriteria.value.ethnicity) count++
+  if (localSearchCriteria.value.academicGPA !== null && localSearchCriteria.value.academicGPA > 0) count++
+  if (localSearchCriteria.value.state) count++
+  if (localSearchCriteria.value.essayRequired === true) count++
+  if (localSearchCriteria.value.recommendationRequired === true) count++
   
   // Debug logging
-  console.log('Active filters count:', count, 'Filters:', localFilters.value)
+  console.log('Active filters count:', count, 'Filters:', localSearchCriteria.value)
   
   return count
 })
 
 // Watch for changes in props
 watch(() => props.searchCriteria, (newFilters) => {
-  localFilters.value = { ...newFilters }
+  localSearchCriteria.value = { ...newFilters }
 }, { deep: true, immediate: true })
 
 // Watch for changes in local filters
-watch(localFilters, (newValue) => {
+watch(localSearchCriteria, (newValue) => {
   emit('update:searchCriteria', newValue)
 }, { deep: true })
 
@@ -281,8 +281,8 @@ const handlePopulateFromProfile = (checked: boolean) => {
     const profilePrefs = userStore.user.profile.userPreferences.searchPreferences
     
     // Populate filters from profile
-    localFilters.value = {
-      ...localFilters.value,
+    localSearchCriteria.value = {
+      ...localSearchCriteria.value,
       subjectAreas: profilePrefs.subjectAreas || [],
       educationLevel: profilePrefs.educationLevel || null,
       targetType: profilePrefs.targetType || null,
@@ -300,7 +300,7 @@ const handlePopulateFromProfile = (checked: boolean) => {
 }
 
 const clearAllFilters = () => {
-  localFilters.value = {
+  localSearchCriteria.value = {
     keywords: '',
     subjectAreas: [],
     educationLevel: null,
@@ -321,7 +321,7 @@ const clearAllFilters = () => {
 defineExpose({
   activeFiltersCount,
   getActiveFiltersCount: () => activeFiltersCount.value,
-  localFilters
+  localSearchCriteria
 })
 </script>
 

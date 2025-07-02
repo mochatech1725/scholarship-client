@@ -114,7 +114,7 @@ const handleSearch = async () => {
   searching.value = true
   hasSearched.value = true
   try {
-    const searchCriteria = searchCriteriaRef.value?.localsearchCriteria || defaultSearchCriteria
+    const searchCriteria = searchCriteriaRef.value?.localSearchCriteria || defaultSearchCriteria
     const results = await apiService.findScholarships(searchCriteria, maxSearchResults.value)
     searchResultsRef.value?.setResults(results)
   } catch (error) {
