@@ -4,7 +4,7 @@
 
     <div class="row justify-end items-center q-mb-lg q-gutter-md">
       <div class="col-auto">
-        <ScholarshipSearchFilter 
+        <ScholarshipSearchCriteria 
           ref="searchCriteriaRef"
           :search-criteria="defaultSearchCriteria"
         />
@@ -81,7 +81,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import ScholarshipSearchFilter from 'components/ScholarshipSearchFilter.vue'
+import ScholarshipSearchCriteria from 'components/ScholarshipSearchCriteria.vue'
 import ScholarshipSearchResults from 'components/ScholarshipSearchResults.vue'
 import { apiService } from 'src/services/api.service'
 
