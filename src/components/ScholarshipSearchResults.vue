@@ -36,7 +36,7 @@ const searchResults = ref<Scholarship[]>([])
 const scholarshipColumns = [
   {
     name: 'name',
-    label: 'Scholarship',
+    label: 'Scholarship Name',
     field: (row: Scholarship) => row.name,
     align: 'left' as const
   },
@@ -51,6 +51,18 @@ const scholarshipColumns = [
     label: 'Amount',
     field: (row: Scholarship) => row.amount,
     align: 'right' as const
+  },
+  {
+    name: 'deadline',
+    label: 'Deadline',
+    field: (row: Scholarship) => row.deadline,
+    align: 'center' as const
+  },
+  {
+    name: 'targetType',
+    label: 'Type',
+    field: (row: Scholarship) => row.targetType,
+    align: 'center' as const
   },
   {
     name: 'url',
