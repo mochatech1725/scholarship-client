@@ -195,7 +195,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, defineExpose } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useUserStore } from 'src/stores/user.store'
 import { 
   academicLevelOptions, 

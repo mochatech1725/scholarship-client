@@ -193,6 +193,7 @@ export interface RegisterData {
 export interface ScholarshipResult {
   title: string
   description: string
+  organization: string
   amount: number
   deadline: string
   eligibility: string
