@@ -21,8 +21,8 @@ export const useApplicationStore = defineStore('application', {
       return await apiService.updateApplication(id, application)
     },
 
-    async getApplicationsByUserId(userId: string) {
-      this.applications = await apiService.getApplicationsByUserId(userId)
+    async getApplicationsByUserId(auth_user_id: string) {
+      this.applications = await apiService.getApplicationsByUserId(auth_user_id)
       return this.applications
     },
 

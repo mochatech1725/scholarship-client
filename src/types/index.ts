@@ -153,7 +153,7 @@ export interface Profile {
 
 export interface User {
   _id?: string
-  userId: string
+  auth_user_id: string
   firstName: string
   lastName: string
   emailAddress: string

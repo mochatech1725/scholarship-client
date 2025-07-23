@@ -419,8 +419,8 @@ const onSubmit = async () => {
 const loadRecommenders = async () => {
   try {
     // Get userId from application or use a default
-    const userId = props.application?.studentId || 'user-1' // Default fallback
-    recommenders.value = await recommenderStore.getRecommendersByUserId(userId)
+    const auth_user_id = props.application?.studentId || 'user-1' // Default fallback
+    recommenders.value = await recommenderStore.getRecommendersByUserId(auth_user_id)
   } catch (error) {
     console.error('Failed to load recommenders:', error)
   }

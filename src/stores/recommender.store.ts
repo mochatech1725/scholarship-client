@@ -19,8 +19,8 @@ export const useRecommenderStore = defineStore('recommender', {
       return this.recommenders || []
     },
 
-    async getRecommendersByUserId(userId: string) {
-      this.recommenders = await apiService.getRecommendersByUserId(userId)
+    async getRecommendersByUserId(auth_user_id: string) {
+      this.recommenders = await apiService.getRecommendersByUserId(auth_user_id)
       return this.recommenders
     },
 

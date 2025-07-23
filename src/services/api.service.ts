@@ -68,15 +68,15 @@ class ApiService {
   }
 
   // User endpoints
-  async getUser(userId?: string) {
-    if (userId) {
-      return this.makeRequest(`/api/users/getById/${userId}`)
+  async getUser(auth_user_id?: string) {
+    if (auth_user_id) {
+      return this.makeRequest(`/api/users/getById/${auth_user_id}`)
     }
     return this.makeRequest('/api/auth/login')
   }
 
-  async updateProfile(profile: Profile, userId: string) {
-    return this.makeRequest(`/api/users/saveProfile/${userId}`, {
+  async updateProfile(profile: Profile, auth_user_id: string) {
+    return this.makeRequest(`/api/users/saveProfile/${auth_user_id}`, {
       method: 'POST',
       data: profile
     })
@@ -111,13 +111,13 @@ class ApiService {
     })
   }
 
-  async getApplicationsByUserId(userId: string) {
-    return this.makeRequest(`/api/applications/getByUserId/${userId}`)
+  async getApplicationsByUserId(auth_user_id: string) {
+    return this.makeRequest(`/api/applications/getByUserId/${auth_user_id}`)
   }
 
   // Recommender endpoints
-  async getRecommendersByUserId(userId: string) {
-    return this.makeRequest(`/api/recommenders/getByUserId/${userId}`)
+  async getRecommendersByUserId(auth_user_id: string) {
+    return this.makeRequest(`/api/recommenders/getByUserId/${auth_user_id}`)
   }
 
   async getRecommenders() {

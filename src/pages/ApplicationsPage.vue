@@ -208,8 +208,8 @@ const loadApplications = async () => {
   if (!userStore.user) {
     try {
       // If we have a user in auth store, use their ID, otherwise load without ID
-      if (authStore.user?.userId) {
-        await userStore.loadUser(authStore.user.userId)
+      if (authStore.user?.auth_user_id) {
+        await userStore.loadUser(authStore.user.auth_user_id)
       } else {
         await userStore.loadUser()
       }
@@ -233,7 +233,7 @@ const loadApplications = async () => {
   
   loading.value = true
   try {
-    await applicationStore.getApplicationsByUserId(userStore.user.userId)
+    await applicationStore.getApplicationsByUserId(userStore.user.auth_user_id)
   } catch (error) {
     console.error('Failed to load applications:', error)
     $q.notify({

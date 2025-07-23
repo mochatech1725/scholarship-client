@@ -84,6 +84,82 @@ import { ref, computed } from 'vue'
 import ScholarshipSearchCriteria from 'components/ScholarshipSearchCriteria.vue'
 import ScholarshipSearchResults from 'components/ScholarshipSearchResults.vue'
 import { apiService } from 'src/services/api.service'
+import type { SearchCriteria } from 'src/types'
+
+// --- Validation function moved from utils/helper.ts ---
+/**
+ * Validates and trims a SearchCriteria object.
+ * - Trims all string fields
+ * - Validates startDate and endDate (if present) are valid dates
+ * - Validates endDate > startDate (if both present)
+ * @param criteria SearchCriteria object
+ * @returns { cleaned: SearchCriteria, error?: string, invalidFields?: string[] }
+ */
+function validateAndCleanSearchCriteria(
+  criteria: SearchCriteria
+): { cleaned: SearchCriteria; error?: string; invalidFields?: string[] } {
+  // Helper to trim or return null
+  const trimOrNull = (val: string | null) =>
+    typeof val === 'string' ? val.trim() : val;
+
+  // Cleaned object
+  const cleaned: SearchCriteria = {
+    ...criteria,
+    keywords: trimOrNull(criteria.keywords) || '',
+    subjectAreas: Array.isArray(criteria.subjectAreas)
+      ? criteria.subjectAreas.map((s: string) => (typeof s === 'string' ? s.trim() : s))
+      : [],
+    academicLevel: trimOrNull(criteria.academicLevel),
+    targetType: trimOrNull(criteria.targetType),
+    gender: trimOrNull(criteria.gender),
+    ethnicity: trimOrNull(criteria.ethnicity),
+    geographicRestrictions: trimOrNull(criteria.geographicRestrictions),
+    academicGPA: criteria.academicGPA,
+    essayRequired: criteria.essayRequired,
+    recommendationRequired: criteria.recommendationRequired,
+    deadlineRange: (() => {
+      if (!criteria.deadlineRange) return {};
+      const dr: { startDate?: string; endDate?: string } = {};
+      const s = criteria.deadlineRange.startDate !== undefined ? trimOrNull(criteria.deadlineRange.startDate ?? null) ?? undefined : undefined;
+      const e = criteria.deadlineRange.endDate !== undefined ? trimOrNull(criteria.deadlineRange.endDate ?? null) ?? undefined : undefined;
+      if (s !== undefined) dr.startDate = s;
+      if (e !== undefined) dr.endDate = e;
+      return dr;
+    })(),
+    ...((criteria.deadlineWithinDays !== undefined) ? { deadlineWithinDays: criteria.deadlineWithinDays } : {}),
+  };
+
+  // Validate dates if present
+  const invalidFields: string[] = [];
+  let error: string | undefined;
+  if (cleaned.deadlineRange) {
+    const { startDate, endDate } = cleaned.deadlineRange;
+    let start: Date | undefined, end: Date | undefined;
+    if (startDate) {
+      start = new Date(startDate);
+      if (isNaN(start.getTime())) {
+        error = 'Invalid start date format.';
+        invalidFields.push('deadlineRange.startDate');
+      }
+    }
+    if (endDate) {
+      end = new Date(endDate);
+      if (isNaN(end.getTime())) {
+        error = error ? error + ' Invalid end date format.' : 'Invalid end date format.';
+        invalidFields.push('deadlineRange.endDate');
+      }
+    }
+    if (start && end && end <= start) {
+      error = 'End date must be after start date.';
+      invalidFields.push('deadlineRange.endDate', 'deadlineRange.startDate');
+    }
+  }
+  if (error) {
+    return { cleaned, error, invalidFields };
+  }
+  return { cleaned };
+}
+// --- End validation function ---
 
 const searchCriteriaRef = ref()
 const searching = ref(false)
@@ -121,7 +197,14 @@ const handleSearch = async () => {
   
   try {
     const searchCriteria = searchCriteriaRef.value?.localSearchCriteria || defaultSearchCriteria
-    const results = await apiService.findScholarships(searchCriteria, maxSearchResults.value)
+    const { cleaned, error, invalidFields } = validateAndCleanSearchCriteria(searchCriteria)
+    if (error) {
+      const fieldList = invalidFields && invalidFields.length > 0 ? `\nInvalid field(s): ${invalidFields.join(', ')}` : ''
+      alert(`${error}${fieldList}`) // Replace with better UI notification if desired
+      searching.value = false
+      return
+    }
+    const results = await apiService.findScholarships(cleaned, maxSearchResults.value)
     searchResults.value = results
     searching.value = false
   } catch (error) {

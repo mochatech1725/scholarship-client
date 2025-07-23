@@ -131,7 +131,7 @@ const columns = [
 const loadRecommenders = async () => {
   try {
     loading.value = true
-    recommenders.value = await recommenderStore.getRecommendersByUserId(user?.value?.userId || '')
+    recommenders.value = await recommenderStore.getRecommendersByUserId(user?.value?.auth_user_id || '')
   } catch (err) {
     console.error('Failed to load recommenders:', err)
     $q.notify({

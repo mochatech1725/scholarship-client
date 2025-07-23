@@ -8,10 +8,10 @@ export const useUserStore = defineStore('user', {
   }),
 
   actions: {
-    async loadUser(userId?: string) {
+    async loadUser(auth_user_id?: string) {
       try {
-        console.log('loadUser called with userId:', userId)
-        const user = await apiService.getUser(userId)
+        console.log('loadUser called with auth_user_id:', auth_user_id)
+        const user = await apiService.getUser(auth_user_id)
         this.user = user
         return user
       } catch (error) {
@@ -36,10 +36,10 @@ export const useUserStore = defineStore('user', {
 
     async updateProfile(profile: User['profile']) {
       try {
-        if (!this.user?.userId) {
+        if (!this.user?.auth_user_id) {
           throw new Error('User ID not available')
         }
-        const updatedUser = await apiService.updateProfile(profile, this.user.userId)
+        const updatedUser = await apiService.updateProfile(profile, this.user.auth_user_id)
         this.user = updatedUser
         return updatedUser
       } catch (error) {

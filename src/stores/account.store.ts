@@ -26,7 +26,7 @@ export const useAccountStore = defineStore('account', () => {
     try {
       isLoading.value = true
       const registerData = {
-        userId: auth0User.sub,
+        auth_user_id: auth0User.sub,
         emailAddress: auth0User.emailAddress,
       }
       

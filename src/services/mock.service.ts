@@ -19,9 +19,9 @@ function castSubjectAreas(arr: string[]): SubjectArea[] {
 class MockService {
 
   // Recommender methods
-  async getRecommendersByUserId(userId: string): Promise<Recommender[]> {
+  async getRecommendersByAuth_user_id(auth_user_id: string): Promise<Recommender[]> {
     await new Promise(resolve => setTimeout(resolve, 100))
-    const recommenders = recommenderData.recommenders.filter(rec => rec.studentId === userId)
+    const recommenders = recommenderData.recommenders.filter(rec => rec.studentId === auth_user_id)
     return recommenders || []
   }
 
@@ -31,7 +31,7 @@ class MockService {
     return recommender || null
   }
 
-  async createRecommender(userId: string, recommender: Omit<Recommender, '_id'>): Promise<Recommender> {
+  async createRecommender(auth_user_id: string, recommender: Omit<Recommender, '_id'>): Promise<Recommender> {
     await new Promise(resolve => setTimeout(resolve, 100))
     return {
       ...recommender,
@@ -87,7 +87,7 @@ class MockService {
   async updateProfile(profile: Profile): Promise<User> {
     await new Promise(resolve => setTimeout(resolve, 100))
     return {
-      userId: mockUserData.userId,
+      auth_user_id: mockUserData.userId,
       firstName: mockUserData.firstName,
       lastName: mockUserData.lastName,
       emailAddress: mockUserData.emailAddress,
@@ -99,7 +99,7 @@ class MockService {
   async getUser(): Promise<User> {
     await new Promise(resolve => setTimeout(resolve, 100))
     return {
-      userId: mockUserData.userId,
+      auth_user_id: mockUserData.userId,
       firstName: mockUserData.firstName,
       lastName: mockUserData.lastName,
       emailAddress: mockUserData.emailAddress,

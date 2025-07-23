@@ -47,8 +47,8 @@ const handleCancel = () => {
 onMounted(async () => {
   try {
     // If we already have a user, use their ID, otherwise load user data
-    if (userStore.user?.userId) {
-      await userStore.loadUser(userStore.user.userId)
+    if (userStore.user?.auth_user_id) {
+      await userStore.loadUser(userStore.user.auth_user_id)
     } else {
       await userStore.loadUser()
     }
