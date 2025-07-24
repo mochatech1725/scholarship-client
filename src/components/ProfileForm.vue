@@ -7,15 +7,15 @@
         <div class="row q-col-gutter-md">
           <div class="col-12 col-md-6">
             <div class="form-label">First Name</div>
-            <div class="q-pa-sm">{{ user?.firstName || 'Not set' }}</div>
+            <div class="q-pa-sm">{{ user?.first_name || 'Not set' }}</div>
           </div>
           <div class="col-12 col-md-6">
             <div class="form-label">Last Name</div>
-            <div class="q-pa-sm">{{ user?.lastName || 'Not set' }}</div>
+            <div class="q-pa-sm">{{ user?.last_name || 'Not set' }}</div>
           </div>
           <div class="col-12 col-md-6">
             <div class="form-label">Email</div>
-            <div class="q-pa-sm">{{ user?.emailAddress || 'Not set' }}</div>
+            <div class="q-pa-sm">{{ user?.email_address || 'Not set' }}</div>
           </div>
         </div>
       </q-card-section>
@@ -76,88 +76,88 @@
               <div class="col-12 col-md-6">
                 <div class="form-label">Search Areas</div>
                 <q-select
-                  v-model="form.userPreferences.searchPreferences.subjectAreas"
+                  v-model="form.subject_areas"
                   :options="subjectAreaOptions"
                   multiple
                   flat
                   dense
-                  class="q-mb-sm"
+                  outlined
                 />
               </div>
               <div class="col-12 col-md-6">
                 <div class="form-label">Academic Level</div>
                 <q-select
-                  v-model="form.userPreferences.searchPreferences.academicLevel"
+                  v-model="form.academic_level"
                   :options="academicLevelOptions"
                   flat
                   dense
-                  class="q-mb-sm"
+                  outlined
                 />
               </div>
               <div class="col-12 col-md-6">
                 <div class="form-label">Target Type</div>
                 <q-select
-                  v-model="form.userPreferences.searchPreferences.targetType"
+                  v-model="form.target_type"
                   :options="targetTypeOptions"
                   flat
                   dense
-                  class="q-mb-sm"
+                  outlined
                 />
               </div>
-              <div class="col-12 col-md-6">
+              <div class="col-12">
                 <div class="form-label">Areas of Interest</div>
                 <q-select
-                  v-model="form.userPreferences.searchPreferences.subjectAreas"
+                  v-model="form.subject_areas"
                   :options="subjectAreaOptions"
                   multiple
                   flat
                   dense
-                  class="q-mb-sm"
+                  outlined
                 />
               </div>
               <div class="col-12 col-md-6">
                 <div class="form-label">Gender</div>
                 <q-select
-                  v-model="form.userPreferences.searchPreferences.gender"
+                  v-model="form.gender"
                   :options="genderOptions"
                   flat
                   dense
-                  class="q-mb-sm"
+                  outlined
                 />
               </div>
               <div class="col-12 col-md-6">
                 <div class="form-label">Ethnicity</div>
                 <q-select
-                  v-model="form.userPreferences.searchPreferences.ethnicity"
+                  v-model="form.ethnicity"
                   :options="ethnicityOptions"
                   flat
                   dense
-                  class="q-mb-sm"
+                  outlined
                 />
               </div>
               <div class="col-12 col-md-6">
                 <div class="form-label">Academic GPA</div>
                 <q-input
-                  v-model.number="form.userPreferences.searchPreferences.academicGPA"
+                  v-model.number="form.academic_gpa"
                   type="number"
                   step="0.01"
                   min="0"
                   max="4.0"
                   flat
                   dense
-                  class="q-mb-sm"
+                  outlined
                 />
               </div>
               <div class="col-12 col-md-6">
                 <q-checkbox
-                  v-model="form.userPreferences.searchPreferences.essayRequired"
+                  v-model="form.essay_required"
                   label="Essay Required"
                   class="q-mb-sm"
                 />
               </div>
               <div class="col-12 col-md-6">
                 <q-checkbox
-                  v-model="form.userPreferences.searchPreferences.recommendationRequired"
+                  v-model="form.recommendation_required"
                   label="Recommendation Required"
                   class="q-mb-sm"
                 />
@@ -171,37 +171,37 @@
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-6">
               <div class="form-label">Search Areas</div>
-              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.subjectAreas?.join(', ') || 'Not set' }}</div>
+              <div class="q-pa-sm">{{ search_preferences?.subject_areas?.join(', ') || 'Not set' }}</div>
             </div>
             <div class="col-12 col-md-6">
               <div class="form-label">Academic Level</div>
-              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.academicLevel || 'Not set' }}</div>
+              <div class="q-pa-sm">{{ search_preferences?.academic_level || 'Not set' }}</div>
             </div>
             <div class="col-12 col-md-6">
               <div class="form-label">Target Type</div>
               <div class="q-pa-sm">{{ 
-                  profile?.userPreferences?.searchPreferences?.targetType || 'Not set' 
+                  search_preferences?.target_type || 'Not set' 
               }}</div>
             </div>
             <div class="col-12 col-md-6">
               <div class="form-label">Gender</div>
-              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.gender || 'Not set' }}</div>
+              <div class="q-pa-sm">{{ search_preferences?.gender || 'Not set' }}</div>
             </div>
             <div class="col-12 col-md-6">
               <div class="form-label">Ethnicity</div>
-              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.ethnicity || 'Not set' }}</div>
+              <div class="q-pa-sm">{{ search_preferences?.ethnicity || 'Not set' }}</div>
             </div>
             <div class="col-12 col-md-6">
               <div class="form-label">Academic GPA</div>
-              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.academicGPA || 'Not set' }}</div>
+              <div class="q-pa-sm">{{ search_preferences?.academic_gpa || 'Not set' }}</div>
             </div>
             <div class="col-12 col-md-6">
               <div class="form-label">Essay Required</div>
-              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.essayRequired ? 'Yes' : 'No' }}</div>
+              <div class="q-pa-sm">{{ search_preferences?.essay_required ? 'Yes' : 'No' }}</div>
             </div>
             <div class="col-12 col-md-6">
               <div class="form-label">Recommendation Required</div>
-              <div class="q-pa-sm">{{ profile?.userPreferences?.searchPreferences?.recommendationRequired ? 'Yes' : 'No' }}</div>
+              <div class="q-pa-sm">{{ search_preferences?.recommendation_required ? 'Yes' : 'No' }}</div>
             </div>
           </div>
         </div>
@@ -213,7 +213,7 @@
 <script setup lang="ts">
 import { ref, watch, computed, onUnmounted, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
-import type { Profile, User } from 'src/types'
+import type { SearchPreferences, User } from 'src/types'
 import { 
   academicLevelOptions, 
   targetTypeOptions, 
@@ -224,34 +224,30 @@ import {
 
 const $q = useQuasar()
 
-const props = defineProps<{ 
-  isEdit?: boolean; 
-  profile?: Profile | null;
+const props = defineProps<{
+  isEdit?: boolean;
+  search_preferences?: SearchPreferences | null;
   user?: User | null;
 }>()
 
-const emit = defineEmits<{ 
-  (e: 'submit', profile: Profile): void; 
+const emit = defineEmits<{
+  (e: 'submit', search_preferences: SearchPreferences): void;
   (e: 'cancel'): void;
   (e: 'edit'): void;
 }>()
 
-const form = ref<Profile>({
-  userPreferences: {
-    searchPreferences: {
-      subjectAreas: [],
-      academicLevel: 'Undergraduate',
-      targetType: 'Both',
-      gender: 'Male',
-      ethnicity: 'White/Caucasian',
-      academicGPA: 3.0,
-      essayRequired: false,
-      recommendationRequired: false
-    }
-  }
+const form = ref<SearchPreferences>({
+  subject_areas: [],
+  academic_level: 'Undergraduate' as const,
+  target_type: 'Both' as const,
+  gender: 'Male' as const,
+  ethnicity: 'White/Caucasian' as const,
+  academic_gpa: 3.0,
+  essay_required: false,
+  recommendation_required: false
 })
 
-const originalFormData = ref<Profile | null>(null)
+const originalFormData = ref<SearchPreferences | null>(null)
 const isInitialized = ref(false)
 
 // Track if form is dirty (has been modified)
@@ -265,14 +261,12 @@ const isFormDirty = computed(() => {
 })
 
 watch(
-  () => [!!props.profile, props.profile],
+  () => [!!props.search_preferences, props.search_preferences],
   ([hasProfile, newProfile]) => {
     if (hasProfile && newProfile) {
-      // Store original data first
-      originalFormData.value = JSON.parse(JSON.stringify(newProfile)) as Profile
-      // Then set form data
-      form.value = newProfile as Profile
-      isInitialized.value = true
+      // Deep clone to avoid reference issues
+      originalFormData.value = JSON.parse(JSON.stringify(newProfile)) as SearchPreferences
+      form.value = newProfile as SearchPreferences
     }
   },
   { immediate: true }
@@ -280,13 +274,13 @@ watch(
 
 // Debug watch to see what props are being received
 watch(
-  () => [props.user, props.profile],
-  ([user, profile]) => {
+  () => [props.user, props.search_preferences],
+  ([user, searchPreferences]) => {
     console.log('ProfileForm props changed:', {
       user: user,
-      profile: profile,
+      search_preferences: searchPreferences,
       hasUser: !!user,
-      hasProfile: !!profile
+      hasProfile: !!searchPreferences
     })
   },
   { immediate: true }

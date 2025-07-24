@@ -47,7 +47,7 @@
           <div class="col-12 col-md-6">
             <div class="form-label">Due Date</div>
             <q-input
-              v-model="form.dueDate"
+              v-model="form.due_date"
               type="date"
               flat
               dense
@@ -58,7 +58,7 @@
           <div class="col-12 col-md-6">
             <div class="form-label">Submission Method</div>
             <q-select
-              v-model="form.submissionMethod"
+              v-model="form.submission_method"
               :options="submissionMethodOptions"
               flat
               dense
@@ -69,7 +69,7 @@
           <div class="col-12 col-md-6">
             <div class="form-label">Request Date</div>
             <q-input
-              v-model="form.requestDate"
+              v-model="form.request_date"
               type="date"
               flat
               dense
@@ -80,7 +80,7 @@
           <div class="col-12 col-md-6">
             <div class="form-label">Submission Date</div>
             <q-input
-              v-model="form.submissionDate"
+              v-model="form.submission_date"
               type="date"
               flat
               dense
@@ -119,18 +119,18 @@ const selectedRecommenderId = ref<string | null>(null)
 
 const form = ref<Recommendation>({
   recommender: {
-    studentId: '',
-    firstName: '',
-    lastName: '',
-    emailAddress: '',
-    phoneNumber: '',
+    student_id: '',
+    first_name: '',
+    last_name: '',
+    email_address: '',
+    phone_number: '',
     relationship: ''
   },
-  dueDate: '',
+  due_date: '',
   status: 'Pending',
-  submissionMethod: 'DirectEmail',
-  requestDate: '',
-  submissionDate: null
+  submission_method: 'DirectEmail',
+  request_date: '',
+  submission_date: null
 })
 
 const originalFormData = ref<Recommendation | null>(null)
@@ -152,26 +152,26 @@ const isFormDirty = computed(() => {
 
 const recommenderOptions = computed(() => {
   return props.recommenders.map(recommender => ({
-    label: `${recommender.firstName} ${recommender.lastName} (${recommender.emailAddress})`,
-    value: `${recommender.firstName} ${recommender.lastName} (${recommender.emailAddress})`
+    label: `${recommender.first_name} ${recommender.last_name} (${recommender.email_address})`,
+    value: `${recommender.first_name} ${recommender.last_name} (${recommender.email_address})`
   }))
 })
 
 const scholarshipName = computed(() => {
-  return props.application?.scholarshipName || ''
+  return props.application?.scholarship_name || ''
 })
 
 const submissionMethodOptions = ['DirectEmail', 'StudentUpload', 'DirectMail'] as const
 
 const onRecommenderChange = (selectedValue: string) => {
-  const selectedRecommender = props.recommenders.find(r => r._id === selectedValue)
+  const selectedRecommender = props.recommenders.find(r => r.recommender_id === selectedValue)
   if (selectedRecommender) {
     form.value.recommender = {
-      studentId: selectedRecommender.studentId,
-      firstName: selectedRecommender.firstName,
-      lastName: selectedRecommender.lastName,
-      emailAddress: selectedRecommender.emailAddress,
-      phoneNumber: selectedRecommender.phoneNumber,
+      student_id: selectedRecommender.student_id,
+      first_name: selectedRecommender.first_name,
+      last_name: selectedRecommender.last_name,
+      email_address: selectedRecommender.email_address,
+      phone_number: selectedRecommender.phone_number,
       relationship: selectedRecommender.relationship
     }
   }
@@ -216,15 +216,15 @@ const initializeForm = () => {
     const { recommender } = props.recommendation
     const recommendationData = {
       recommender: recommender,
-      dueDate: formatDateForInput(props.recommendation.dueDate),
+      due_date: formatDateForInput(props.recommendation.due_date),
       status: props.recommendation.status,
-      submissionMethod: props.recommendation.submissionMethod,
-      requestDate: formatDateForInput(props.recommendation.requestDate),
-      submissionDate: props.recommendation.submissionDate ? formatDateForInput(props.recommendation.submissionDate) : null
+      submission_method: props.recommendation.submission_method,
+      request_date: formatDateForInput(props.recommendation.request_date),
+      submission_date: props.recommendation.submission_date ? formatDateForInput(props.recommendation.submission_date) : null
     }
     
     // Set the selected recommender value for the dropdown
-    const selectedValue = `${recommender.firstName} ${recommender.lastName} (${recommender.emailAddress})`
+    const selectedValue = `${recommender.first_name} ${recommender.last_name} (${recommender.email_address})`
     
     // Store original data first
     originalFormData.value = { ...recommendationData }
@@ -236,18 +236,18 @@ const initializeForm = () => {
   } else {
     const defaultData: Recommendation = {
       recommender: {
-        studentId: '',
-        firstName: '',
-        lastName: '',
-        emailAddress: '',
-        phoneNumber: '',
+        student_id: '',
+        first_name: '',
+        last_name: '',
+        email_address: '',
+        phone_number: '',
         relationship: ''
       },
-      dueDate: '',
+      due_date: '',
       status: 'Pending' as const,
-      submissionMethod: 'DirectEmail' as const,
-      requestDate: '',
-      submissionDate: null
+      submission_method: 'DirectEmail' as const,
+      request_date: '',
+      submission_date: null
     }
     
     // Store original data first

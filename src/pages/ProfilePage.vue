@@ -3,7 +3,7 @@
     <div class="text-h5 q-mb-lg">Search Preferences</div>
     <ProfileForm
       :is-edit="isEdit"
-      :profile="userStore.user?.profile ?? null"
+      :search_preferences="userStore.user?.search_preferences ?? null"
       :user="userStore.user"
       @submit="handleSubmit"
       @cancel="handleCancel"
@@ -17,24 +17,24 @@ import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import ProfileForm from 'src/components/ProfileForm.vue'
 import { useUserStore } from 'src/stores/user.store'
-import type { Profile } from 'src/types'
+import type { SearchPreferences } from 'src/types'
 
 const $q = useQuasar()
 const userStore = useUserStore()
 const isEdit = ref(false)
 
-const handleSubmit = async (profile: Profile) => {
+const handleSubmit = async (search_preferences: SearchPreferences) => {
   try {
-    await userStore.updateProfile(profile)
+    await userStore.updateSearchPreferences(search_preferences)
     $q.notify({
-      type: 'positive',
+      color: 'positive',
       message: 'Profile updated successfully'
     })
     isEdit.value = false
   } catch (error) {
     console.error('Failed to update profile:', error)
     $q.notify({
-      type: 'negative',
+      color: 'negative',
       message: 'Failed to update profile'
     })
   }

@@ -10,7 +10,12 @@ export const useApplicationStore = defineStore('application', {
 
   actions: {
     async getApplicationById(id: string) {
-      return await apiService.getApplicationById(id)
+      try {
+        return await apiService.getApplicationById(id)
+      } catch (error) {
+        console.error('Error fetching application by ID:', error)
+        return null
+      }
     },
 
     async createApplication(application: Omit<Application, '_id'>) {
@@ -22,8 +27,13 @@ export const useApplicationStore = defineStore('application', {
     },
 
     async getApplicationsByUserId(auth_user_id: string) {
-      this.applications = await apiService.getApplicationsByUserId(auth_user_id)
-      return this.applications
+      try {
+        this.applications = await apiService.getApplicationsByUserId(auth_user_id)
+        return this.applications
+      } catch (error) {
+        console.error('Error fetching applications:', error)
+        return []
+      }
     },
 
     async deleteApplication(id: string) {

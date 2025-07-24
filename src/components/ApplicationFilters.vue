@@ -69,7 +69,7 @@
         <div class="filter-section">
           <div class="filter-label">Company</div>
           <q-input
-            v-model="localFilters.company"
+            v-model="localFilters.organization"
             clearable
             outlined
             dense
@@ -131,7 +131,7 @@ const props = defineProps<{
     status: string | null
     targetType: string | null
     currentAction: string | null
-    company: string
+    organization: string
     dueDateFrom: string | null
     dueDateTo: string | null
   }
@@ -162,7 +162,7 @@ const activeFiltersCount = computed(() => {
   if (localFilters.value.status) count++
   if (localFilters.value.targetType) count++
   if (localFilters.value.currentAction) count++
-  if (localFilters.value.company) count++
+  if (localFilters.value.organization) count++
   if (dateRange.value?.from || dateRange.value?.to) count++
   return count
 })
@@ -195,7 +195,7 @@ const clearAllFilters = () => {
     status: null,
     targetType: null,
     currentAction: null,
-    company: '',
+    organization: '',
     dueDateFrom: null,
     dueDateTo: null
   }

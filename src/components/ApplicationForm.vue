@@ -40,8 +40,8 @@
                 <div class="col-12 col-md-6">
                   <div class="form-label">Scholarship Name</div>
                   <q-input
-                    v-model="form.scholarshipName"
-                    :rules="rules.scholarshipName"
+                    v-model="form.scholarship_name"
+                    :rules="rules.scholarship_name"
                     flat
                     dense
                     hide-bottom-space
@@ -52,7 +52,7 @@
                 <div class="col-12 col-md-6">
                   <div class="form-label">Target Type</div>
                   <q-select
-                    v-model="form.targetType"
+                    v-model="form.target_type"
                     :options="targetTypeOptions"
                     flat
                     dense
@@ -61,10 +61,10 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="form-label">Company</div>
+                  <div class="form-label">Organization</div>
                   <q-input
-                    v-model="form.company"
-                    :rules="rules.company"
+                    v-model="form.organization"
+                    :rules="rules.organization"
                     flat
                     dense
                     hide-bottom-space
@@ -73,9 +73,9 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="form-label">Company Website</div>
+                  <div class="form-label">Organization Website</div>
                   <q-input
-                    v-model="form.companyWebsite"
+                    v-model="form.org_website"
                     flat
                     dense
                     class="q-mb-sm"
@@ -95,7 +95,7 @@
                 <div class="col-12 col-md-6">
                   <div class="form-label">Application Link</div>
                   <q-input
-                    v-model="form.applicationLink"
+                    v-model="form.application_link"
                     flat
                     dense
                     class="q-mb-sm"
@@ -124,7 +124,7 @@
                 <div class="col-12 col-md-6">
                   <div class="form-label">Renewable Terms</div>
                   <q-input
-                    v-model="form.renewableTerms"
+                    v-model="form.renewable_terms"
                     flat
                     dense
                     class="q-mb-sm"
@@ -152,19 +152,9 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="form-label">Document Info Link</div>
-                  <q-input
-                    v-model="form.documentInfoLink"
-                    flat
-                    dense
-                    class="q-mb-sm"
-                  />
-                </div>
-
-                <div class="col-12 col-md-6">
                   <div class="form-label">Current Action</div>
                   <q-input
-                    v-model="form.currentAction"
+                    v-model="form.current_action"
                     flat
                     dense
                     class="q-mb-sm"
@@ -185,7 +175,7 @@
                 <div class="col-12 col-md-6">
                   <div class="form-label">Submission Date</div>
                   <q-input
-                    v-model="form.submissionDate"
+                    v-model="form.submission_date"
                     type="date"
                     flat
                     dense
@@ -196,7 +186,7 @@
                 <div class="col-12 col-md-6">
                   <div class="form-label">Open Date</div>
                   <q-input
-                    v-model="form.openDate"
+                    v-model="form.open_date"
                     type="date"
                     flat
                     dense
@@ -207,7 +197,7 @@
                 <div class="col-12 col-md-6">
                   <div class="form-label">Due Date</div>
                   <q-input
-                    v-model="form.dueDate"
+                    v-model="form.due_date"
                     type="date"
                     flat
                     dense
@@ -282,24 +272,23 @@ const recommenders = ref<Recommender[]>([])
 
 // Single source of truth for default form data
 const getDefaultFormData = (): Omit<Application, '_id'> => ({
-  studentId: '', // TODO: Get from auth store
-  scholarshipName: '',
-  targetType: 'Both' as const,
-  company: '',
-  companyWebsite: '',
+  student_id: '', // TODO: Get from auth store
+  scholarship_name: '',
+  target_type: 'Both' as const,
+  organization: '',
+  org_website: '',
   platform: '',
-  applicationLink: '',
+  application_link: '',
   theme: '',
   amount: 0,
   requirements: '',
   renewable: false,
-  renewableTerms: '',
-  documentInfoLink: '',
-  currentAction: 'N/A' as const,
+  renewable_terms: '',
+  current_action: 'N/A' as const,
   status: 'Not Started' as const,
-  submissionDate: '',
-  openDate: '',
-  dueDate: '',
+  submission_date: '',
+  open_date: '',
+  due_date: '',
   essays: [],
   recommendations: []
 })
@@ -333,12 +322,12 @@ const isFormDirty = computed(() => {
 })
 
 const rules = {
-  scholarshipName: [
+  scholarship_name: [
     (val: string) => !!val || 'Scholarship name is required'
   ],
 
-  company: [
-    (val: string) => !!val || 'Company name is required'
+  organization: [
+    (val: string) => !!val || 'Organization name is required'
   ],
 }
 
@@ -373,21 +362,21 @@ watch(() => props.application, (newApplication) => {
 }, { immediate: true })
 
 const scholarshipName = computed(() => {
-  return props.application?.scholarshipName || form.value.scholarshipName || ''
+  return props.application?.scholarship_name || form.value.scholarship_name || ''
 })
 
 const onSubmit = async () => {
   try {
     loading.value = true
-    if (props.isEdit && form.value._id) {
-      await applicationStore.updateApplication(form.value._id, form.value)
+    if (props.isEdit && form.value.application_id) {
+      await applicationStore.updateApplication(form.value.application_id, form.value)
       $q.notify({
         color: 'positive',
         message: 'Application updated successfully'
       })
     } else {
       // For new applications, let the server handle ID generation
-      const newApplication: Omit<Application, '_id'> = {
+      const newApplication: Omit<Application, 'application_id'> = {
         ...form.value
       };
       
@@ -419,7 +408,7 @@ const onSubmit = async () => {
 const loadRecommenders = async () => {
   try {
     // Get userId from application or use a default
-    const auth_user_id = props.application?.studentId || 'user-1' // Default fallback
+    const auth_user_id = props.application?.student_id || '' // Default fallback
     recommenders.value = await recommenderStore.getRecommendersByUserId(auth_user_id)
   } catch (error) {
     console.error('Failed to load recommenders:', error)

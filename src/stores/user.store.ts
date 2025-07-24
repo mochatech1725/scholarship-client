@@ -34,12 +34,12 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    async updateProfile(profile: User['profile']) {
+    async updateSearchPreferences(search_preferences: User['search_preferences']) {
       try {
         if (!this.user?.auth_user_id) {
           throw new Error('User ID not available')
         }
-        const updatedUser = await apiService.updateProfile(profile, this.user.auth_user_id)
+        const updatedUser = await apiService.updateProfile({ search_preferences }, this.user.auth_user_id)
         this.user = updatedUser
         return updatedUser
       } catch (error) {

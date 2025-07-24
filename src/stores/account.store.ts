@@ -27,7 +27,7 @@ export const useAccountStore = defineStore('account', () => {
       isLoading.value = true
       const registerData = {
         auth_user_id: auth0User.sub,
-        emailAddress: auth0User.emailAddress,
+        email_address: auth0User.emailAddress,
       }
       
       await apiService.register(registerData)
@@ -59,10 +59,10 @@ export const useAccountStore = defineStore('account', () => {
     }
   }
 
-  const updateProfile = async (profile: User['profile']) => {
+  const updateProfile = async (search_preferences: User['search_preferences']) => {
     try {
       isLoading.value = true
-      return await userStore.updateProfile(profile)
+      return await userStore.updateSearchPreferences(search_preferences)
     } catch (error) {
       console.error('Failed to update profile:', error)
       throw error

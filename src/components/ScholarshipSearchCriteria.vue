@@ -67,7 +67,7 @@
         <div class="filter-section">
           <div class="filter-label">Subject Areas</div>
           <q-select
-            v-model="localSearchCriteria.subjectAreas"
+            v-model="localSearchCriteria.subject_areas"
             :options="subjectAreaOptions"
             multiple
             outlined
@@ -82,7 +82,7 @@
         <div class="filter-section">
           <div class="filter-label">Academic Level</div>
           <q-select
-            v-model="localSearchCriteria.academicLevel"
+            v-model="localSearchCriteria.academic_level"
             :options="academicLevelOptions"
             clearable
             outlined
@@ -97,7 +97,7 @@
         <div class="filter-section">
           <div class="filter-label">Target Type</div>
           <q-select
-            v-model="localSearchCriteria.targetType"
+            v-model="localSearchCriteria.target_type"
             :options="targetTypeOptions"
             clearable
             outlined
@@ -142,7 +142,7 @@
         <div class="filter-section">
           <div class="filter-label">Minimum GPA</div>
           <q-input
-            v-model.number="localSearchCriteria.academicGPA"
+            v-model.number="localSearchCriteria.academic_gpa"
             type="number"
             step="0.1"
             min="0"
@@ -157,7 +157,7 @@
         <div class="filter-section">
           <div class="filter-label">Geographic Restrictions</div>
           <q-select
-            v-model="localSearchCriteria.geographicRestrictions"
+            v-model="localSearchCriteria.geographic_restrictions"
             :options="stateOptions"
             clearable
             outlined
@@ -171,7 +171,7 @@
         <!-- Essay Required Filter -->
         <div class="filter-section">
           <q-checkbox
-            v-model="localSearchCriteria.essayRequired"
+            v-model="localSearchCriteria.essay_required"
             label="Essay Required"
             :true-value="true"
             :false-value="null"
@@ -182,7 +182,7 @@
         <!-- Recommendation Required Filter -->
         <div class="filter-section">
           <q-checkbox
-            v-model="localSearchCriteria.recommendationRequired"
+            v-model="localSearchCriteria.recommendation_required"
             label="Recommendation Required"
             :true-value="true"
             :false-value="null"
@@ -224,20 +224,20 @@ const userStore = useUserStore()
 const props = defineProps<{
   searchCriteria: {
     keywords: string
-    subjectAreas: string[]
-    academicLevel: string | null
-    targetType: string | null
+    subject_areas: string[]
+    academic_level: string | null
+    target_type: string | null
     gender: string | null
     ethnicity: string | null
-    academicGPA: number | null
-    geographicRestrictions: string | null
-    essayRequired: boolean | null
-    recommendationRequired: boolean | null
-    deadlineRange?: {
-      startDate?: string
-      endDate?: string
+    academic_gpa: number | null
+    geographic_restrictions: string | null
+    essay_required: boolean | null
+    recommendation_required: boolean | null
+    deadline_range?: {
+      start_date?: string
+      end_date?: string
     } | null
-    deadlineWithinDays?: number | null
+    deadline_within_days?: number | null
   }
 }>()
 
@@ -250,15 +250,15 @@ const localSearchCriteria = ref({ ...props.searchCriteria })
 const activeFiltersCount = computed(() => {
   let count = 0
   if (localSearchCriteria.value.keywords) count++
-  if (localSearchCriteria.value.subjectAreas && localSearchCriteria.value.subjectAreas.length > 0) count++
-  if (localSearchCriteria.value.academicLevel) count++
-  if (localSearchCriteria.value.targetType) count++
+  if (localSearchCriteria.value.subject_areas && localSearchCriteria.value.subject_areas.length > 0) count++
+  if (localSearchCriteria.value.academic_level) count++
+  if (localSearchCriteria.value.target_type) count++
   if (localSearchCriteria.value.gender) count++
   if (localSearchCriteria.value.ethnicity) count++
-  if (localSearchCriteria.value.academicGPA !== null && localSearchCriteria.value.academicGPA > 0) count++
-  if (localSearchCriteria.value.geographicRestrictions) count++
-  if (localSearchCriteria.value.essayRequired === true) count++
-  if (localSearchCriteria.value.recommendationRequired === true) count++
+  if (localSearchCriteria.value.academic_gpa !== null && localSearchCriteria.value.academic_gpa > 0) count++
+  if (localSearchCriteria.value.geographic_restrictions) count++
+  if (localSearchCriteria.value.essay_required === true) count++
+  if (localSearchCriteria.value.recommendation_required === true) count++
   
   return count
 })
@@ -274,21 +274,21 @@ watch(localSearchCriteria, (newValue) => {
 }, { deep: true })
 
 const handlePopulateFromProfile = (checked: boolean) => {
-  if (checked && userStore.user?.profile?.userPreferences?.searchPreferences) {
-    const profilePrefs = userStore.user.profile.userPreferences.searchPreferences
-    
+  if (checked && userStore.user?.search_preferences) {
+    const profilePrefs = userStore.user.search_preferences
+
     // Populate filters from profile
     localSearchCriteria.value = {
-      ...localSearchCriteria.value,
-      subjectAreas: profilePrefs.subjectAreas || [],
-      academicLevel: profilePrefs.academicLevel || null,
-      targetType: profilePrefs.targetType || null,
+      keywords: localSearchCriteria.value.keywords,
+      subject_areas: profilePrefs.subject_areas || [],
+      academic_level: profilePrefs.academic_level || null,
+      target_type: profilePrefs.target_type || null,
       gender: profilePrefs.gender || null,
       ethnicity: profilePrefs.ethnicity || null,
-      academicGPA: profilePrefs.academicGPA || null,
-      geographicRestrictions: null, // Geographic restrictions are not in profile preferences, so keep as null
-      essayRequired: profilePrefs.essayRequired,
-      recommendationRequired: profilePrefs.recommendationRequired
+      academic_gpa: profilePrefs.academic_gpa || null,
+      geographic_restrictions: null, // Geographic restrictions are not in profile preferences, so keep as null
+      essay_required: profilePrefs.essay_required,
+      recommendation_required: profilePrefs.recommendation_required
     }
   } else if (!checked) {
     // Clear all filters when unchecked
@@ -299,17 +299,17 @@ const handlePopulateFromProfile = (checked: boolean) => {
 const clearAllFilters = () => {
   localSearchCriteria.value = {
     keywords: '',
-    subjectAreas: [],
-    academicLevel: null,
-    targetType: null,
+    subject_areas: [],
+    academic_level: null,
+    target_type: null,
     gender: null,
     ethnicity: null,
-    academicGPA: null,
-    geographicRestrictions: null,
-    essayRequired: null,
-    recommendationRequired: null,
-    deadlineRange: null,
-    deadlineWithinDays: null
+    academic_gpa: null,
+    geographic_restrictions: null,
+    essay_required: null,
+    recommendation_required: null,
+    deadline_range: null,
+    deadline_within_days: null
   }
   populateFromProfile.value = false
 }

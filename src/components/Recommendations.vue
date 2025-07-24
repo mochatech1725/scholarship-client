@@ -22,7 +22,7 @@
       >
         <template v-slot:body-cell-recommender="props">
           <q-td :props="props">
-            {{ props.row.recommender?.firstName }} {{ props.row.recommender?.lastName }}
+            {{ props.row.recommender?.first_name }} {{ props.row.recommender?.last_name }}
           </q-td>
         </template>
         <template v-slot:body-cell-status="props">
@@ -125,7 +125,7 @@ const { getStatusColor } = useGetStatusColor()
 const recommenderDisplayName = computed(() => {
   return (recommendation: Recommendation) => {
     if (!recommendation.recommender) return 'Loading...'
-    return `${recommendation.recommender.firstName} ${recommendation.recommender.lastName} (${recommendation.recommender.emailAddress})`
+    return `${recommendation.recommender.first_name} ${recommendation.recommender.last_name} (${recommendation.recommender.email_address})`
   }
 })
 
@@ -148,24 +148,23 @@ const createApplicationUpdateObject = (recommendations: Recommendation[]): Appli
   }
   
   return {
-    ...(props.application._id ? { _id: props.application._id } : {}),
-    studentId: props.application.studentId,
-    scholarshipName: props.application.scholarshipName,
-    targetType: props.application.targetType,
-    company: props.application.company,
-    companyWebsite: props.application.companyWebsite,
+    ...(props.application.application_id ? { application_id: props.application.application_id } : {}),
+    student_id: props.application.student_id,
+    scholarship_name: props.application.scholarship_name,
+    target_type: props.application.target_type,
+    organization: props.application.organization,
+    org_website: props.application.org_website,
     platform: props.application.platform,
-    applicationLink: props.application.applicationLink,
+    application_link: props.application.application_link,
     theme: props.application.theme,
     amount: props.application.amount,
     requirements: props.application.requirements,
     renewable: props.application.renewable,
-    documentInfoLink: props.application.documentInfoLink,
-    currentAction: props.application.currentAction,
+    current_action: props.application.current_action,
     status: props.application.status,
-    submissionDate: props.application.submissionDate,
-    openDate: props.application.openDate,
-    dueDate: props.application.dueDate,
+    submission_date: props.application.submission_date,
+    open_date: props.application.open_date,
+    due_date: props.application.due_date,
     essays: props.application.essays,
     recommendations
   }
@@ -184,11 +183,11 @@ const closeForm = () => {
 const handleSubmit = async (form: Recommendation) => {
   try {
     loading.value = true
-    if (editingRecommendation.value && editingRecommendation.value._id && props.application && props.application._id) {
-      const appId = props.application._id;
+    if (editingRecommendation.value && editingRecommendation.value.recommendation_id && props.application && props.application.application_id) {
+      const appId = props.application.application_id;
       // Update the recommendation in the application's recommendations array
       const updatedRecommendations = props.application.recommendations.map(rec =>
-        rec._id === editingRecommendation.value!._id ? form : rec
+        rec.recommendation_id === editingRecommendation.value!.recommendation_id ? form : rec
       )
       const updateObj = createApplicationUpdateObject(updatedRecommendations);
       await applicationStore.updateApplication(appId, updateObj)
@@ -196,12 +195,12 @@ const handleSubmit = async (form: Recommendation) => {
         type: 'positive',
         message: 'Recommendation updated successfully'
       })
-    } else if (props.application && props.application._id) {
-      const appId = props.application._id;
-      // Add new recommendation
+    } else if (props.application && props.application.application_id) {
+      const appId = props.application.application_id;
+      // Add new recommendation - let database generate the ID
       const updatedRecommendations = [
         ...(props.application.recommendations || []),
-        { ...form, _id: crypto.randomUUID() }
+        { ...form } // No ID needed - database will generate it
       ]
       const updateObj = createApplicationUpdateObject(updatedRecommendations);
       await applicationStore.updateApplication(appId, updateObj)
@@ -225,14 +224,14 @@ const handleSubmit = async (form: Recommendation) => {
 }
 
 const confirmDeleteRecommendation = (recommendation: Recommendation) => {
-  if (!recommendation._id || !props.application || !props.application._id) {
+  if (!recommendation.recommendation_id || !props.application || !props.application.application_id) {
     $q.notify({
       color: 'negative',
       message: 'Cannot delete recommendation: No recommendation ID or application found'
     })
     return
   }
-  const appId = props.application._id;
+  const appId = props.application.application_id;
   $q.dialog({
     title: 'Confirm',
     message: 'Are you sure you want to delete this recommendation?',
@@ -243,7 +242,7 @@ const confirmDeleteRecommendation = (recommendation: Recommendation) => {
       try {
         // Remove the recommendation from the application's recommendations array
         const updatedRecommendations = (props.application!.recommendations || []).filter(
-          rec => rec._id !== recommendation._id
+          rec => rec.recommendation_id !== recommendation.recommendation_id
         )
         const updateObj = createApplicationUpdateObject(updatedRecommendations);
         await applicationStore.updateApplication(appId, updateObj)

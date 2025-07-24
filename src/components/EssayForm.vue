@@ -52,7 +52,7 @@
           <div class="col-12">
             <div class="form-label">Essay Link</div>
             <q-input
-              v-model="form.essayLink"
+              v-model="form.essay_link"
               :rules="[val => !!val || 'Essay link is required']"
               flat
               dense
@@ -97,13 +97,13 @@ const emit = defineEmits<{
 }>()
 
 const scholarshipName = computed(() => {
-  return props.application?.scholarshipName || ''
+  return props.application?.scholarship_name || ''
 })
 
 const unitOptions = ['words', 'characters', 'pages', 'sentences']
 
 const form = ref<Essay>({
-  essayLink: '',
+  essay_link: '',
   count: 0,
   units: 'words',
   theme: ''
@@ -125,7 +125,7 @@ const isFormDirty = computed(() => {
 const initializeForm = () => {
   if (props.essay) {
     const essayData = {
-      essayLink: props.essay.essayLink,
+      essay_link: props.essay.essay_link,
       count: props.essay.count,
       units: props.essay.units,
       theme: props.essay.theme
@@ -136,7 +136,7 @@ const initializeForm = () => {
     form.value = essayData
   } else {
     const defaultData = {
-      essayLink: '',
+      essay_link: '',
       count: 0,
       units: 'words',
       theme: ''

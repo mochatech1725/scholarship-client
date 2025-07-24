@@ -112,7 +112,7 @@ const essayColumns = [
 ]
 
 const loadEssays = () => {
-  if (!props.application?._id) return
+  if (!props.application?.application_id) return
   
   try {
     loading.value = true
@@ -139,7 +139,7 @@ const closeEssayForm = () => {
 }
 
 const confirmDeleteEssay = (essay: Essay) => {
-  if (!essay._id) {
+  if (!essay.essay_id) {
     $q.notify({
       color: 'negative',
       message: 'Cannot delete essay: No essay ID found'
@@ -173,15 +173,15 @@ const confirmDeleteEssay = (essay: Essay) => {
 
 const handleEssaySubmit = (updatedEssay: Essay) => {
   // Update the essays array with the new/updated essay
-  if (editingEssay.value && editingEssay.value._id) {
+  if (editingEssay.value && editingEssay.value.essay_id) {
     // Update existing essay
-    const index = essays.value.findIndex(e => e._id === editingEssay.value!._id)
+    const index = essays.value.findIndex(e => e.essay_id === editingEssay.value!.essay_id)
     if (index !== -1) {
       essays.value[index] = updatedEssay
     }
   } else {
-    // Add new essay
-    essays.value.push({ ...updatedEssay, _id: crypto.randomUUID() })
+    // Add new essay - let database generate the ID
+    essays.value.push({ ...updatedEssay }) // No ID needed - database will generate it
   }
   
   // Emit the updated essays to the parent

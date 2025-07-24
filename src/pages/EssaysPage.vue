@@ -110,12 +110,12 @@ const columns = [
   { name: 'theme', label: 'Theme', field: 'theme', align: 'left' as const },
   { name: 'count', label: 'Count', field: 'count', align: 'left' as const },
   { name: 'units', label: 'Units', field: 'units', align: 'left' as const },
-  { name: 'essayLink', label: 'Essay Link', field: 'essayLink', align: 'left' as const, format: (val: string) => val ? 'View' : 'Not uploaded' },
+  { name: 'essayLink', label: 'Essay Link', field: 'essay_link', align: 'left' as const, format: (val: string) => val ? 'View' : 'Not uploaded' },
   { name: 'actions', label: 'Actions', field: 'actions', align: 'center' as const }
 ]
 
 const loadEssays = () => {
-  if (!props.application?._id) {
+  if (!props.application?.application_id) {
     $q.notify({
       type: 'negative',
       message: 'No application provided'
@@ -132,18 +132,16 @@ const confirmDelete = (essay: Essay) => {
 }
 
 const handleDelete = async () => {
-  if (!selectedEssay.value?._id || !props.application._id) return
+  if (!selectedEssay.value?.essay_id || !props.application.application_id) return
 
   try {
-    // Since essays are nested in applications, we need to update the application
-    // Remove the essay from the application's essays array
-    const updatedEssays = props.application.essays.filter(essay => essay._id !== selectedEssay.value?._id)
+    const updatedEssays = props.application.essays.filter(essay => essay.essay_id !== selectedEssay.value?.essay_id)
     const updatedApplication = {
       ...props.application,
       essays: updatedEssays
     }
     
-    await applicationStore.updateApplication(props.application._id, updatedApplication)
+    await applicationStore.updateApplication(props.application.application_id, updatedApplication)
     
     $q.notify({
       type: 'positive',

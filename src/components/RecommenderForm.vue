@@ -29,7 +29,7 @@
       <div class="col-12 col-md-6">
         <div class="form-label">First Name</div>
         <q-input
-          v-model="form.firstName"
+          v-model="form.first_name"
           :rules="rules.firstName"
           flat
           dense
@@ -41,7 +41,7 @@
       <div class="col-12 col-md-6">
         <div class="form-label">Last Name</div>
         <q-input
-          v-model="form.lastName"
+          v-model="form.last_name"
           :rules="rules.lastName"
           flat
           dense
@@ -53,7 +53,7 @@
       <div class="col-12 col-md-6">
         <div class="form-label">Email Address</div>
         <q-input
-          v-model="form.emailAddress"
+          v-model="form.email_address"
           :rules="rules.emailAddress"
           flat
           dense
@@ -66,7 +66,7 @@
       <div class="col-12 col-md-6">
         <div class="form-label">Phone Number</div>
         <q-input
-          v-model="form.phoneNumber"
+          v-model="form.phone_number"
           flat
           dense
           mask="(###) ###-####"
@@ -105,22 +105,22 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'submit', form: Omit<Recommender, '_id'> & { emailAddress: string; phoneNumber: string }): void
+  (e: 'submit', form: Omit<Recommender, 'recommender_id'>): void
   (e: 'cancel'): void
 }>()
 
 const relationshipOptions = ['Teacher', 'Counselor', 'Employer', 'Friend', 'Other']
 
-const form = ref<Omit<Recommender, '_id'> & { emailAddress: string; phoneNumber: string }>({
-  studentId: props.user?._id || '',
-  firstName: '',
-  lastName: '',
+const form = ref<Omit<Recommender, 'recommender_id'> & { email_address: string; phone_number: string }>({
+  student_id: props.user?.user_id || '',
+  first_name: '',
+  last_name: '',
   relationship: '',
-  emailAddress: '',
-  phoneNumber: ''
+  email_address: '',
+  phone_number: ''
 })
 
-const originalFormData = ref<Omit<Recommender, '_id'> & { emailAddress: string; phoneNumber: string } | null>(null)
+const originalFormData = ref<Omit<Recommender, 'recommender_id'> & { email_address: string; phone_number: string } | null>(null)
 const isInitialized = ref(false)
 
 // Track if form is dirty (has been modified)
@@ -148,12 +148,12 @@ const rules = {
 const loadData = () => {
   if (props.isEdit && props.recommender) {
     const recommenderData = {
-      studentId: props.recommender.studentId,
-      firstName: props.recommender.firstName,
-      lastName: props.recommender.lastName,
+      student_id: props.recommender.student_id,
+      first_name: props.recommender.first_name,
+      last_name: props.recommender.last_name,
       relationship: props.recommender.relationship,
-      emailAddress: props.recommender.emailAddress,
-      phoneNumber: props.recommender.phoneNumber
+      email_address: props.recommender.email_address,
+      phone_number: props.recommender.phone_number
     }
     // Store original data first
     originalFormData.value = { ...recommenderData }
@@ -161,12 +161,12 @@ const loadData = () => {
     form.value = recommenderData
   } else {
     const defaultData = {
-      studentId: props.user?._id || '',
-      firstName: '',
-      lastName: '',
+      student_id: props.user?.user_id || '',
+      first_name: '',
+      last_name: '',
       relationship: '',
-      emailAddress: '',
-      phoneNumber: ''
+      email_address: '',
+      phone_number: ''
     }
     // Store original data first
     originalFormData.value = { ...defaultData }

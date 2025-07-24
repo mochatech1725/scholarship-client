@@ -77,7 +77,7 @@ const scholarshipColumns = [
   {
     name: 'geographicRestrictions',
     label: 'Geographic Restrictions',
-    field: (row: ScholarshipResult) => row.geographicRestrictions,
+    field: (row: ScholarshipResult) => row.geographic_restrictions,
     align: 'left' as const
   }
 ]

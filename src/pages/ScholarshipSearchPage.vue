@@ -106,52 +106,52 @@ function validateAndCleanSearchCriteria(
   const cleaned: SearchCriteria = {
     ...criteria,
     keywords: trimOrNull(criteria.keywords) || '',
-    subjectAreas: Array.isArray(criteria.subjectAreas)
-      ? criteria.subjectAreas.map((s: string) => (typeof s === 'string' ? s.trim() : s))
+    subject_areas: Array.isArray(criteria.subject_areas)
+      ? criteria.subject_areas.map((s: string) => (typeof s === 'string' ? s.trim() : s))
       : [],
-    academicLevel: trimOrNull(criteria.academicLevel),
-    targetType: trimOrNull(criteria.targetType),
+    academic_level: trimOrNull(criteria.academic_level),
+    target_type: trimOrNull(criteria.target_type),
     gender: trimOrNull(criteria.gender),
     ethnicity: trimOrNull(criteria.ethnicity),
-    geographicRestrictions: trimOrNull(criteria.geographicRestrictions),
-    academicGPA: criteria.academicGPA,
-    essayRequired: criteria.essayRequired,
-    recommendationRequired: criteria.recommendationRequired,
-    deadlineRange: (() => {
-      if (!criteria.deadlineRange) return {};
-      const dr: { startDate?: string; endDate?: string } = {};
-      const s = criteria.deadlineRange.startDate !== undefined ? trimOrNull(criteria.deadlineRange.startDate ?? null) ?? undefined : undefined;
-      const e = criteria.deadlineRange.endDate !== undefined ? trimOrNull(criteria.deadlineRange.endDate ?? null) ?? undefined : undefined;
-      if (s !== undefined) dr.startDate = s;
-      if (e !== undefined) dr.endDate = e;
+    geographic_restrictions: trimOrNull(criteria.geographic_restrictions),
+    academic_gpa: criteria.academic_gpa,
+    essay_required: criteria.essay_required,
+    recommendation_required: criteria.recommendation_required,
+    deadline_range: (() => {
+      if (!criteria.deadline_range) return {};
+      const dr: { start_date?: string; end_date?: string } = {};
+      const s = criteria.deadline_range.start_date !== undefined ? trimOrNull(criteria.deadline_range.start_date ?? null) ?? undefined : undefined;
+      const e = criteria.deadline_range.end_date !== undefined ? trimOrNull(criteria.deadline_range.end_date ?? null) ?? undefined : undefined;
+      if (s !== undefined) dr.start_date = s;
+      if (e !== undefined) dr.end_date = e;
       return dr;
     })(),
-    ...((criteria.deadlineWithinDays !== undefined) ? { deadlineWithinDays: criteria.deadlineWithinDays } : {}),
+    ...((criteria.deadline_within_days !== undefined) ? { deadline_within_days: criteria.deadline_within_days } : {}),
   };
 
   // Validate dates if present
   const invalidFields: string[] = [];
   let error: string | undefined;
-  if (cleaned.deadlineRange) {
-    const { startDate, endDate } = cleaned.deadlineRange;
+  if (cleaned.deadline_range) {
+    const { start_date, end_date } = cleaned.deadline_range;
     let start: Date | undefined, end: Date | undefined;
-    if (startDate) {
-      start = new Date(startDate);
+    if (start_date) {
+      start = new Date(start_date);
       if (isNaN(start.getTime())) {
         error = 'Invalid start date format.';
-        invalidFields.push('deadlineRange.startDate');
+        invalidFields.push('deadline_range.start_date');
       }
     }
-    if (endDate) {
-      end = new Date(endDate);
+    if (end_date) {
+      end = new Date(end_date);
       if (isNaN(end.getTime())) {
         error = error ? error + ' Invalid end date format.' : 'Invalid end date format.';
-        invalidFields.push('deadlineRange.endDate');
+        invalidFields.push('deadline_range.end_date');
       }
     }
     if (start && end && end <= start) {
       error = 'End date must be after start date.';
-      invalidFields.push('deadlineRange.endDate', 'deadlineRange.startDate');
+      invalidFields.push('deadline_range.end_date', 'deadline_range.start_date');
     }
   }
   if (error) {
@@ -169,17 +169,17 @@ const searchResults = ref([])
 
 const defaultSearchCriteria = {
   keywords: '',
-  subjectAreas: [] as string[],
-  academicLevel: null as string | null,
-  targetType: null as string | null,
+  subject_areas: [] as string[],
+  academic_level: null as string | null,
+  target_type: null as string | null,
   gender: null as string | null,
   ethnicity: null as string | null,
-  academicGPA: null as number | null,
-  geographicRestrictions: null as string | null,
-  essayRequired: null as boolean | null,
-  recommendationRequired: null as boolean | null,
-  deadlineRange: null as { startDate?: string; endDate?: string } | null,
-  deadlineWithinDays: null as number | null
+  academic_gpa: null as number | null,
+  geographic_restrictions: null as string | null,
+  essay_required: null as boolean | null,
+  recommendation_required: null as boolean | null,
+  deadline_range: null as { start_date?: string; end_date?: string } | null,
+  deadline_within_days: null as number | null
 }
 
 const hasActiveSearchCriteria = computed(() => {

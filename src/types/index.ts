@@ -120,74 +120,69 @@ export interface Auth0User {
 }
 
 export interface Essay {
-  _id?: string
-  essayLink: string
+  essay_id?: string
+  essay_link: string
   count: number
   units: string
   theme: string
 }
 
 export interface Recommender {
-  _id?: string
-  studentId: string
-  firstName: string
-  lastName: string
+  recommender_id?: string
+  student_id: string
+  first_name: string
+  last_name: string
   relationship: string
-  emailAddress: string
-  phoneNumber: string
+  email_address: string
+  phone_number: string
 }
 
 export interface Recommendation {
-  _id?: string
+  recommendation_id?: string
   recommender: Recommender
   status: RecommendationStatus
-  submissionMethod: SubmissionMethod
-  requestDate: string
-  dueDate: string
-  submissionDate: string | null
-}
-
-export interface Profile {
-  userPreferences: UserPreferences
+  submission_method: SubmissionMethod
+  request_date: string
+  due_date: string
+  submission_date: string | null
 }
 
 export interface User {
-  _id?: string
+  user_id?: string
   auth_user_id: string
-  firstName: string
-  lastName: string
-  emailAddress: string
-  phoneNumber: string
-  profile: Profile
+  first_name: string
+  last_name: string
+  email_address: string
+  phone_number: string
+  search_preferences: SearchPreferences
 } 
 
 export interface Application {
-  _id?: string
-  studentId: string
-  scholarshipName: string
-  targetType: TargetType
-  company: string
-  companyWebsite: string
+  application_id?: string
+  student_id: string
+  scholarship_name: string
+  target_type: TargetType
+  organization: string
+  org_website: string
   platform: string
-  applicationLink: string
+  application_link: string
   theme: string
   amount: number
   requirements: string
   renewable: boolean
-  renewableTerms?: string
-  documentInfoLink: string
-  currentAction: CurrentAction
+  renewable_terms?: string
+  current_action: CurrentAction
   status: ApplicationStatus
   essays: Essay[]
   recommendations: Recommendation[]
-  submissionDate: string
-  openDate: string
-  dueDate: string
+  submission_date: string
+  open_date: string
+  due_date: string
 }
 
 export interface RegisterData {
-  _id?: string
-  emailAddress: string
+  register_id?: string
+  email_address: string
 }
 
 export interface ScholarshipResult {
@@ -198,47 +193,47 @@ export interface ScholarshipResult {
   deadline: string
   eligibility: string
   ethnicity: string
-  educationLevel: string
+  education_level: string
   area: string
-  academicGPA: number
+  academic_gpa: number
   essay: boolean
   recommendation: boolean
   url: string
-  isActive: boolean
+  is_active: boolean
   renewable: boolean
-  geographicRestrictions: string
+  geographic_restrictions: string
 }
 
 export interface UserPreferences {
-  searchPreferences: SearchPreferences
+  search_preferences: SearchPreferences
 }
 
 export interface SearchPreferences {
-  subjectAreas: SubjectArea[]
-  academicLevel: AcademicLevel
-  targetType: TargetType
+  subject_areas: SubjectArea[]
+  academic_level: AcademicLevel
+  target_type: TargetType
   gender: Gender
   ethnicity: Ethnicity
-  academicGPA: number
-  essayRequired: boolean
-  recommendationRequired: boolean
+  academic_gpa: number
+  essay_required: boolean
+  recommendation_required: boolean
 }
 
 export interface SearchCriteria {
   keywords: string
-  subjectAreas: string[]
-  academicLevel: string | null
-  targetType: string | null
+  subject_areas: string[]
+  academic_level: string | null
+  target_type: string | null
   gender: string | null
   ethnicity: string | null
-  academicGPA: number | null
-  geographicRestrictions: string | null
-  essayRequired: boolean | null
-  recommendationRequired: boolean | null
-  deadlineRange?: {
-    startDate?: string  // ISO date string
-    endDate?: string    // ISO date string
+  academic_gpa: number | null
+  geographic_restrictions: string | null
+  essay_required: boolean | null
+  recommendation_required: boolean | null
+  deadline_range?: {
+    start_date?: string  // ISO date string
+    end_date?: string    // ISO date string
   }
-  deadlineWithinDays?: number  // e.g., 30 for "due within 30 days"
+  deadline_within_days?: number  // e.g., 30 for "due within 30 days"
 }
 

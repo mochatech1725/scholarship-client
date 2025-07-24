@@ -127,13 +127,13 @@ const filters = ref({
   status: null as ApplicationStatus | null,
   targetType: null as string | null,
   currentAction: '',
-  company: '',
+  organization: '',
   dueDateFrom: null as string | null,
   dueDateTo: null as string | null
 })
 
 const columns: QTableColumn[] = [
-  { name: 'company', label: 'Company', field: 'company', sortable: true, align: 'left' },
+  { name: 'organization', label: 'Organization', field: 'organization', sortable: true, align: 'left' },
   { name: 'scholarshipName', label: 'Scholarship', field: 'scholarshipName', sortable: true, align: 'left' },
   { name: 'targetType', label: 'Type', field: 'targetType', sortable: true, align: 'left' },
   { name: 'amount', label: 'Amount', field: 'amount', sortable: true, align: 'right', format: (val: number) => `$${val.toLocaleString()}` },
@@ -153,13 +153,13 @@ const pagination = ref({
 const filteredApplications = computed(() => {
   return applications.value.filter(app => {
     if (filters.value.status && app.status !== filters.value.status) return false
-    if (filters.value.targetType && app.targetType !== filters.value.targetType) return false
-    if (filters.value.currentAction && !app.currentAction.toLowerCase().includes(filters.value.currentAction.toLowerCase())) return false
-    if (filters.value.company && !app.company.toLowerCase().includes(filters.value.company.toLowerCase())) return false
+    if (filters.value.targetType && app.target_type !== filters.value.targetType) return false
+    if (filters.value.currentAction && !app.current_action.toLowerCase().includes(filters.value.currentAction.toLowerCase())) return false
+    if (filters.value.organization && !app.organization.toLowerCase().includes(filters.value.organization.toLowerCase())) return false
     
     // Date range filtering
     if (filters.value.dueDateFrom || filters.value.dueDateTo) {
-      const appDueDate = new Date(app.dueDate)
+      const appDueDate = new Date(app.due_date)
       const fromDate = filters.value.dueDateFrom ? new Date(filters.value.dueDateFrom) : null
       const toDate = filters.value.dueDateTo ? new Date(filters.value.dueDateTo) : null
       
@@ -254,8 +254,8 @@ const confirmDelete = (application: Application) => {
   }).onOk(() => {
     void (async () => {
       try {
-        if (application._id) {
-          await applicationStore.deleteApplication(application._id)
+        if (application.application_id) {
+          await applicationStore.deleteApplication(application.application_id)
           $q.notify({
             color: 'positive',
             message: 'Application deleted successfully'

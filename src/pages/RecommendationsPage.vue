@@ -27,7 +27,7 @@ const recommenders = ref<Recommender[]>([])
 
 const loadRecommenders = async () => {
   try {
-    const auth_user_id = props.application?.studentId || 'user-1' // Default fallback
+    const auth_user_id = props.application?.student_id || '' // Default fallback
     recommenders.value = await recommenderStore.getRecommendersByUserId(auth_user_id)
   } catch (error) {
     console.error('Failed to load recommenders:', error)

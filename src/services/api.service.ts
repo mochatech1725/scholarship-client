@@ -1,5 +1,5 @@
 import { useAuthStore } from 'src/stores/auth.store'
-import type { Profile, Application, RegisterData, Recommender, SearchCriteria } from 'src/types'
+import type { Application, RegisterData, Recommender, SearchCriteria, SearchPreferences } from 'src/types'
 import { api } from 'src/boot/axios'
 import type { AxiosRequestConfig } from 'axios'
 
@@ -75,10 +75,10 @@ class ApiService {
     return this.makeRequest('/api/auth/login')
   }
 
-  async updateProfile(profile: Profile, auth_user_id: string) {
+  async updateProfile(search_preferences: { search_preferences: SearchPreferences }, auth_user_id: string) {
     return this.makeRequest(`/api/users/saveProfile/${auth_user_id}`, {
       method: 'POST',
-      data: profile
+      data: search_preferences
     })
   }
 
@@ -128,14 +128,14 @@ class ApiService {
     return this.makeRequest(`/api/recommenders/getById/${id}`)
   }
 
-  async createRecommender(recommender: Omit<Recommender, '_id'>) {
+  async createRecommender(recommender: Omit<Recommender, 'recommender_id'>) {
     return this.makeRequest('/api/recommenders/create', {
       method: 'POST',
       data: recommender
     })
   }
 
-  async updateRecommender(id: string, recommender: Omit<Recommender, '_id'>) {
+  async updateRecommender(id: string, recommender: Omit<Recommender, 'recommender_id'>) {
     return this.makeRequest(`/api/recommenders/update/${id}`, {
       method: 'POST',
       data: recommender
