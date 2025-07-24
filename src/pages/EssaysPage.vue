@@ -13,7 +13,7 @@
     <q-table
       :rows="essays"
       :columns="columns"
-      row-key="_id"
+      row-key="essay_id"
       :loading="loading"
     >
       <template v-slot:body-cell-actions="props">

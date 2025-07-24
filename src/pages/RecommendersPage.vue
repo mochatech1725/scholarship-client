@@ -15,7 +15,7 @@
         <q-table
           :rows="recommenders"
           :columns="columns"
-          row-key="_id"
+          row-key="re_id"
           flat
           bordered
           dense

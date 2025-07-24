@@ -15,7 +15,7 @@
       <q-table
         :rows="essays"
         :columns="essayColumns"
-        row-key="_id"
+        row-key="essay_id"
         flat
         bordered
         dense

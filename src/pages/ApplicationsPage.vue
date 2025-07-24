@@ -26,7 +26,7 @@
           <q-table
             :rows="filteredApplications"
             :columns="columns"
-            row-key="id"
+            row-key="application_id"
             :loading="loading"
             v-model:pagination="pagination"
           >
@@ -134,17 +134,17 @@ const filters = ref({
 
 const columns: QTableColumn[] = [
   { name: 'organization', label: 'Organization', field: 'organization', sortable: true, align: 'left' },
-  { name: 'scholarshipName', label: 'Scholarship', field: 'scholarshipName', sortable: true, align: 'left' },
-  { name: 'targetType', label: 'Type', field: 'targetType', sortable: true, align: 'left' },
+  { name: 'scholarship_name', label: 'Scholarship', field: 'scholarship_name', sortable: true, align: 'left' },
+  { name: 'target_type', label: 'Type', field: 'target_type', sortable: true, align: 'left' },
   { name: 'amount', label: 'Amount', field: 'amount', sortable: true, align: 'right', format: (val: number) => `$${val.toLocaleString()}` },
   { name: 'status', label: 'Status', field: 'status', sortable: true, align: 'left' },
-  { name: 'currentAction', label: 'Current Action', field: 'currentAction', sortable: true, align: 'left' },
-  { name: 'dueDate', label: 'Due Date', field: 'dueDate', sortable: true, align: 'left', format: (val: string) => formatDate(val) },
+  { name: 'current_action', label: 'Current Action', field: 'current_action', sortable: true, align: 'left' },
+  { name: 'due_date', label: 'Due Date', field: 'due_date', sortable: true, align: 'left', format: (val: string) => formatDate(val) },
   { name: 'actions', label: 'Actions', field: 'actions', align: 'right', style: 'width: 70px' }
 ]
 
 const pagination = ref({
-  sortBy: 'dueDate',
+  sortBy: 'due_date',
   descending: true,
   page: 1,
   rowsPerPage: 10

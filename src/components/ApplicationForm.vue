@@ -301,19 +301,16 @@ const isInitialized = ref(false)
 const isFormDirty = computed(() => {
   if (!originalFormData.value || !isInitialized.value) return false
   
-  // Check main form data (excluding essays and recommendations)
   const currentMain = { ...form.value, essays: [], recommendations: [] }
   const originalMain = { ...originalFormData.value, essays: [], recommendations: [] }
   const currentMainStr = JSON.stringify(currentMain)
   const originalMainStr = JSON.stringify(originalMain)
   const mainFormDirty = currentMainStr !== originalMainStr
   
-  // Check essays
   const currentEssays = JSON.stringify(form.value.essays || [])
   const originalEssays = JSON.stringify(originalFormData.value.essays || [])
   const essaysDirty = currentEssays !== originalEssays
   
-  // Check recommendations
   const currentRecommendations = JSON.stringify(form.value.recommendations || [])
   const originalRecommendations = JSON.stringify(originalFormData.value.recommendations || [])
   const recommendationsDirty = currentRecommendations !== originalRecommendations
@@ -351,11 +348,8 @@ const initializeForm = () => {
 // Watch for changes in props.application
 watch(() => props.application, (newApplication) => {
   if (newApplication) {
-    // Update form with application data, excluding the created field
     const { ...applicationData } = newApplication
-    // Store original data first
     originalFormData.value = { ...applicationData }
-    // Then set form data
     form.value = applicationData
     isInitialized.value = true
   }
@@ -380,7 +374,6 @@ const onSubmit = async () => {
         ...form.value
       };
       
-      // Create the application first
       await applicationStore.createApplication(newApplication);
  
       $q.notify({
