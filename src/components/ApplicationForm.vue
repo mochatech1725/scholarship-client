@@ -76,9 +76,21 @@
                   <div class="form-label">Organization Website</div>
                   <q-input
                     v-model="form.org_website"
+                    :rules="rules.org_website"
                     flat
                     dense
-                    class="q-mb-sm"
+                    placeholder="https://example.com"
+                  />
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <div class="form-label">Document Info Link</div>
+                  <q-input
+                    v-model="form.document_info_link"
+                    :rules="rules.document_info_link"
+                    flat
+                    dense
+                    placeholder="https://example.com/documents"
                   />
                 </div>
 
@@ -277,6 +289,7 @@ const getDefaultFormData = (): Omit<Application, '_id'> => ({
   target_type: 'Both' as const,
   organization: '',
   org_website: '',
+  document_info_link: '',
   platform: '',
   application_link: '',
   theme: '',
@@ -326,6 +339,12 @@ const rules = {
   organization: [
     (val: string) => !!val || 'Organization name is required'
   ],
+  org_website: [
+    (val: string) => !!val || 'Organization website is required'
+  ],
+  document_info_link: [
+    (val: string) => !!val || 'Document info link is required'
+  ]
 }
 
 const initializeForm = () => {

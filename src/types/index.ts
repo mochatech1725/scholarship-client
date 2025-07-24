@@ -178,6 +178,7 @@ export interface Application {
   submission_date: string
   open_date: string
   due_date: string
+  document_info_link: string
 }
 
 export interface RegisterData {
