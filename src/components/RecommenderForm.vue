@@ -93,7 +93,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, onUnmounted } from 'vue'
 import { useQuasar } from 'quasar'
-import type { Recommender, User } from 'src/types'
+import type { Recommender, User } from 'src/shared-types'
 
 const $q = useQuasar()
 
@@ -112,7 +112,7 @@ const emit = defineEmits<{
 const relationshipOptions = ['Teacher', 'Counselor', 'Employer', 'Friend', 'Other']
 
 const form = ref<Omit<Recommender, 'recommender_id'> & { email_address: string; phone_number: string }>({
-  student_id: props.user?.user_id || '',
+  student_id: props.user?.user_id ||  0,
   first_name: '',
   last_name: '',
   relationship: '',
@@ -145,35 +145,34 @@ const rules = {
   ]
 }
 
-const loadData = () => {
-  if (props.isEdit && props.recommender) {
+const getDefaultFormData = () => {
+  return {
+    student_id: props.user?.user_id || 0,
+    first_name: '',
+    last_name: '',
+    relationship: '',
+    email_address: '',
+    phone_number: ''
+  }
+}
+
+const initializeForm = () => {
+  if (props.recommender) {
     const recommenderData = {
-      student_id: props.recommender.student_id,
+      student_id: props.recommender.student_id || 0,
       first_name: props.recommender.first_name,
       last_name: props.recommender.last_name,
-      relationship: props.recommender.relationship,
+      relationship: props.recommender.relationship || '',
       email_address: props.recommender.email_address,
-      phone_number: props.recommender.phone_number
+      phone_number: props.recommender.phone_number || ''
     }
-    // Store original data first
     originalFormData.value = { ...recommenderData }
-    // Then set form data
     form.value = recommenderData
   } else {
-    const defaultData = {
-      student_id: props.user?.user_id || '',
-      first_name: '',
-      last_name: '',
-      relationship: '',
-      email_address: '',
-      phone_number: ''
-    }
-    // Store original data first
+    const defaultData = getDefaultFormData()
     originalFormData.value = { ...defaultData }
-    // Then set form data
     form.value = defaultData
   }
-  isInitialized.value = true
 }
 
 const handleCancel = () => {
@@ -210,7 +209,7 @@ const handleKeydown = (event: KeyboardEvent) => {
 }
 
 onMounted(() => {
-  void loadData()
+  void initializeForm()
   
   // Add ESC key listener
   document.addEventListener('keydown', handleKeydown)

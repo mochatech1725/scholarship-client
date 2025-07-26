@@ -2,9 +2,8 @@ import { defineStore } from 'pinia'
 import { ref, computed, onUnmounted } from 'vue'
 import { useAuth0 } from '@auth0/auth0-vue'
 import { waitForAuth0Initialization } from 'src/boot/auth0'
-import type { User } from 'src/types'
+import type { User } from 'src/shared-types'
 import { useUserStore } from 'src/stores/user.store'
-import { useAccountStore } from 'src/stores/account.store'
 
 interface TokenInfo {
   expiresAt: number
@@ -16,7 +15,6 @@ export type AuthStore = ReturnType<typeof useAuthStore>
 export const useAuthStore = defineStore('auth', () => {
   const auth0 = useAuth0()
   const userStore = useUserStore()
-  const accountStore = useAccountStore()
   const isInitialized = ref(false)
   const isLoggingIn = ref(false)
   const user = ref<User | null>(null)
@@ -103,28 +101,15 @@ export const useAuthStore = defineStore('auth', () => {
     return false
   }
 
-  // Start monitoring token expiry
   const startTokenExpiryMonitoring = () => {
-    // Clear any existing interval
-    if (tokenExpiryCheckInterval.value) {
-      clearInterval(tokenExpiryCheckInterval.value)
-    }
-
-    // Check every 30 seconds
+    // Check token expiry every 30 seconds
     tokenExpiryCheckInterval.value = window.setInterval(() => {
-      void (async () => {
-        if (isTokenExpired.value && auth0?.isAuthenticated?.value) {
-          console.log('Token expired detected, attempting refresh...')
-          await handleTokenExpiry()
-        } else if (isTokenExpiringSoon.value) {
-          console.log('Token expiring soon, attempting proactive refresh...')
-          await updateTokenInfo()
-        }
-      })()
-    }, 30000) // 30 seconds
+      if (isTokenExpired.value) {
+        void handleTokenExpiry()
+      }
+    }, 30000)
   }
 
-  // Stop monitoring token expiry
   const stopTokenExpiryMonitoring = () => {
     if (tokenExpiryCheckInterval.value) {
       clearInterval(tokenExpiryCheckInterval.value)
@@ -133,215 +118,167 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const initialize = async () => {
-    if (isInitialized.value) {
-      return
-    }
-
     try {
-      console.log('Auth store: Initializing...')
+      console.log('Initializing auth store...')
       
-      if (!auth0) {
-        isInitialized.value = true
-        return
-      }
-      
+      // Wait for Auth0 to be ready
       await waitForAuth0Initialization(auth0)
       
-      // If user is authenticated, load user data from server
-      if (auth0?.isAuthenticated?.value && auth0.user.value) {
-        try {
-          const userData = await accountStore.authenticate()
-          user.value = userData
-          await updateTokenInfo()
-          startTokenExpiryMonitoring()
-          isInitialized.value = true
-        } catch (err) {
-          console.error('Failed to load user profile:', err)
-          isInitialized.value = false
-          user.value = null
-          userStore.clearUser()
-          throw err
-        }
-      } else {
-        isInitialized.value = true
+      if (auth0?.isAuthenticated?.value) {
+        console.log('User is authenticated, loading user data...')
+        const userData = await userStore.authenticate()
+        user.value = userData
+        await updateTokenInfo()
+        startTokenExpiryMonitoring()
       }
-    } catch (err) {
-      console.error('Failed to initialize auth:', err)
-      throw err
+      
+      isInitialized.value = true
+      console.log('Auth store initialized')
+    } catch (error) {
+      console.error('Failed to initialize auth store:', error)
+      isInitialized.value = true // Mark as initialized even if there's an error
     }
   }
 
   const handleCallback = async () => {
     try {
-      console.log('Auth store: Starting callback processing...')
-      await waitForAuth0Initialization(auth0)
+      console.log('Handling Auth0 callback...')
       
-      // After successful authentication, load user data from backend
-      if (auth0?.isAuthenticated?.value && auth0.user.value) {
-        try {
-          const userData = await accountStore.authenticate()
-          user.value = userData
-          await updateTokenInfo()
-          startTokenExpiryMonitoring()
-          isInitialized.value = true
-        } catch (err) {
-          console.error('Failed to load user profile:', err)
-          // If backend authentication fails, reset the auth state
-          isInitialized.value = false
-          user.value = null
-          userStore.clearUser()
-          throw err
-        }
-      } else {
-        // If not authenticated, we can still initialize
-        isInitialized.value = true
+      if (auth0?.isAuthenticated?.value) {
+        console.log('User authenticated after callback, loading user data...')
+        const userData = await userStore.authenticate()
+        user.value = userData
+        await updateTokenInfo()
+        startTokenExpiryMonitoring()
       }
-      return true
-    } catch (err) {
-      console.error('Failed to handle callback:', err)
-      return false
+    } catch (error) {
+      console.error('Failed to handle Auth0 callback:', error)
+      throw error
     }
   }
 
   const login = async () => {
-    if (!auth0) return false
-
     try {
       isLoggingIn.value = true
-      await auth0.loginWithRedirect({
-        appState: { 
-          target: '/dashboard/applications'
-        }
-      })
-      return true
-    } catch (err) {
-      console.error('Failed to login:', err)
-      return false
+      console.log('Logging in...')
+      
+      await auth0?.loginWithRedirect()
+    } catch (error) {
+      console.error('Failed to login:', error)
+      throw error
     } finally {
       isLoggingIn.value = false
     }
   }
 
   const logout = async () => {
-    if (!auth0) return
-
     try {
-      // Stop token monitoring
-      stopTokenExpiryMonitoring()
+      console.log('Logging out...')
       
-      // First, logout from the backend
-      await accountStore.logout()
-      
-      // Then clear local state (but keep isInitialized true to prevent re-initialization)
+      // Clear local state first
       user.value = null
-      userStore.clearUser()
       tokenInfo.value = null
+      stopTokenExpiryMonitoring()
+      userStore.clearUser()
       
-      // Finally, logout from Auth0
-      await auth0.logout({
+      // Call backend logout
+      await userStore.logout()
+      
+      // Then logout from Auth0
+      await auth0?.logout({
         logoutParams: {
           returnTo: window.location.origin
         }
       })
-    } catch (err) {
-      console.error('Failed to logout:', err)
-      // Even if there's an error, we should still clear local state
+    } catch (error) {
+      console.error('Failed to logout:', error)
+      // Still clear local state even if logout fails
       user.value = null
-      userStore.clearUser()
       tokenInfo.value = null
+      stopTokenExpiryMonitoring()
+      userStore.clearUser()
     }
   }
 
   const register = async () => {
-    if (!auth0) return false
-
     try {
-      isLoggingIn.value = true
+      console.log('Registering...')
       
-      // Use Auth0's signup flow by setting screen_hint to 'signup'
-      await auth0.loginWithRedirect({
-        appState: { 
-          target: '/dashboard/applications'
-        },
-        authorizationParams: {
-          screen_hint: 'signup'
-        }
-      })
-      return true
-    } catch (err) {
-      console.error('Failed to register:', err)
-      return false
-    } finally {
-      isLoggingIn.value = false
+      if (!auth0?.user?.value) {
+        throw new Error('No Auth0 user available for registration')
+      }
+      
+      const auth0User = {
+        sub: auth0.user.value.sub || '',
+        emailAddress: auth0.user.value.email || ''
+      }
+      
+      const userData = await userStore.handleRegistration(auth0User)
+      user.value = userData
+      await updateTokenInfo()
+      startTokenExpiryMonitoring()
+      
+      return userData
+    } catch (error) {
+      console.error('Failed to register:', error)
+      throw error
     }
   }
 
   const getToken = async () => {
-    if (!auth0) return null
-
     try {
+      if (!auth0?.isAuthenticated?.value) {
+        throw new Error('User not authenticated')
+      }
+      
       const token = await auth0.getAccessTokenSilently()
-      
-      // Update token info when we get a fresh token
-      await updateTokenInfo()
-      
       return token
-    } catch (err) {
-      console.error('Failed to get token:', err)
-      
-      // If the error is about missing refresh token, redirect to login
-      if (err instanceof Error && err.message && err.message.includes('Missing Refresh Token')) {
-        console.log('Refresh token missing, redirecting to login...')
-        await login()
-        return null
-      }
-      
-      return null
+    } catch (error) {
+      console.error('Failed to get token:', error)
+      throw error
     }
   }
 
-  // Method to refresh user data from backend
   const refreshUser = async () => {
-    if (auth0?.isAuthenticated?.value) {
-      try {
-        // Add a small delay to prevent rapid successive calls
-        await new Promise(resolve => setTimeout(resolve, 100))
-        
-        const userData = await accountStore.authenticate()
-        user.value = userData
-        await updateTokenInfo()
-      } catch (err) {
-        console.error('Failed to refresh user:', err)
-        // Don't throw here, just log the error
-      }
+    try {
+      console.log('Refreshing user data...')
+      const userData = await userStore.authenticate()
+      user.value = userData
+      return userData
+    } catch (error) {
+      console.error('Failed to refresh user:', error)
+      throw error
     }
   }
 
-  // Method to reset the store state (useful for testing or force refresh)
   const reset = () => {
-    stopTokenExpiryMonitoring()
+    user.value = null
+    tokenInfo.value = null
     isInitialized.value = false
     isLoggingIn.value = false
-    user.value = null
+    stopTokenExpiryMonitoring()
     userStore.clearUser()
-    tokenInfo.value = null
-    console.log('Auth store: Reset complete')
   }
 
-  // Clean up on component unmount
+  // Cleanup on unmount
   onUnmounted(() => {
     stopTokenExpiryMonitoring()
   })
 
   return {
+    // State
     isInitialized,
     isLoggingIn,
     user,
     tokenInfo,
-    isAuthenticated: isUserAuthenticated,
+    
+    // Computed
+    isUserAuthenticated,
     isTokenExpired,
-    isTokenExpiringSoon,
     timeUntilExpiry,
+    isTokenExpiringSoon,
+    
+    // Actions
     initialize,
     handleCallback,
     login,

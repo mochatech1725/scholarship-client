@@ -40,51 +40,31 @@
               dense
               class="q-mb-md"
               :rules="[val => !!val || 'Recommender is required']"
-              @update:model-value="onRecommenderChange"
+              @update:model-value="handleRecommenderChange"
             />
           </div>
 
           <div class="col-12 col-md-6">
-            <div class="form-label">Due Date</div>
+            <div class="form-label">Content</div>
             <q-input
-              v-model="form.due_date"
-              type="date"
+              v-model="form.content"
+              type="textarea"
               flat
               dense
               class="q-mb-sm"
+              :rules="[val => !!val || 'Content is required']"
             />
           </div>
 
           <div class="col-12 col-md-6">
-            <div class="form-label">Submission Method</div>
+            <div class="form-label">Status</div>
             <q-select
-              v-model="form.submission_method"
-              :options="submissionMethodOptions"
+              v-model="form.status"
+              :options="statusOptions"
               flat
               dense
               class="q-mb-sm"
-            />
-          </div>
-
-          <div class="col-12 col-md-6">
-            <div class="form-label">Request Date</div>
-            <q-input
-              v-model="form.request_date"
-              type="date"
-              flat
-              dense
-              class="q-mb-md"
-            />
-          </div>
-
-          <div class="col-12 col-md-6">
-            <div class="form-label">Submission Date</div>
-            <q-input
-              v-model="form.submission_date"
-              type="date"
-              flat
-              dense
-              class="q-mb-sm"
+              :rules="[val => !!val || 'Status is required']"
             />
           </div>
         </div>
@@ -96,8 +76,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, onBeforeUnmount, onUnmounted } from 'vue'
 import { useQuasar } from 'quasar'
-import type { Recommendation, Application, Recommender } from 'src/types'
-import { formatDateForInput } from 'src/utils/helper'
+import type { Recommendation, Application, Recommender } from 'src/shared-types'
 import ScholarshipBanner from 'components/ScholarshipBanner.vue'
 
 const $q = useQuasar()
@@ -118,19 +97,13 @@ const emit = defineEmits<{
 const selectedRecommenderId = ref<string | null>(null)
 
 const form = ref<Recommendation>({
-  recommender: {
-    student_id: '',
-    first_name: '',
-    last_name: '',
-    email_address: '',
-    phone_number: '',
-    relationship: ''
-  },
-  due_date: '',
+  application_id: props.application?.application_id || 0,
+  recommender_id: 0,
+  content: '',
   status: 'Pending',
-  submission_method: 'DirectEmail',
-  request_date: '',
-  submission_date: null
+  submitted_at: new Date(),
+  created_at: new Date(),
+  updated_at: new Date()
 })
 
 const originalFormData = ref<Recommendation | null>(null)
@@ -161,19 +134,12 @@ const scholarshipName = computed(() => {
   return props.application?.scholarship_name || ''
 })
 
-const submissionMethodOptions = ['DirectEmail', 'StudentUpload', 'DirectMail'] as const
+const statusOptions = ['Pending', 'Approved', 'Rejected'] as const
 
-const onRecommenderChange = (selectedValue: string) => {
-  const selectedRecommender = props.recommenders.find(r => r.recommender_id === selectedValue)
+const handleRecommenderChange = (selectedValue: string) => {
+  const selectedRecommender = props.recommenders.find(r => r.recommender_id === parseInt(selectedValue))
   if (selectedRecommender) {
-    form.value.recommender = {
-      student_id: selectedRecommender.student_id,
-      first_name: selectedRecommender.first_name,
-      last_name: selectedRecommender.last_name,
-      email_address: selectedRecommender.email_address,
-      phone_number: selectedRecommender.phone_number,
-      relationship: selectedRecommender.relationship
-    }
+    form.value.recommender_id = selectedRecommender.recommender_id || 0
   }
 }
 
@@ -211,57 +177,40 @@ const handleKeydown = (event: KeyboardEvent) => {
   }
 }
 
-const initializeForm = () => {
+const getDefaultFormData = (): Omit<Recommendation, 'recommendation_id'> => {
+  return {
+    application_id: props.application?.application_id || 0,
+    recommender_id: 0,
+    content: '',
+    submitted_at: new Date(),
+    status: 'Pending' as const,
+    created_at: new Date(),
+    updated_at: new Date()
+  }
+}
+
+const initializeFormWithData = () => {
   if (props.recommendation) {
-    const { recommender } = props.recommendation
     const recommendationData = {
-      recommender: recommender,
-      due_date: formatDateForInput(props.recommendation.due_date),
+      application_id: props.application?.application_id || 0,
+      recommender_id: props.recommendation.recommender_id,
+      content: props.recommendation.content || '',
+      submitted_at: props.recommendation.submitted_at || new Date(),
       status: props.recommendation.status,
-      submission_method: props.recommendation.submission_method,
-      request_date: formatDateForInput(props.recommendation.request_date),
-      submission_date: props.recommendation.submission_date ? formatDateForInput(props.recommendation.submission_date) : null
+      created_at: props.recommendation.created_at || new Date(),
+      updated_at: props.recommendation.updated_at || new Date()
     }
-    
-    // Set the selected recommender value for the dropdown
-    const selectedValue = `${recommender.first_name} ${recommender.last_name} (${recommender.email_address})`
-    
-    // Store original data first
     originalFormData.value = { ...recommendationData }
-    originalSelectedRecommenderId.value = selectedValue
-    
-    // Then set form data
     form.value = recommendationData
-    selectedRecommenderId.value = selectedValue
   } else {
-    const defaultData: Recommendation = {
-      recommender: {
-        student_id: '',
-        first_name: '',
-        last_name: '',
-        email_address: '',
-        phone_number: '',
-        relationship: ''
-      },
-      due_date: '',
-      status: 'Pending' as const,
-      submission_method: 'DirectEmail' as const,
-      request_date: '',
-      submission_date: null
-    }
-    
-    // Store original data first
+    const defaultData = getDefaultFormData()
     originalFormData.value = { ...defaultData }
-    originalSelectedRecommenderId.value = selectedRecommenderId.value
-    
-    // Then set form data
     form.value = defaultData
   }
-  isInitialized.value = true
 }
 
 onMounted(() => {
-  initializeForm()
+  initializeFormWithData()
   
   // Add ESC key listener
   document.addEventListener('keydown', handleKeydown)

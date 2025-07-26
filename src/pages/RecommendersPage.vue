@@ -100,7 +100,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useQuasar } from 'quasar'
-import type { Recommender } from 'src/types'
+import type { Recommender } from 'src/shared-types'
 import { useRecommenderStore } from 'src/stores/recommender.store'
 import { useUserStore } from 'src/stores/user.store'
 import RecommenderForm from 'src/components/RecommenderForm.vue'
@@ -191,7 +191,7 @@ const deleteRecommender = async () => {
   if (!recommenderToDelete.value?.recommender_id) return
 
   try {
-    await recommenderStore.deleteRecommender(recommenderToDelete.value.recommender_id)
+    await recommenderStore.deleteRecommender(recommenderToDelete.value.recommender_id || 0)
     recommenders.value = recommenders.value.filter(r => r.recommender_id !== recommenderToDelete.value?.recommender_id)
     $q.notify({
       type: 'positive',

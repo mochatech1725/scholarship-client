@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { apiService } from 'src/services/api.service'
 
-import type { Application } from 'src/types'
+import type { Application } from 'src/shared-types'
 
 export const useApplicationStore = defineStore('application', {
   state: () => ({
@@ -9,11 +9,11 @@ export const useApplicationStore = defineStore('application', {
   }),
 
   actions: {
-    async getApplicationById(id: string) {
+    async getApplicationById(application_id: number) {
       try {
-        return await apiService.getApplicationById(id)
+        return await apiService.getApplicationById(application_id)
       } catch (error) {
-        console.error('Error fetching application by ID:', error)
+        console.error('Error getting application:', error)
         return null
       }
     },
@@ -22,8 +22,13 @@ export const useApplicationStore = defineStore('application', {
       return await apiService.createApplication(application)
     },
 
-    async updateApplication(id: string, application: Application) {
-      return await apiService.updateApplication(id, application)
+    async updateApplication(application_id: number, application: Application) {
+      try {
+        return await apiService.updateApplication(application_id, application)
+      } catch (error) {
+        console.error('Error updating application:', error)
+        return null
+      }
     },
 
     async getApplicationsByUserId(auth_user_id: string) {
@@ -36,8 +41,23 @@ export const useApplicationStore = defineStore('application', {
       }
     },
 
-    async deleteApplication(id: string) {
-      await apiService.deleteApplication(id)
+    async getApplicationsByStudentId(student_id: number) {
+      try {
+        this.applications = await apiService.getApplicationsByStudentId(student_id)
+        return this.applications
+      } catch (error) {
+        console.error('Error fetching applications:', error)
+        return []
+      }
+    },
+
+    async deleteApplication(application_id: number) {
+      try {
+        await apiService.deleteApplication(application_id)
+      } catch (error) { 
+        console.error('Error deleting application:', error)
+        throw error
+      }
     },
   }
 }) 

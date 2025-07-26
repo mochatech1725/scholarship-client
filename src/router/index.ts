@@ -53,17 +53,17 @@ router.beforeEach(async (to, from, next) => {
   }
 
   // Wait for authentication state to be determined
-  if (!authStore.isAuthenticated && !publicRoutes.includes(to.name as string)) {
+  if (!authStore.isUserAuthenticated && !publicRoutes.includes(to.name as string)) {
     // If not authenticated and trying to access protected route, redirect to login
     return next({ name: 'login', query: { redirect: to.fullPath } });
   }
 
   if (to.name === 'home') {
-    return next(authStore.isAuthenticated ? { name: 'applicationsList' } : { name: 'login' });
+    return next(authStore.isUserAuthenticated ? { name: 'applicationsList' } : { name: 'login' });
   }
 
   // Allow access to public routes
-  if (authStore.isAuthenticated || publicRoutes.includes(to.name as string) || !to.matched.some(record => record.meta.requiresAuth)) {
+  if (authStore.isUserAuthenticated || publicRoutes.includes(to.name as string) || !to.matched.some(record => record.meta.requiresAuth)) {
     return next();
   }
 

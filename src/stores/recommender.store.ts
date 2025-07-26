@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { apiService } from 'src/services/api.service'
-import type { Recommender } from 'src/types'
+import type { Recommender } from 'src/shared-types'
 
 export const useRecommenderStore = defineStore('recommender', {
   state: () => ({
@@ -34,19 +34,24 @@ export const useRecommenderStore = defineStore('recommender', {
       return this.recommenders
     },
 
-    async getRecommenderById(id: string) {
+    async getRecommendersByStudentId(student_id: number) {
+      this.recommenders = await apiService.getRecommendersByStudentId(student_id)
+      return this.recommenders
+    },
+    
+    async getRecommenderById(recommender_id: number) {
       try {
-        return await apiService.getRecommenderById(id)
+        return await apiService.getRecommenderById(recommender_id)
       } catch (error) {
-        console.error('Error fetching recommender by ID:', error)
+        console.error('Error getting recommender:', error)
         return null
       }
     },
 
-    async updateRecommender(id: string, updates: Omit<Recommender, 'recommender_id'>) {
+    async updateRecommender(recommender_id: number, recommender: Omit<Recommender, 'recommender_id'>) {
       try {
-        const updatedRecommender = await apiService.updateRecommender(id, updates)
-        const index = this.recommenders.findIndex(r => r.recommender_id === id)
+        const updatedRecommender = await apiService.updateRecommender(recommender_id, recommender)
+        const index = this.recommenders.findIndex(r => r.recommender_id === recommender_id)
         if (index !== -1) {
           this.recommenders[index] = updatedRecommender
         }
@@ -57,11 +62,16 @@ export const useRecommenderStore = defineStore('recommender', {
       }
     },
 
-    async deleteRecommender(id: string) {
-      await apiService.deleteRecommender(id)
-      const index = this.recommenders.findIndex(r => r.recommender_id === id)
-      if (index !== -1) {
-        this.recommenders.splice(index, 1)
+    async deleteRecommender(recommender_id: number) {
+      try {
+        await apiService.deleteRecommender(recommender_id)
+        const index = this.recommenders.findIndex(r => r.recommender_id === recommender_id)
+        if (index !== -1) {
+          this.recommenders.splice(index, 1)
+        }
+      } catch (error) {
+        console.error('Error deleting recommender:', error)
+        throw error
       }
     }
   }

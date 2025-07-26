@@ -31,53 +31,59 @@
 
 
 // Import the interface from types
-import type { ScholarshipResult } from 'src/types'
+import type { Scholarship } from 'src/shared-types/scholarship.types'
 
 defineProps<{
-  results: ScholarshipResult[]
+  results: Scholarship[]
 }>()
 
 const scholarshipColumns = [
   {
     name: 'title',
     label: 'Scholarship Name',
-    field: (row: ScholarshipResult) => row.title.length > 50 ? row.title.substring(0, 50) + '...' : row.title,
+    field: (row: Scholarship) => row.title.length > 50 ? row.title.substring(0, 50) + '...' : row.title,
     align: 'left' as const
   },
   {
-    name: 'amount',
-    label: 'Amount',
-    field: (row: ScholarshipResult) => row.amount,
+    name: 'min_award',
+    label: 'Min Award',
+    field: (row: Scholarship) => row.min_award,
     align: 'right' as const
+  },
+  {
+    name: 'max_award',
+    label: 'Max Award',
+    field: (row: Scholarship) => row.max_award,
+    align: 'right' as const 
   },
   {
     name: 'deadline',
     label: 'Deadline',
-    field: (row: ScholarshipResult) => row.deadline,
+    field: (row: Scholarship) => row.deadline,
     align: 'center' as const
   },
   {
     name: 'eligibility',
     label: 'Eligibility',
-    field: (row: ScholarshipResult) => row.eligibility,
+    field: (row: Scholarship) => row.eligibility,
     align: 'left' as const
   },
   {
     name: 'renewable',
     label: 'Renewable',
-    field: (row: ScholarshipResult) => row.renewable ? 'Yes' : 'No',
+    field: (row: Scholarship) => row.renewable ? 'Yes' : 'No',
     align: 'center' as const
   },
   {
     name: 'url',
     label: 'Website',
-    field: (row: ScholarshipResult) => row.url,
+    field: (row: Scholarship) => row.url,
     align: 'left' as const
   },
   {
     name: 'geographicRestrictions',
     label: 'Geographic Restrictions',
-    field: (row: ScholarshipResult) => row.geographic_restrictions,
+    field: (row: Scholarship) => row.geographic_restrictions,
     align: 'left' as const
   }
 ]

@@ -13,9 +13,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import type { Application, Recommender } from 'src/types'
+import type { Application, Recommender } from 'src/shared-types'
 import { useRecommenderStore } from 'src/stores/recommender.store'
 import Recommendations from 'src/components/Recommendations.vue'
+import { useUserStore } from 'src/stores/user.store'
 
 const props = defineProps<{
   application: Application | null
@@ -24,11 +25,14 @@ const props = defineProps<{
 const application = computed(() => props.application)
 const recommenderStore = useRecommenderStore()
 const recommenders = ref<Recommender[]>([])
+const userStore = useUserStore()
 
 const loadRecommenders = async () => {
   try {
-    const auth_user_id = props.application?.student_id || '' // Default fallback
-    recommenders.value = await recommenderStore.getRecommendersByUserId(auth_user_id)
+    const auth_user_id = userStore.user?.auth_user_id
+    if (auth_user_id) {
+      recommenders.value = await recommenderStore.getRecommendersByUserId(auth_user_id.toString())
+    }
   } catch (error) {
     console.error('Failed to load recommenders:', error)
   }

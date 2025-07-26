@@ -67,8 +67,8 @@
         <div class="filter-section">
           <div class="filter-label">Subject Areas</div>
           <q-select
-            v-model="localSearchCriteria.subject_areas"
-            :options="subjectAreaOptions"
+            v-model="localSearchCriteria.subjectAreas"
+            :options="subjectAreasOptions"
             multiple
             outlined
             dense
@@ -138,21 +138,6 @@
           />
         </div>
 
-        <!-- Academic GPA Filter -->
-        <div class="filter-section">
-          <div class="filter-label">Minimum GPA</div>
-          <q-input
-            v-model.number="localSearchCriteria.academic_gpa"
-            type="number"
-            step="0.1"
-            min="0"
-            max="4.0"
-            outlined
-            dense
-            placeholder="Any GPA"
-          />
-        </div>
-
         <!-- Geographic Restrictions Filter -->
         <div class="filter-section">
           <div class="filter-label">Geographic Restrictions</div>
@@ -182,7 +167,7 @@
         <!-- Recommendation Required Filter -->
         <div class="filter-section">
           <q-checkbox
-            v-model="localSearchCriteria.recommendation_required"
+            v-model="localSearchCriteria.recommendations_required"
             label="Recommendation Required"
             :true-value="true"
             :false-value="null"
@@ -200,10 +185,11 @@ import { useUserStore } from 'src/stores/user.store'
 import { 
   academicLevelOptions, 
   targetTypeOptions, 
-  subjectAreaOptions, 
   genderOptions, 
-  ethnicityOptions
-} from 'src/types'
+  ethnicityOptions,
+  subjectAreasOptions
+} from 'src/shared-types'
+import type { SearchCriteria } from 'src/shared-types'
 
 // State options for the filter
 const stateOptions = [
@@ -222,43 +208,26 @@ const populateFromProfile = ref(false)
 const userStore = useUserStore()
 
 const props = defineProps<{
-  searchCriteria: {
-    keywords: string
-    subject_areas: string[]
-    academic_level: string | null
-    target_type: string | null
-    gender: string | null
-    ethnicity: string | null
-    academic_gpa: number | null
-    geographic_restrictions: string | null
-    essay_required: boolean | null
-    recommendation_required: boolean | null
-    deadline_range?: {
-      start_date?: string
-      end_date?: string
-    } | null
-    deadline_within_days?: number | null
-  }
+  searchCriteria: SearchCriteria
 }>()
 
 const emit = defineEmits<{
-  'update:searchCriteria': [value: typeof props.searchCriteria]
+  'update:searchCriteria': [value: SearchCriteria]
 }>()
 
-const localSearchCriteria = ref({ ...props.searchCriteria })
+const localSearchCriteria = ref<SearchCriteria>({ ...props.searchCriteria })
 
 const activeFiltersCount = computed(() => {
   let count = 0
   if (localSearchCriteria.value.keywords) count++
-  if (localSearchCriteria.value.subject_areas && localSearchCriteria.value.subject_areas.length > 0) count++
+  if (localSearchCriteria.value.subjectAreas && localSearchCriteria.value.subjectAreas.length > 0) count++
   if (localSearchCriteria.value.academic_level) count++
   if (localSearchCriteria.value.target_type) count++
   if (localSearchCriteria.value.gender) count++
   if (localSearchCriteria.value.ethnicity) count++
-  if (localSearchCriteria.value.academic_gpa !== null && localSearchCriteria.value.academic_gpa > 0) count++
   if (localSearchCriteria.value.geographic_restrictions) count++
   if (localSearchCriteria.value.essay_required === true) count++
-  if (localSearchCriteria.value.recommendation_required === true) count++
+  if (localSearchCriteria.value.recommendations_required === true) count++
   
   return count
 })
@@ -280,15 +249,14 @@ const handlePopulateFromProfile = (checked: boolean) => {
     // Populate filters from profile
     localSearchCriteria.value = {
       keywords: localSearchCriteria.value.keywords,
-      subject_areas: profilePrefs.subject_areas || [],
+      subjectAreas: profilePrefs.subject_areas || [],
       academic_level: profilePrefs.academic_level || null,
       target_type: profilePrefs.target_type || null,
       gender: profilePrefs.gender || null,
       ethnicity: profilePrefs.ethnicity || null,
-      academic_gpa: profilePrefs.academic_gpa || null,
-      geographic_restrictions: null, // Geographic restrictions are not in profile preferences, so keep as null
-      essay_required: profilePrefs.essay_required,
-      recommendation_required: profilePrefs.recommendation_required
+      geographic_restrictions: null, 
+      essay_required: profilePrefs.essay_required || null,
+      recommendations_required: profilePrefs.recommendations_required || null
     }
   } else if (!checked) {
     // Clear all filters when unchecked
@@ -299,17 +267,14 @@ const handlePopulateFromProfile = (checked: boolean) => {
 const clearAllFilters = () => {
   localSearchCriteria.value = {
     keywords: '',
-    subject_areas: [],
+    subjectAreas: [],
     academic_level: null,
     target_type: null,
     gender: null,
     ethnicity: null,
-    academic_gpa: null,
     geographic_restrictions: null,
     essay_required: null,
-    recommendation_required: null,
-    deadline_range: null,
-    deadline_within_days: null
+    recommendations_required: null
   }
   populateFromProfile.value = false
 }

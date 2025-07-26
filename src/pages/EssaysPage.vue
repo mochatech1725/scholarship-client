@@ -90,7 +90,7 @@
 import { ref, watch } from 'vue'
 import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'src/stores/application.store'
-import type { Essay, Application } from 'src/types'
+import type { Essay, Application } from 'src/shared-types'
 import EssayForm from 'src/components/EssayForm.vue'
 
 const props = defineProps<{
@@ -135,7 +135,7 @@ const handleDelete = async () => {
   if (!selectedEssay.value?.essay_id || !props.application.application_id) return
 
   try {
-    const updatedEssays = props.application.essays.filter(essay => essay.essay_id !== selectedEssay.value?.essay_id)
+    const updatedEssays = props.application.essays?.filter(essay => essay.essay_id !== selectedEssay.value?.essay_id) || []
     const updatedApplication = {
       ...props.application,
       essays: updatedEssays
@@ -144,14 +144,16 @@ const handleDelete = async () => {
     await applicationStore.updateApplication(props.application.application_id, updatedApplication)
     
     $q.notify({
-      type: 'positive',
+      color: 'positive',
       message: 'Essay deleted successfully'
     })
-    loadEssays()
-  } catch (err) {
-    console.error('Failed to delete essay:', err)
+    
+    selectedEssay.value = null
+    showDeleteDialog.value = false
+  } catch (error) {
+    console.error('Failed to delete essay:', error)
     $q.notify({
-      type: 'negative',
+      color: 'negative',
       message: 'Failed to delete essay'
     })
   }

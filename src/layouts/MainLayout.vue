@@ -12,7 +12,7 @@
 
         <!-- Navigation Menu for authenticated users -->
         <q-btn-dropdown
-          v-if="authStore.isAuthenticated"
+          v-if="authStore.isUserAuthenticated"
           flat
           icon="menu"
           label="Menu"
@@ -52,7 +52,7 @@
 
         <!-- Auth Menu for non-authenticated users -->
         <q-btn-dropdown
-          v-if="!authStore.isAuthenticated"
+          v-if="!authStore.isUserAuthenticated"
           flat
           icon="account_circle"
           label="Account"
@@ -114,12 +114,12 @@ const onLogout = async () => {
 
 // Watch for authentication state changes
 watch(
-  () => authStore.isAuthenticated,
+  () => authStore.isUserAuthenticated,
   async (isAuthenticated) => {
     if (!isAuthenticated && router.currentRoute.value.path !== '/login') {
       await router.push({ name: 'login' })
     } else if (isAuthenticated) {
-      console.log('**** authStore.isAuthenticated changed to true')
+      console.log('**** authStore.isUserAuthenticated changed to true')
     }
   }
 )

@@ -84,16 +84,11 @@ import { ref, computed } from 'vue'
 import ScholarshipSearchCriteria from 'components/ScholarshipSearchCriteria.vue'
 import ScholarshipSearchResults from 'components/ScholarshipSearchResults.vue'
 import { apiService } from 'src/services/api.service'
-import type { SearchCriteria } from 'src/types'
+import type { SearchCriteria } from 'src/shared-types'
 
-// --- Validation function moved from utils/helper.ts ---
 /**
  * Validates and trims a SearchCriteria object.
- * - Trims all string fields
- * - Validates startDate and endDate (if present) are valid dates
- * - Validates endDate > startDate (if both present)
- * @param criteria SearchCriteria object
- * @returns { cleaned: SearchCriteria, error?: string, invalidFields?: string[] }
+ * Returns an object with cleaned criteria and any validation errors.
  */
 function validateAndCleanSearchCriteria(
   criteria: SearchCriteria
@@ -106,52 +101,48 @@ function validateAndCleanSearchCriteria(
   const cleaned: SearchCriteria = {
     ...criteria,
     keywords: trimOrNull(criteria.keywords) || '',
-    subject_areas: Array.isArray(criteria.subject_areas)
-      ? criteria.subject_areas.map((s: string) => (typeof s === 'string' ? s.trim() : s))
+    subjectAreas: Array.isArray(criteria.subjectAreas)
+      ? criteria.subjectAreas.map((s: string) => (typeof s === 'string' ? s.trim() : s))
       : [],
     academic_level: trimOrNull(criteria.academic_level),
     target_type: trimOrNull(criteria.target_type),
     gender: trimOrNull(criteria.gender),
     ethnicity: trimOrNull(criteria.ethnicity),
     geographic_restrictions: trimOrNull(criteria.geographic_restrictions),
-    academic_gpa: criteria.academic_gpa,
+    ...(criteria.academic_gpa !== null && { academic_gpa: criteria.academic_gpa }),
     essay_required: criteria.essay_required,
-    recommendation_required: criteria.recommendation_required,
-    deadline_range: (() => {
-      if (!criteria.deadline_range) return {};
-      const dr: { start_date?: string; end_date?: string } = {};
-      const s = criteria.deadline_range.start_date !== undefined ? trimOrNull(criteria.deadline_range.start_date ?? null) ?? undefined : undefined;
-      const e = criteria.deadline_range.end_date !== undefined ? trimOrNull(criteria.deadline_range.end_date ?? null) ?? undefined : undefined;
-      if (s !== undefined) dr.start_date = s;
-      if (e !== undefined) dr.end_date = e;
-      return dr;
-    })(),
-    ...((criteria.deadline_within_days !== undefined) ? { deadline_within_days: criteria.deadline_within_days } : {}),
+    recommendations_required: criteria.recommendations_required,
+    ...(criteria.deadlineRange && {
+      deadlineRange: {
+        ...(criteria.deadlineRange.startDate && { startDate: criteria.deadlineRange.startDate }),
+        ...(criteria.deadlineRange.endDate && { endDate: criteria.deadlineRange.endDate })
+      }
+    })
   };
 
   // Validate dates if present
   const invalidFields: string[] = [];
   let error: string | undefined;
-  if (cleaned.deadline_range) {
-    const { start_date, end_date } = cleaned.deadline_range;
+  if (cleaned.deadlineRange) {
+    const { startDate, endDate } = cleaned.deadlineRange;
     let start: Date | undefined, end: Date | undefined;
-    if (start_date) {
-      start = new Date(start_date);
+    if (startDate) {
+      start = new Date(startDate);
       if (isNaN(start.getTime())) {
         error = 'Invalid start date format.';
-        invalidFields.push('deadline_range.start_date');
+        invalidFields.push('deadlineRange.startDate');
       }
     }
-    if (end_date) {
-      end = new Date(end_date);
+    if (endDate) {
+      end = new Date(endDate);
       if (isNaN(end.getTime())) {
         error = error ? error + ' Invalid end date format.' : 'Invalid end date format.';
-        invalidFields.push('deadline_range.end_date');
+        invalidFields.push('deadlineRange.endDate');
       }
     }
     if (start && end && end <= start) {
       error = 'End date must be after start date.';
-      invalidFields.push('deadline_range.end_date', 'deadline_range.start_date');
+      invalidFields.push('deadlineRange.endDate', 'deadlineRange.startDate');
     }
   }
   if (error) {
@@ -159,7 +150,6 @@ function validateAndCleanSearchCriteria(
   }
   return { cleaned };
 }
-// --- End validation function ---
 
 const searchCriteriaRef = ref()
 const searching = ref(false)
@@ -167,19 +157,16 @@ const hasSearched = ref(false)
 const maxSearchResults = ref(25)
 const searchResults = ref([])
 
-const defaultSearchCriteria = {
+const defaultSearchCriteria: SearchCriteria = {
   keywords: '',
-  subject_areas: [] as string[],
-  academic_level: null as string | null,
-  target_type: null as string | null,
-  gender: null as string | null,
-  ethnicity: null as string | null,
-  academic_gpa: null as number | null,
-  geographic_restrictions: null as string | null,
-  essay_required: null as boolean | null,
-  recommendation_required: null as boolean | null,
-  deadline_range: null as { start_date?: string; end_date?: string } | null,
-  deadline_within_days: null as number | null
+  subjectAreas: [],
+  academic_level: null,
+  target_type: null,
+  gender: null,
+  ethnicity: null,
+  geographic_restrictions: null,
+  essay_required: null,
+  recommendations_required: null
 }
 
 const hasActiveSearchCriteria = computed(() => {
@@ -187,29 +174,34 @@ const hasActiveSearchCriteria = computed(() => {
 })
 
 const handleSearch = async () => {
-  // Clear previous results and close search criteria
-  searchResults.value = []
-  searching.value = true
-  hasSearched.value = true
-  
-  // Close the search criteria component
-  searchCriteriaRef.value?.close()
-  
   try {
-    const searchCriteria = searchCriteriaRef.value?.localSearchCriteria || defaultSearchCriteria
-    const { cleaned, error, invalidFields } = validateAndCleanSearchCriteria(searchCriteria)
+    searching.value = true
+    
+    // Validate and clean search criteria
+    const { cleaned, error, invalidFields } = validateAndCleanSearchCriteria(searchCriteriaRef.value?.localSearchCriteria || defaultSearchCriteria)
+    
     if (error) {
-      const fieldList = invalidFields && invalidFields.length > 0 ? `\nInvalid field(s): ${invalidFields.join(', ')}` : ''
-      alert(`${error}${fieldList}`) // Replace with better UI notification if desired
-      searching.value = false
+      const fieldNames = invalidFields?.map(field => {
+        // Convert field names to user-friendly format
+        return field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+      }).join(', ')
+      
+      alert(`Invalid search criteria: ${error} Please check: ${fieldNames}`) // Replace with better UI notification if desired
       return
     }
+
     const results = await apiService.findScholarships(cleaned, maxSearchResults.value)
-    searchResults.value = results
-    searching.value = false
+    searchResults.value = results || []
+    
+    if (results && results.length > 0) {
+      alert(`Found ${results.length} scholarships`) // Replace with better UI notification if desired
+    } else {
+      alert('No scholarships found matching your criteria') // Replace with better UI notification if desired
+    }
   } catch (error) {
     console.error('Search failed:', error)
     // Handle error - could show notification here
+  } finally {
     searching.value = false
   }
 }

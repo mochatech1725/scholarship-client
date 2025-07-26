@@ -1,5 +1,6 @@
 import { useAuthStore } from 'src/stores/auth.store'
-import type { Application, RegisterData, Recommender, SearchCriteria, SearchPreferences } from 'src/types'
+import type { RegisterData } from 'src/types/index.ts'
+import type { Application, Recommender, SearchCriteria, UserSearchPreferences, User } from 'src/shared-types'
 import { api } from 'src/boot/axios'
 import type { AxiosRequestConfig } from 'axios'
 
@@ -17,13 +18,6 @@ class ApiService {
     try {
       const headers = await this.getAuthHeaders()
       const url = endpoint
-      
-      // console.log('Making API request:', {
-      //   url,
-      //   method: options.method || 'GET',
-      //   headers: headers,
-      //   hasToken: !!headers.Authorization
-      // })
       
       const response = await api({
         url,
@@ -68,6 +62,13 @@ class ApiService {
   }
 
   // User endpoints
+  async createUser(userData: Omit<User, 'user_id'>) {
+    return this.makeRequest('/api/users/create', {
+      method: 'POST',
+      data: userData
+    })
+  }
+
   async getUser(auth_user_id?: string) {
     if (auth_user_id) {
       return this.makeRequest(`/api/users/getById/${auth_user_id}`)
@@ -75,8 +76,8 @@ class ApiService {
     return this.makeRequest('/api/auth/login')
   }
 
-  async updateProfile(search_preferences: { search_preferences: SearchPreferences }, auth_user_id: string) {
-    return this.makeRequest(`/api/users/saveProfile/${auth_user_id}`, {
+  async updateProfile(search_preferences: UserSearchPreferences,  user_id: number) {
+    return this.makeRequest(`/api/users/saveProfile/${user_id}`, {
       method: 'POST',
       data: search_preferences
     })
@@ -87,32 +88,40 @@ class ApiService {
     return this.makeRequest('/api/applications/getAll')
   }
 
-  async getApplicationById(id: string) {
-    return this.makeRequest(`/api/applications/getById/${id}`)
+  async getApplicationById(application_id: number) {
+    return this.makeRequest(`/api/applications/getById/${application_id}`)
   }
 
-  async createApplication(application: Omit<Application, '_id'>) {
+  async createApplication(application: Omit<Application, 'application_id'>) {
     return this.makeRequest('/api/applications/create', {
       method: 'POST',
       data: application
     })
   }
 
-  async updateApplication(id: string, application: Application) {
-    return this.makeRequest(`/api/applications/update/${id}`, {
+  async updateApplication(application_id: number, application: Application) {
+    return this.makeRequest(`/api/applications/update/${application_id}`, {
       method: 'POST',
       data: application
     })
   }
 
-  async deleteApplication(id: string) {
-    return this.makeRequest(`/api/applications/delete/${id}`, {
+  async deleteApplication(application_id: number) {
+    return this.makeRequest(`/api/applications/delete/${application_id}`, {
       method: 'DELETE'
     })
   }
-
   async getApplicationsByUserId(auth_user_id: string) {
     return this.makeRequest(`/api/applications/getByUserId/${auth_user_id}`)
+  }
+
+  async getApplicationsByStudentId(student_id: number) {
+    return this.makeRequest(`/api/applications/getByStudentId/${student_id}`)
+  }
+
+  // Recommender endpoints
+  async getRecommendersByStudentId(student_id: number) {
+    return this.makeRequest(`/api/recommenders/getByStudentId/${student_id}`)
   }
 
   // Recommender endpoints
@@ -124,8 +133,8 @@ class ApiService {
     return this.makeRequest('/api/recommenders/getAll')
   }
 
-  async getRecommenderById(id: string) {
-    return this.makeRequest(`/api/recommenders/getById/${id}`)
+  async getRecommenderById(recommender_id: number) {
+    return this.makeRequest(`/api/recommenders/getById/${recommender_id}`)
   }
 
   async createRecommender(recommender: Omit<Recommender, 'recommender_id'>) {
@@ -135,15 +144,15 @@ class ApiService {
     })
   }
 
-  async updateRecommender(id: string, recommender: Omit<Recommender, 'recommender_id'>) {
-    return this.makeRequest(`/api/recommenders/update/${id}`, {
+  async updateRecommender(recommender_id: number, recommender: Omit<Recommender, 'recommender_id'>) {
+    return this.makeRequest(`/api/recommenders/update/${recommender_id}`, {
       method: 'POST',
       data: recommender
     })
   }
 
-  async deleteRecommender(id: string) {
-    return this.makeRequest(`/api/recommenders/delete/${id}`, {
+  async deleteRecommender(recommender_id: number) {
+    return this.makeRequest(`/api/recommenders/delete/${recommender_id}`, {
       method: 'DELETE'
     })
   }

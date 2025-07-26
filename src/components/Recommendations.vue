@@ -22,7 +22,7 @@
       >
         <template v-slot:body-cell-recommender="props">
           <q-td :props="props">
-            {{ props.row.recommender?.first_name }} {{ props.row.recommender?.last_name }}
+            {{ getRecommenderDisplayName(props.row) }}
           </q-td>
         </template>
         <template v-slot:body-cell-status="props">
@@ -96,10 +96,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'src/stores/application.store'
-import type { Recommendation, Application, Recommender } from 'src/types'
+import type { Recommendation, Application, Recommender } from 'src/shared-types'
 import { useGetStatusColor } from 'src/composables/useGetStatusColor'
 import RecommendationForm from 'src/components/RecommendationForm.vue'
 import { formatDate } from 'src/utils/helper'
@@ -122,16 +122,15 @@ const editingRecommendation = ref<Recommendation | null>(null)
 
 const { getStatusColor } = useGetStatusColor()
 
-const recommenderDisplayName = computed(() => {
-  return (recommendation: Recommendation) => {
-    if (!recommendation.recommender) return 'Loading...'
-    return `${recommendation.recommender.first_name} ${recommendation.recommender.last_name} (${recommendation.recommender.email_address})`
-  }
-})
+const getRecommenderDisplayName = (recommendation: Recommendation) => {
+  const recommender = props.recommenders.find(r => r.recommender_id === recommendation.recommender_id)
+  if (!recommender) return 'Loading...'
+  return `${recommender.first_name} ${recommender.last_name} (${recommender.email_address})`
+}
 
 const recommendationColumns = [
   { name: 'recommender', label: 'Recommender', 
-  field: (row: Recommendation) => recommenderDisplayName.value(row), align: 'left' as const },
+  field: (row: Recommendation) => getRecommenderDisplayName(row), align: 'left' as const },
   { name: 'status', label: 'Status', field: 'status', align: 'left' as const },
   { name: 'dueDate', label: 'Due Date', field: 'dueDate', align: 'left' as const, format: (val: string) => formatDate(val) },
   { name: 'submissionDate', label: 'Submitted', field: 'submissionDate', align: 'left' as const, format: (val: string | null) => val ? formatDate(val) : '-' },
@@ -157,15 +156,20 @@ const createApplicationUpdateObject = (recommendations: Recommendation[]): Appli
     platform: props.application.platform,
     application_link: props.application.application_link,
     theme: props.application.theme,
-    amount: props.application.amount,
+    min_award: props.application.min_award,
+    max_award: props.application.max_award,
     requirements: props.application.requirements,
     renewable: props.application.renewable,
+    ...(props.application.renewable_terms && { renewable_terms: props.application.renewable_terms }),
+    document_info_link: props.application.document_info_link,
     current_action: props.application.current_action,
     status: props.application.status,
-    submission_date: props.application.submission_date,
-    open_date: props.application.open_date,
+    ...(props.application.submission_date && { submission_date: props.application.submission_date }),
+    ...(props.application.open_date && { open_date: props.application.open_date }),
     due_date: props.application.due_date,
-    essays: props.application.essays,
+    ...(props.application.created_at && { created_at: props.application.created_at }),
+    ...(props.application.updated_at && { updated_at: props.application.updated_at }),
+    ...(props.application.essays && { essays: props.application.essays }),
     recommendations
   }
 }
@@ -186,7 +190,7 @@ const handleSubmit = async (form: Recommendation) => {
     if (editingRecommendation.value && editingRecommendation.value.recommendation_id && props.application && props.application.application_id) {
       const appId = props.application.application_id;
       // Update the recommendation in the application's recommendations array
-      const updatedRecommendations = props.application.recommendations.map(rec =>
+      const updatedRecommendations = (props.application.recommendations || []).map(rec =>
         rec.recommendation_id === editingRecommendation.value!.recommendation_id ? form : rec
       )
       const updateObj = createApplicationUpdateObject(updatedRecommendations);

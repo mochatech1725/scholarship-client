@@ -122,7 +122,7 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import { formatDate } from 'src/utils/helper'
-import { targetTypeOptions, applicationStatusOptions, currentActionOptions } from 'src/types'
+import { targetTypeOptions, applicationStatusOptions, currentActionOptions } from 'src/shared-types'
 
 const isExpanded = ref(false)
 

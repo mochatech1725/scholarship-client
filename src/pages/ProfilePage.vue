@@ -17,13 +17,13 @@ import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import ProfileForm from 'src/components/ProfileForm.vue'
 import { useUserStore } from 'src/stores/user.store'
-import type { SearchPreferences } from 'src/types'
+import type { UserSearchPreferences } from 'src/shared-types'
 
 const $q = useQuasar()
 const userStore = useUserStore()
 const isEdit = ref(false)
 
-const handleSubmit = async (search_preferences: SearchPreferences) => {
+const handleSubmit = async (search_preferences: UserSearchPreferences) => {
   try {
     await userStore.updateSearchPreferences(search_preferences)
     $q.notify({

@@ -77,7 +77,7 @@
                 <div class="form-label">Search Areas</div>
                 <q-select
                   v-model="form.subject_areas"
-                  :options="subjectAreaOptions"
+                  :options="subjectAreasOptions"
                   multiple
                   flat
                   dense
@@ -108,7 +108,7 @@
                 <div class="form-label">Areas of Interest</div>
                 <q-select
                   v-model="form.subject_areas"
-                  :options="subjectAreaOptions"
+                  :options="subjectAreasOptions"
                   multiple
                   flat
                   dense
@@ -136,19 +136,6 @@
                 />
               </div>
               <div class="col-12 col-md-6">
-                <div class="form-label">Academic GPA</div>
-                <q-input
-                  v-model.number="form.academic_gpa"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  max="4.0"
-                  flat
-                  dense
-                  outlined
-                />
-              </div>
-              <div class="col-12 col-md-6">
                 <q-checkbox
                   v-model="form.essay_required"
                   label="Essay Required"
@@ -157,7 +144,7 @@
               </div>
               <div class="col-12 col-md-6">
                 <q-checkbox
-                  v-model="form.recommendation_required"
+                  v-model="form.recommendations_required"
                   label="Recommendation Required"
                   class="q-mb-sm"
                 />
@@ -192,16 +179,12 @@
               <div class="q-pa-sm">{{ search_preferences?.ethnicity || 'Not set' }}</div>
             </div>
             <div class="col-12 col-md-6">
-              <div class="form-label">Academic GPA</div>
-              <div class="q-pa-sm">{{ search_preferences?.academic_gpa || 'Not set' }}</div>
-            </div>
-            <div class="col-12 col-md-6">
               <div class="form-label">Essay Required</div>
               <div class="q-pa-sm">{{ search_preferences?.essay_required ? 'Yes' : 'No' }}</div>
             </div>
             <div class="col-12 col-md-6">
               <div class="form-label">Recommendation Required</div>
-              <div class="q-pa-sm">{{ search_preferences?.recommendation_required ? 'Yes' : 'No' }}</div>
+              <div class="q-pa-sm">{{ search_preferences?.recommendations_required ? 'Yes' : 'No' }}</div>
             </div>
           </div>
         </div>
@@ -213,41 +196,35 @@
 <script setup lang="ts">
 import { ref, watch, computed, onUnmounted, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
-import type { SearchPreferences, User } from 'src/types'
-import { 
-  academicLevelOptions, 
-  targetTypeOptions, 
-  subjectAreaOptions, 
-  genderOptions, 
-  ethnicityOptions 
-} from 'src/types'
+import type { UserSearchPreferences, User } from 'src/shared-types'
+import { academicLevelOptions, targetTypeOptions, subjectAreasOptions, genderOptions, ethnicityOptions } from 'src/shared-types'
 
 const $q = useQuasar()
 
 const props = defineProps<{
   isEdit?: boolean;
-  search_preferences?: SearchPreferences | null;
+  search_preferences?: UserSearchPreferences | null;
   user?: User | null;
 }>()
 
 const emit = defineEmits<{
-  (e: 'submit', search_preferences: SearchPreferences): void;
+  (e: 'submit', search_preferences: UserSearchPreferences): void;
   (e: 'cancel'): void;
   (e: 'edit'): void;
 }>()
 
-const form = ref<SearchPreferences>({
+const form = ref<UserSearchPreferences>({
+  student_id: 0, // Will be set by the backend
   subject_areas: [],
-  academic_level: 'Undergraduate' as const,
-  target_type: 'Both' as const,
-  gender: 'Male' as const,
-  ethnicity: 'White/Caucasian' as const,
-  academic_gpa: 3.0,
+  academic_level: 'Undergraduate',
+  target_type: 'Both',
+  gender: 'Female',
+  ethnicity: 'Black/African American',
   essay_required: false,
-  recommendation_required: false
+  recommendations_required: false
 })
 
-const originalFormData = ref<SearchPreferences | null>(null)
+const originalFormData = ref<UserSearchPreferences | null>(null)
 const isInitialized = ref(false)
 
 // Track if form is dirty (has been modified)
@@ -265,8 +242,8 @@ watch(
   ([hasProfile, newProfile]) => {
     if (hasProfile && newProfile) {
       // Deep clone to avoid reference issues
-      originalFormData.value = JSON.parse(JSON.stringify(newProfile)) as SearchPreferences
-      form.value = newProfile as SearchPreferences
+      originalFormData.value = JSON.parse(JSON.stringify(newProfile)) as UserSearchPreferences
+      form.value = newProfile as UserSearchPreferences
     }
   },
   { immediate: true }

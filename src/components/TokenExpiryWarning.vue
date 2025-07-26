@@ -43,7 +43,7 @@ const isExtending = ref(false)
 
 // Show warning when token expires in 5 minutes or less
 const shouldShowWarning = computed(() => {
-  return authStore.isTokenExpiringSoon && authStore.isAuthenticated
+  return authStore.isTokenExpiringSoon && authStore.isUserAuthenticated
 })
 
 const timeUntilExpiry = computed(() => {

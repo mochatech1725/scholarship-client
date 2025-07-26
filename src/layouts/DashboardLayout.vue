@@ -46,7 +46,7 @@
         
         <!-- Logout Button -->
         <q-btn
-          v-if="authStore.isAuthenticated"
+          v-if="authStore.isUserAuthenticated"
           flat
           round
           icon="logout"

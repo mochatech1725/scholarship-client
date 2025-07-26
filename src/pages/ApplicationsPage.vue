@@ -106,7 +106,7 @@ import { useQuasar } from 'quasar'
 import type { QTableColumn } from 'quasar'
 import ApplicationFilters from 'src/components/ApplicationFilters.vue'
 import ApplicationForm from 'src/components/ApplicationForm.vue'
-import type { ApplicationStatus, Application } from 'src/types'
+import type { ApplicationStatus, Application } from 'src/shared-types'
 import { useGetStatusColor } from 'src/composables/useGetStatusColor'
 import { useApplicationStore } from 'src/stores/application.store'
 import { useUserStore } from 'src/stores/user.store'
@@ -233,7 +233,7 @@ const loadApplications = async () => {
   
   loading.value = true
   try {
-    await applicationStore.getApplicationsByUserId(userStore.user.auth_user_id)
+    await applicationStore.getApplicationsByStudentId(userStore.user.user_id || 0)
   } catch (error) {
     console.error('Failed to load applications:', error)
     $q.notify({

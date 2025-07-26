@@ -115,9 +115,19 @@
                 </div>
 
                 <div class="col-12 col-md-6">
-                  <div class="form-label">Amount</div>
+                  <div class="form-label">Minimum Award</div>
                   <q-input
-                    v-model.number="form.amount"
+                    v-model.number="form.min_award"
+                    type="number"
+                    flat
+                    dense
+                    class="q-mb-sm"
+                  />
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="form-label">Maximum Award</div>
+                  <q-input
+                    v-model.number="form.max_award"
                     type="number"
                     flat
                     dense
@@ -187,7 +197,7 @@
                 <div class="col-12 col-md-6">
                   <div class="form-label">Submission Date</div>
                   <q-input
-                    v-model="form.submission_date"
+                    v-model="submissionDateString"
                     type="date"
                     flat
                     dense
@@ -198,7 +208,7 @@
                 <div class="col-12 col-md-6">
                   <div class="form-label">Open Date</div>
                   <q-input
-                    v-model="form.open_date"
+                    v-model="openDateString"
                     type="date"
                     flat
                     dense
@@ -209,7 +219,7 @@
                 <div class="col-12 col-md-6">
                   <div class="form-label">Due Date</div>
                   <q-input
-                    v-model="form.due_date"
+                    v-model="dueDateString"
                     type="date"
                     flat
                     dense
@@ -258,17 +268,19 @@
 import { ref, onMounted, watch, computed, onUnmounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'stores/application.store'
-import type { Application, Recommender, Essay, Recommendation } from 'src/types'
-import { targetTypeOptions, applicationStatusOptions } from 'src/types'
+import type { Application, Recommender, Essay, Recommendation } from 'src/shared-types'
+import { targetTypeOptions, applicationStatusOptions } from 'src/shared-types'
 import Essays from 'components/Essays.vue'
 import Recommendations from 'components/Recommendations.vue'
 import ScholarshipBanner from 'components/ScholarshipBanner.vue'
 import { useRecommenderStore } from 'src/stores/recommender.store'
+import { useUserStore } from 'src/stores/user.store'
 
 
 const $q = useQuasar()
 const applicationStore = useApplicationStore()
 const loading = ref(false)
+const userStore = useUserStore()
 
 const props = defineProps<{
   isEdit: boolean
@@ -283,28 +295,33 @@ const recommenderStore = useRecommenderStore()
 const recommenders = ref<Recommender[]>([])
 
 // Single source of truth for default form data
-const getDefaultFormData = (): Omit<Application, '_id'> => ({
-  student_id: '', // TODO: Get from auth store
-  scholarship_name: '',
-  target_type: 'Both' as const,
-  organization: '',
-  org_website: '',
-  document_info_link: '',
-  platform: '',
-  application_link: '',
-  theme: '',
-  amount: 0,
-  requirements: '',
-  renewable: false,
-  renewable_terms: '',
-  current_action: 'N/A' as const,
-  status: 'Not Started' as const,
-  submission_date: '',
-  open_date: '',
-  due_date: '',
-  essays: [],
-  recommendations: []
-})
+const getDefaultFormData = (): Omit<Application, 'application_id'> => {
+  return {
+    student_id: userStore.user?.user_id || 0,
+    scholarship_name: '',
+    target_type: 'Merit' as const,
+    organization: '',
+    org_website: '',
+    platform: '',
+    application_link: '',
+    theme: '',
+    min_award: 0,
+    max_award: 0,
+    requirements: '',
+    renewable: false,
+    renewable_terms: '',
+    document_info_link: '',
+    current_action: '',
+    status: 'Not Started' as const,
+    submission_date: new Date(),
+    open_date: new Date(),
+    due_date: new Date(),
+    created_at: new Date(),
+    updated_at: new Date(),
+    essays: [],
+    recommendations: []
+  }
+}
 
 const form = ref<Application>(getDefaultFormData() as Application)
 const originalFormData = ref<Application | null>(null)
@@ -382,7 +399,7 @@ const onSubmit = async () => {
   try {
     loading.value = true
     if (props.isEdit && form.value.application_id) {
-      await applicationStore.updateApplication(form.value.application_id, form.value)
+      await applicationStore.updateApplication(parseInt(form.value.application_id?.toString() || '0'), form.value)
       $q.notify({
         color: 'positive',
         message: 'Application updated successfully'
@@ -419,9 +436,10 @@ const onSubmit = async () => {
 
 const loadRecommenders = async () => {
   try {
-    // Get userId from application or use a default
-    const auth_user_id = props.application?.student_id || '' // Default fallback
-    recommenders.value = await recommenderStore.getRecommendersByUserId(auth_user_id)
+    const auth_user_id = userStore.user?.auth_user_id
+    if (auth_user_id) {
+      recommenders.value = await recommenderStore.getRecommendersByUserId(auth_user_id.toString())
+    }
   } catch (error) {
     console.error('Failed to load recommenders:', error)
   }
@@ -455,6 +473,22 @@ const handleEssaysUpdated = (updatedEssays: Essay[]) => {
   // Update the application form data with the new essays
   form.value.essays = updatedEssays
 }
+
+// Add computed properties for date conversions
+const submissionDateString = computed({
+  get: () => form.value.submission_date ? form.value.submission_date.toISOString().split('T')[0] : '',
+  set: (value: string) => form.value.submission_date = value ? new Date(value) : new Date()
+})
+
+const openDateString = computed({
+  get: () => form.value.open_date ? form.value.open_date.toISOString().split('T')[0] : '',
+  set: (value: string) => form.value.open_date = value ? new Date(value) : new Date()
+})
+
+const dueDateString = computed({
+  get: () => form.value.due_date ? form.value.due_date.toISOString().split('T')[0] : '',
+  set: (value: string) => form.value.due_date = value ? new Date(value) : new Date()
+})
 
 // Handle ESC key press
 const handleKeydown = (event: KeyboardEvent) => {

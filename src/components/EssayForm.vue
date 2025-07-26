@@ -63,7 +63,7 @@
           <div class="col-12">
             <div class="form-label">Count</div>
             <q-input
-              v-model.number="form.count"
+              v-model.number="form.word_count"
               type="number"
               :rules="[val => !!val || 'Count is required']"
               flat
@@ -81,7 +81,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, onUnmounted } from 'vue'
 import { useQuasar } from 'quasar'
-import type { Essay, Application } from 'src/types'
+import type { Essay, Application } from 'src/shared-types'
 import ScholarshipBanner from 'components/ScholarshipBanner.vue'
 
 const $q = useQuasar()
@@ -103,8 +103,9 @@ const scholarshipName = computed(() => {
 const unitOptions = ['words', 'characters', 'pages', 'sentences']
 
 const form = ref<Essay>({
+  application_id: props.application?.application_id || 0,
   essay_link: '',
-  count: 0,
+  word_count: 0,
   units: 'words',
   theme: ''
 })
@@ -122,28 +123,25 @@ const isFormDirty = computed(() => {
   return current !== original
 })
 
-const initializeForm = () => {
-  if (props.essay) {
-    const essayData = {
-      essay_link: props.essay.essay_link,
-      count: props.essay.count,
-      units: props.essay.units,
-      theme: props.essay.theme
-    }
-    // Store original data first
+const getDefaultFormData = (): Omit<Essay, 'essay_id'> => {
+  return {
+    application_id: props.application?.application_id || 0,
+    theme: '',
+    units: '',
+    essay_link: '',
+    word_count: 0,
+    created_at: new Date(),
+    updated_at: new Date()
+  }
+}
+
+const initializeForm = (essayData?: Essay) => {
+  if (essayData) {
     originalFormData.value = { ...essayData }
-    // Then set form data
     form.value = essayData
   } else {
-    const defaultData = {
-      essay_link: '',
-      count: 0,
-      units: 'words',
-      theme: ''
-    }
-    // Store original data first
+    const defaultData = getDefaultFormData()
     originalFormData.value = { ...defaultData }
-    // Then set form data
     form.value = defaultData
   }
   isInitialized.value = true

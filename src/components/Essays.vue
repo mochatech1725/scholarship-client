@@ -84,7 +84,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useQuasar } from 'quasar'
-import type { Essay, Application } from 'src/types'
+import type { Essay, Application } from 'src/shared-types'
 import EssayForm from './EssayForm.vue'
 
 const props = defineProps<{
