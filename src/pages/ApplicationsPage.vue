@@ -136,7 +136,8 @@ const columns: QTableColumn[] = [
   { name: 'organization', label: 'Organization', field: 'organization', sortable: true, align: 'left' },
   { name: 'scholarship_name', label: 'Scholarship', field: 'scholarship_name', sortable: true, align: 'left' },
   { name: 'target_type', label: 'Type', field: 'target_type', sortable: true, align: 'left' },
-  { name: 'amount', label: 'Amount', field: 'amount', sortable: true, align: 'right', format: (val: number) => `$${val.toLocaleString()}` },
+  { name: 'min_award', label: 'Min Award', field: 'min_award', sortable: true, align: 'right', format: (val: number) => `$${val.toLocaleString()}` },
+  { name: 'max_award', label: 'Max Award', field: 'max_award', sortable: true, align: 'right', format: (val: number) => `$${val.toLocaleString()}` },
   { name: 'status', label: 'Status', field: 'status', sortable: true, align: 'left' },
   { name: 'current_action', label: 'Current Action', field: 'current_action', sortable: true, align: 'left' },
   { name: 'due_date', label: 'Due Date', field: 'due_date', sortable: true, align: 'left', format: (val: string) => formatDate(val) },
@@ -151,6 +152,11 @@ const pagination = ref({
 })
 
 const filteredApplications = computed(() => {
+  // Ensure applications.value is an array before filtering
+  if (!Array.isArray(applications.value)) {
+    return []
+  }
+  
   return applications.value.filter(app => {
     if (filters.value.status && app.status !== filters.value.status) return false
     if (filters.value.targetType && app.target_type !== filters.value.targetType) return false

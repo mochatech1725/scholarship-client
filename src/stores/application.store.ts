@@ -33,20 +33,26 @@ export const useApplicationStore = defineStore('application', {
 
     async getApplicationsByUserId(auth_user_id: string) {
       try {
-        this.applications = await apiService.getApplicationsByUserId(auth_user_id)
+        const result = await apiService.getApplicationsByUserId(auth_user_id)
+        // Ensure result is an array
+        this.applications = Array.isArray(result) ? result : []
         return this.applications
       } catch (error) {
         console.error('Error fetching applications:', error)
+        this.applications = []
         return []
       }
     },
 
     async getApplicationsByStudentId(student_id: number) {
       try {
-        this.applications = await apiService.getApplicationsByStudentId(student_id)
+        const result = await apiService.getApplicationsByStudentId(student_id)
+        // Ensure result is an array
+        this.applications = Array.isArray(result) ? result : []
         return this.applications
       } catch (error) {
         console.error('Error fetching applications:', error)
+        this.applications = []
         return []
       }
     },

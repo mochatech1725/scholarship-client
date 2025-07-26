@@ -389,7 +389,7 @@ watch(() => props.application, (newApplication) => {
     form.value = applicationData
     isInitialized.value = true
   }
-}, { immediate: true })
+}, { immediate: true, flush: 'post' })
 
 const scholarshipName = computed(() => {
   return props.application?.scholarship_name || form.value.scholarship_name || ''
@@ -476,29 +476,71 @@ const handleEssaysUpdated = (updatedEssays: Essay[]) => {
 
 // Add computed properties for date conversions
 const submissionDateString = computed({
-  get: () => form.value.submission_date ? form.value.submission_date.toISOString().split('T')[0] : '',
-  set: (value: string) => form.value.submission_date = value ? new Date(value) : new Date()
+  get: () => {
+    if (!isComponentMounted.value || !form.value.submission_date) return ''
+    try {
+      const date = form.value.submission_date instanceof Date ? form.value.submission_date : new Date(form.value.submission_date)
+      return date.toISOString().split('T')[0]
+    } catch (error) {
+      console.error('Error processing submission date:', error)
+      return ''
+    }
+  },
+  set: (value: string) => {
+    if (isComponentMounted.value) {
+      form.value.submission_date = value ? new Date(value) : new Date()
+    }
+  }
 })
 
 const openDateString = computed({
-  get: () => form.value.open_date ? form.value.open_date.toISOString().split('T')[0] : '',
-  set: (value: string) => form.value.open_date = value ? new Date(value) : new Date()
+  get: () => {
+    if (!isComponentMounted.value || !form.value.open_date) return ''
+    try {
+      const date = form.value.open_date instanceof Date ? form.value.open_date : new Date(form.value.open_date)
+      return date.toISOString().split('T')[0]
+    } catch (error) {
+      console.error('Error processing open date:', error)
+      return ''
+    }
+  },
+  set: (value: string) => {
+    if (isComponentMounted.value) {
+      form.value.open_date = value ? new Date(value) : new Date()
+    }
+  }
 })
 
 const dueDateString = computed({
-  get: () => form.value.due_date ? form.value.due_date.toISOString().split('T')[0] : '',
-  set: (value: string) => form.value.due_date = value ? new Date(value) : new Date()
+  get: () => {
+    if (!isComponentMounted.value || !form.value.due_date) return ''
+    try {
+      const date = form.value.due_date instanceof Date ? form.value.due_date : new Date(form.value.due_date)
+      return date.toISOString().split('T')[0]
+    } catch (error) {
+      console.error('Error processing due date:', error)
+      return ''
+    }
+  },
+  set: (value: string) => {
+    if (isComponentMounted.value) {
+      form.value.due_date = value ? new Date(value) : new Date()
+    }
+  }
 })
 
 // Handle ESC key press
 const handleKeydown = (event: KeyboardEvent) => {
-  if (event.key === 'Escape') {
+  if (isComponentMounted.value && event.key === 'Escape') {
     event.preventDefault()
     handleCancel()
   }
 }
 
+const isComponentMounted = ref(false)
+
 onMounted(async () => {
+  isComponentMounted.value = true
   await loadRecommenders()
   initializeForm()
   
@@ -507,6 +549,7 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
+  isComponentMounted.value = false
   // Remove ESC key listener
   document.removeEventListener('keydown', handleKeydown)
 })
