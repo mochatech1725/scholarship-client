@@ -5,7 +5,7 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', redirect: '/login', name: 'home' },
+      { path: '', redirect: '/dashboard', name: 'home' },
       { path: 'login', component: () => import('pages/LoginPage.vue'), name: 'login', meta: { requiresAuth: false } },
       { path: 'register', component: () => import('pages/RegisterPage.vue'), name: 'register', meta: { requiresAuth: false } },
       { path: 'callback', component: () => import('pages/CallbackPage.vue'), name: 'callback', meta: { requiresAuth: false } }
